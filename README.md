@@ -43,12 +43,8 @@ network={
   psk="<PASSWORD_FOR_NETWORK>"
 }
 ```
-3. Perform a reboot with ```$ sudo shutdown -r now```
-4. Check to see if the RPi connects to WiFi - there should be an IP address specified when rebooting : 
-
-<p align="center">
-  <img src="Images/ip_address.JPG" alt="drawing" width="400"/>
-</p>
+3. Perform a reboot with ```$ sudo shutdown -r now``` or ```$ sudo reboot```
+4. Check to see if the RPi connects to WiFi - there should be an IP address specified when rebooting
 
 #### Special Considerations for Connecting to utexas-iot WiFi
 If connecting to the utexas-iot network, additional steps are required before the first step in the previous section:
@@ -61,7 +57,7 @@ If connecting to the utexas-iot network, additional steps are required before th
 6. A textbox will appear with the devices password. Now when you edit *wpa_supplicant.conf* in step 2 above, use "utexas-iot" as the ssid name and enter the password inside quotation marks with **no spaces** for the password. 
 
 #### Update RPi OS and Python
-Run the two standard updates:
+Run the two lines below:
 ```
 $ sudo apt-get update
 $ sudo apt-get upgrade
@@ -93,10 +89,32 @@ Once connected to WiFi, using a GitHub repository makes updating and sharing fil
   - GitHub commands make queries that rely on the RPi having the correct time. 
   - Type ```$ date -R``` and make sure the time is correct. If the time is incorrect, type ```$ sudo apt-get install ntp```.
   This will allow the RPi to update the time. Be sure to do a ```$ sudo reboot``` after so the changes can take effect.
-2. Navigate to GitHub and copy down the repository's address.
+2. Navigate to GitHub and copy down this repository's address.
 3. On the RPi install the git commands with ```$ sudo apt-get install git-core```
 4. Once installed, type ```$ git clone <GIT ADDRESS>``` to clone the repository on to the RPi.
 5. Move into the new directory and type ```$ git status``` to see if the clone worked correctly. 
+
+This repository holds all the necessary code needed to run the BEVO IAQ Sensor Platform. After setting up the Raspberry Pi, installing the necessary dependencies, and making all the hardware connections - the platform should be ready to go. 
+
+#### Updating Python (Version 3.7.0)
+The Raspbian OS at the time these instructions were written installs a more primitive version of Python. Some of the sensors on board require Python 2 while others require the newer Python 3. To upgrade to version 3.7.0, follow these instructions:
+
+1. Use the command line to install the following dependencies (this is completed in one line on the command line):
+```
+$ sudo apt-get install -y build-essential tk-dev libncurses5-dev libncursesw5-dev libreadline6-dev libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev libffi-dev
+```
+2. Change directories to the location you would like to install Python and then download Python 3.7.0 from their website:
+```
+$ wget https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tgz
+```
+3. Install and compile Python
+```
+$ sudo tar zxf Python-3.7.0.tgz
+$ cd Python-3.7.0
+$ sudo ./configure
+$ sudo make -j 4
+$ sudo make altinstall
+```
 
 #### Authentication with HTTPS Clone
 If the github repository was cloned via HTTPS then every time you push/pull, GitHub will ask for authentification. To counteract this, enter the following two commands:
@@ -115,32 +133,3 @@ However you can set your credientials to expire after a certain time by replacin
 ```
 $ git config --global credential.helper 'cache --timeout 7200'
 ```
-
-#### Updating Python (Version 3.7.0)
-The Raspbian OS at the time these instructions were written installs a more primitive version of Python. To upgrade to version 3.7.0, follow these instructions:
-
-1. Use the command line to install the following dependencies (this is completed in one line on the command line):
-```
-$ sudo apt-get install -y build-essential tk-dev libncurses5-dev libncursesw5-dev libreadline6-dev libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev libffi-dev
-```
-2. Change directories to the location you would like to install Python and then download Python 3.7.0 from their website:
-```
-$ wget https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tgz
-```
-3. Install and compile Python
-```
-$ sudo tar zxf Python-3.7.0.tgz
-$ cd Python-3.7.0
-$ sudo ./configure
-$ sudo make -j 4
-$ sudo make altinstall
-```
-4. Make Python 3.7.0 the default version
-
-Follow the [aliasing](#aliasing) documentation on how to add the following alias to the ".bash_aliases":
-```
-alias python='/usr/lcoal/bin/python3.7'
-```
-Exit and save the file. Either reboot the RPi or source the ".bashrc" file with ```$ source ~/.bashrc```.
-
-5. Check the version with ```$ python -V``` - it should be 3.7
