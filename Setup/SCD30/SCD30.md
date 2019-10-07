@@ -7,7 +7,7 @@ This file contains instructions on how to connect and run the Sensirion SCD30 se
 ## Connecting the SCD30
 The SCD30 sensor does not come fully assembled, so the first task is soldering wires to create connections. The pinout is shown in the image below:
 
-![SCD30_Pinout](bevo_iaq/Setup/Images/scd30_pinout.png)
+![SCD30_Pinout](~/bevo_iaq/Setup/Images/scd30_pinout.png)
 
 The acronyms correspond to:
 1. **VDD**: Voltage supply
