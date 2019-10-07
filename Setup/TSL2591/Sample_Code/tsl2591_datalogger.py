@@ -1,5 +1,7 @@
 import time
 from datetime import datetime
+import csv
+
 import board
 import busio
 import adafruit_tsl2591
