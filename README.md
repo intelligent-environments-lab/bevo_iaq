@@ -5,9 +5,9 @@ This document details the basics of the Building EnVironment and Occupancy (BEVO
 
 The BEVO IAQ, in its first iteration, will be able to monitor:
 -	**Temperature/Relative Humidity**: influences thermal comfort 
+-	**Carbon Dioxide**: Associated with ventilation rates and high concentrations have been shown to impair cognitive function
 -	**Total Volatile Organic Compounds**: Any airborne organic compound commonly associated with cleaning products that may cause upper respiratory irritation 
 -	**Particulate Matter**: Any airborne solid/liquid particles such as dust, pollen, or particles in smoke that are associated with inflammation/irritation of upper respiratory system
--	**Carbon Dioxide**: Associated with ventilation rates and high concentrations have been shown to impair cognitive function
 -	**Light Level**: To help determine when lights are on or off
 
 ## Sensors
