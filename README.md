@@ -15,7 +15,7 @@ The following subsections outline the various sensors that will be incorporated 
 
 ### Sensirion SCD30
 
-[SCD30](https://www.mouser.com/images/marketingid/2018/img/187534792_Sensirion_SCD30SensorModule.png)
+![SCD30](https://www.mouser.com/images/marketingid/2018/img/187534792_Sensirion_SCD30SensorModule.png)
 
 The SCD30 sensor is capable of measuring the following:
 - Temperature
@@ -26,7 +26,7 @@ More on how to connect the sensor can be found in the [setup](Setup/SCD30) direc
 
 ### Sensirion SVM30
 
-[SVM30](https://www.mouser.in/images/marketingid/2019/img/183817211.png)
+![SVM30](https://www.mouser.in/images/marketingid/2019/img/183817211.png)
 
 The SVM30 sensor is actually a combination of two sensors: the SHT1C Temperature/Relative Humidity Sensor and the SGP30 Total Volatile Organic Compounds (TVOCs) sensor. The SVM30 is capable of measuring the following:
 - Temperature
@@ -38,7 +38,7 @@ Since the SCD30 already measures temperature and relative humidity, we do not ne
 
 ### Sensirion SPS30
 
-[SPS30](https://www.mouser.be/images/marketingid/2018/img/106742304.png)
+![SPS30](https://www.mouser.be/images/marketingid/2018/img/106742304.png)
 
 The SPS30 sensor is capable of measuring the following:
 - Particulate Matter (PM) Counts for particles  of 0.5, 1, 2.5, 4, and 10 micrometers in diameter in #/dL
@@ -48,7 +48,7 @@ More on how to connect to and collect readings from the sensor can be found [her
 
 ### Adafruit TSL2591
 
-[TSL](https://asset.conrad.com/media10/isa/160267/c1/-/de/1516629_BB_00_FB/erweiterungsboard-tsl2591-high-dynamic-range-digital-light-sensor-adafruit-1980-1516629.jpg)
+![TSL](https://asset.conrad.com/media10/isa/160267/c1/-/de/1516629_BB_00_FB/erweiterungsboard-tsl2591-high-dynamic-range-digital-light-sensor-adafruit-1980-1516629.jpg)
 
 The TSL sensor is capable of measuring the following:
 - Infrared level
@@ -59,7 +59,7 @@ More on how to connect to and collect readings from the sensor can be found onli
 
 ### Adafruit Real-Time-Clock (RTC) 
 
-[RTC](https://media.digikey.com/Photos/Adafruit%20Industries%20LLC/MFG_3295_top.jpg)
+![RTC](https://media.digikey.com/Photos/Adafruit%20Industries%20LLC/MFG_3295_top.jpg)
 
 The RTC is capable of keeping track of the time even when not connected to WiFi. The BEVO IAQ might not always be deployed in a location with reliable WiFi so having this sensor on board will make sure that the correct timestamp is written to the rows of the output file. 
 
