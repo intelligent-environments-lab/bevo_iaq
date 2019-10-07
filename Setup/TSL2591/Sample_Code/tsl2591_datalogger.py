@@ -11,7 +11,7 @@ dt = datetime.now()
 filename = 'scd30_' + str(dt.year)+'-'+str(dt.month)+'-'+str(dt.day)+'_'+str(dt.hour)+'-'+str(dt.minute)+'-'+str(dt.second) + '.csv'
 with open('Data/'+filename,'wt') as f:
   csv_writer = csv.writer(f)
-  csv_writer.writerow(['date','time','total_light','infared','visible','full_spectrum')
+  csv_writer.writerow(['date','time','total_light','infared','visible','full_spectrum'])
 
   while True:
     # Read and calculate the light level in lux.
