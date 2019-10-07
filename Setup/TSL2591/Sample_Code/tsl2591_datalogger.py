@@ -1,5 +1,5 @@
 import time
-import datetime
+from datetime import datetime
 import board
 import busio
 import adafruit_tsl2591
