@@ -7,7 +7,7 @@ This file contains instructions on how to connect and run the Sensirion SCD30 se
 ## Connecting the SCD30
 The SCD30 sensor does not come fully assembled, so the first task is soldering wires to create connections. The pinout is shown in the image below:
 
-![SCD30_Pinout](/bevo_iaq/Setup/Images/scd30_pinout.png)
+![SCD30_Pinout](bevo_iaq/Setup/Images/scd30_pinout.png)
 
 The acronyms correspond to:
 1. **VDD**: Voltage supply
@@ -24,7 +24,7 @@ The RPi pinout is shown below for reference:
 
 In our case, we need the first four pins of the SCD30 and the last pin (SEL) connected to ground since we are using the I2C connection. The sensors require 3V or less so we must use pull-up resistors on the SDA and SCL pins. The schematic is shown below:
 
-![SCD30_Layout](Layouts/SCD30_bb.png)
+![SCD30_Layout](intelligent-envrionments-lab/bevo_iaq/Layouts/SCD30_bb.png)
 
 ## Installing Necessary Packages and Drivers
 In order to use the SCD30 sensor, we have to get around some problems with the I2C communication protocol. First, make sure that I2C communication has been enabled by typing ```$ raspi-config```, choosing ```Interfacing Options```, navigate to ```P5 I2C```, and select ```<YES>```. 
