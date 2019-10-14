@@ -1,0 +1,29 @@
+*Pick And Place List
+*Company=
+*Author=
+*eMail=
+*
+*Project=BEVO_IAQ
+*Date=15:14:09
+*CreatedBy=Fritzing 0.9.3b.04.19.5c895d327c44a3114e5fcc9d8260daf0cbb52806
+*
+*
+*Coordinates in mm, always center of component
+*Origin 0/0=Lower left corner of PCB
+*Rotation in degree (0-360, math. pos.)
+*
+*No;Value;Package;X;Y;Rotation;Side;Name
+1;;;49.6791;-13.3309;90;Bottom;RTC
+2;220;THT;26.8191;-5.07594;0;Bottom;R3
+3;;;13.4841;-17.7759;90;Bottom;SCD30
+4;;;36.9791;-30.4759;0;Bottom;Via7
+5;;;16.6591;-2.53593;0;Bottom;Via9
+6;;;29.3591;-22.8559;0;Bottom;Via6
+7;;;24.2791;-33.0159;0;Bottom;Via5
+8;;;42.0591;-12.6959;0;Bottom;Via8
+9;;;14.0556;-36.8894;0;Bottom;SPS30
+10;;molex-1x4_lock;7.76907;-22.9829;0;Bottom;SVM30
+11;;;30.6291;-33.6509;0;Bottom;TSL
+12;220;THT;29.3591;-12.6959;0;Bottom;R4
+13;;;-5.09886;21.0746;0;Bottom;Raspberry Pi 1
+14;;;6.49907;-10.1561;0;Bottom;Via2
