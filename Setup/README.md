@@ -114,19 +114,40 @@
  ```
 
  ### Authentication with HTTPS Clone
- If the github repository was cloned via HTTPS then every time you push/pull, GitHub will ask for authentification. To counteract this, enter the following two commands:
- ```
- $ git config credential.helper store
- $ git push https://github.com/owner/repository.git
- ```
+If the github repository was cloned via HTTPS then every time you push/pull, GitHub will ask for authentification. To counteract this, enter the following two commands:
+```
+$ git config credential.helper store
+$ git push https://github.com/owner/repository.git
+```
 
- Then it will prompt you for your username and password (for the last time)
- ```
- Username for 'https://github.com': <USERNAME>
- Password for 'https://USERNAME@github.com': <PASSWORD
- ```
+Then it will prompt you for your username and password (for the last time)
+```
+Username for 'https://github.com': <USERNAME>
+Password for 'https://USERNAME@github.com': <PASSWORD
+```
 
- However you can set your credientials to expire after a certain time by replacing the first line with the following where the time is given in seconds. 
+However you can set your credientials to expire after a certain time by replacing the first line with the following where the time is given in seconds. 
+```
+$ git config --global credential.helper 'cache --timeout 7200'
  ```
- $ git config --global credential.helper 'cache --timeout 7200'
- ```
+ 
+## Sensor Hardware Connection
+The next few sections outline how to connect the sensors to the RPi. 
+
+### Prototyping
+The schematic below shows one possible way to connect the sensors to the RPi via breadboard. From left to right in the schematic, the sensors represented are: SCD30, SVM30, SPS30, TSL2591, and RTC PCF8523. *Note: The sensors used in the schematic are NOT exact replicas.*
+
+![bevo_iaq_bb](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Layouts/BEVO_IAQ_bb.png)
+
+### Printed Circuit Board Development
+A printed circuit board (PCB), shown below, was developed for this project. The PCB design does *not* allow for any direct connections to the board via headers except for the the RTC PCF8523 - the other sensors must be connected with wires.
+
+![bevo_iaq_pcb](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Layouts/BEVO_IAQ_New_pcb.png)
+
+The sensors in the schematic above, from top to bottom, are the SCD30, SVM30, SPS30, TSL2591, and PCF8523. The SVM30 and SPS30 are connected through the use of [5-pin female single connectors](https://images-na.ssl-images-amazon.com/images/I/41WAqkLeBJL._SL500_AC_SS350_.jpg) and [4-pin female single connectors](https://images-na.ssl-images-amazon.com/images/I/411g-Ag85ML._SL500_AC_SS350_.jpg), respectively. The remaining sensors can be connected to [male-to-female headers](http://img.dxcdn.com/productimages/sku_152192_2.jpg) soldered to the bottom of the board.
+
+The PCB in the schematic shows the top view. The connections are routed on the bottom of the board and, from right to left, correspond to SCL, SDA, Vin, and Gnd. If there is a fifth connection, that connection is also ground i.e. SCL, SDA, Vin, Gnd, and Gnd. Two 4.7 k-Ohm resistors are connected at the top and second to bottom rows as pull-up resistors. 
+
+## Code Development
+(Under Construction)
+
