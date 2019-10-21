@@ -167,3 +167,11 @@ The schematic below shows one possible way to connect the sensors to the RPi via
 
 ![bevo_iaq_bb](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Layouts/BEVO_IAQ_bb.png)
 
+### Printed Circuit Board Development
+A printed circuit board (PCB), shown below, was developed for this project. The PCB design does *not* allow for any direct connections to the board via headers except for the the RTC PCF8523 - the other sensors must be connected with wires.
+
+![bevo_iaq_pcb](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Layouts/BEVO_IAQ_New_pcb.png)
+
+The sensors in the schematic above, from top to bottom, are the SCD30, SVM30, SPS30, TSL2591, and PCF8523. The SVM30 and SPS30 are connected through the use of [5-pin female single connectors](https://images-na.ssl-images-amazon.com/images/I/41WAqkLeBJL._SL500_AC_SS350_.jpg) and [4-pin female single connectors](https://images-na.ssl-images-amazon.com/images/I/411g-Ag85ML._SL500_AC_SS350_.jpg), respectively. The remaining sensors can be connected to [male-to-female headers](http://img.dxcdn.com/productimages/sku_152192_2.jpg) soldered to the bottom of the board.
+
+The PCB in the schematic shows the top view. The connections are routed on the bottom of the board and, from right to left, correspond to SCL, SDA, Vin, and Gnd. If there is a fifth connection, that connection is also ground i.e. SCL, SDA, Vin, Gnd, and Gnd. Two 47 k$\Ohm$ resistors are connected at the top and second to bottom rows. 
