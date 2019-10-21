@@ -130,3 +130,36 @@
  ```
  $ git config --global credential.helper 'cache --timeout 7200'
  ```
+ 
+ ## Connecting the Sensors
+ The next few sections outline how to connect the sensors to the RPi. 
+ 
+ ### Sensirion Sensor Considerations
+ Two of Sensirion sensors (SPS30 and SCD30) require the following two packages be installed:
+ 
+ ```$ sudo apt-get install python-crcmod```
+ 
+ ```$ sudo apt-get install pigpio python-pigpio```
+
+Once these libraries have been installed, these sensors should be able to work.
+
+### Adafruit Sensor Considerations
+For the remainder of the sensors, the following libraries are required:
+
+**All Adafruit Sensors***
+```$ pip3 install adafruit-circuitpython-lis3dh```
+
+**SVM30** (really the SGP30)
+```$ pip3 install adafruit-circuitpython-sgp30```
+
+**TSL2591**
+```$ pip3 install adafruit-circuitpython-tsl2591```
+
+**RTC PCF8523**
+```$ pip3 install adafruit-circuitpython-pcf8523```
+
+### Prototyping
+The schematic below shows one possible way to connect the sensors to the RPi via breadboard:
+
+![bevo_iaq_bb](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Layouts/BEVO_IAQ_bb.png)
+
