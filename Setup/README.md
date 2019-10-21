@@ -114,53 +114,25 @@
  ```
 
  ### Authentication with HTTPS Clone
- If the github repository was cloned via HTTPS then every time you push/pull, GitHub will ask for authentification. To counteract this, enter the following two commands:
- ```
- $ git config credential.helper store
- $ git push https://github.com/owner/repository.git
- ```
+If the github repository was cloned via HTTPS then every time you push/pull, GitHub will ask for authentification. To counteract this, enter the following two commands:
+```
+$ git config credential.helper store
+$ git push https://github.com/owner/repository.git
+```
 
- Then it will prompt you for your username and password (for the last time)
- ```
- Username for 'https://github.com': <USERNAME>
- Password for 'https://USERNAME@github.com': <PASSWORD
- ```
+Then it will prompt you for your username and password (for the last time)
+```
+Username for 'https://github.com': <USERNAME>
+Password for 'https://USERNAME@github.com': <PASSWORD
+```
 
- However you can set your credientials to expire after a certain time by replacing the first line with the following where the time is given in seconds. 
- ```
- $ git config --global credential.helper 'cache --timeout 7200'
+However you can set your credientials to expire after a certain time by replacing the first line with the following where the time is given in seconds. 
+```
+$ git config --global credential.helper 'cache --timeout 7200'
  ```
  
- ## Connecting the Sensors
- The next few sections outline how to connect the sensors to the RPi. 
- 
- ### Sensirion Sensor Considerations
- Two of Sensirion sensors (SPS30 and SCD30) require the following two packages be installed:
- 
- ```$ sudo apt-get install python-crcmod```
- 
- ```$ sudo apt-get install pigpio python-pigpio```
-
-Once these libraries have been installed, these sensors should be able to work.
-
-### Adafruit Sensor Considerations
-For the remainder of the sensors, the following libraries are required:
-
-**All Adafruit Sensors**
-
-```$ pip3 install adafruit-circuitpython-lis3dh```
-
-**SVM30** (really the SGP30)
-
-```$ pip3 install adafruit-circuitpython-sgp30```
-
-**TSL2591**
-
-```$ pip3 install adafruit-circuitpython-tsl2591```
-
-**RTC PCF8523**
-
-```$ pip3 install adafruit-circuitpython-pcf8523```
+## Sensor Hardware Connection
+The next few sections outline how to connect the sensors to the RPi. 
 
 ### Prototyping
 The schematic below shows one possible way to connect the sensors to the RPi via breadboard. From left to right in the schematic, the sensors represented are: SCD30, SVM30, SPS30, TSL2591, and RTC PCF8523. *Note: The sensors used in the schematic are NOT exact replicas.*
@@ -174,4 +146,8 @@ A printed circuit board (PCB), shown below, was developed for this project. The 
 
 The sensors in the schematic above, from top to bottom, are the SCD30, SVM30, SPS30, TSL2591, and PCF8523. The SVM30 and SPS30 are connected through the use of [5-pin female single connectors](https://images-na.ssl-images-amazon.com/images/I/41WAqkLeBJL._SL500_AC_SS350_.jpg) and [4-pin female single connectors](https://images-na.ssl-images-amazon.com/images/I/411g-Ag85ML._SL500_AC_SS350_.jpg), respectively. The remaining sensors can be connected to [male-to-female headers](http://img.dxcdn.com/productimages/sku_152192_2.jpg) soldered to the bottom of the board.
 
-The PCB in the schematic shows the top view. The connections are routed on the bottom of the board and, from right to left, correspond to SCL, SDA, Vin, and Gnd. If there is a fifth connection, that connection is also ground i.e. SCL, SDA, Vin, Gnd, and Gnd. Two 47 k$$\Ohm$$ resistors are connected at the top and second to bottom rows. 
+The PCB in the schematic shows the top view. The connections are routed on the bottom of the board and, from right to left, correspond to SCL, SDA, Vin, and Gnd. If there is a fifth connection, that connection is also ground i.e. SCL, SDA, Vin, Gnd, and Gnd. Two 4.7 k-Ohm resistors are connected at the top and second to bottom rows as pull-up resistors. 
+
+## Code Development
+(Under Construction)
+
