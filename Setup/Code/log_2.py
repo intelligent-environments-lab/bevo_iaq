@@ -82,6 +82,8 @@ def sps30_scan():
 
 	# Declare all global variables to be returned (n = count, c = concentration)
 	global pm_n, pm_c
+	pm_n = [0,0,0,0,0]
+	pm_c = [0,0,0,0]
 
 	return {
 		'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],
@@ -99,6 +101,9 @@ def scd30_scan():
 
 	# Declare all global variables to be returned
     global co2, tc, rh
+    co2 = 400
+    tc = 22
+    rh = 50
 
     return {'CO2':co2,'TC':tc,'RH':rh}
 
@@ -262,7 +267,7 @@ def main():
         print('*'*20 + ' END ' + '*'*20)
         print('Rescanning...')
         i += 1
-        
+
 # ------------------------------------------------------------------------- #
 
 # Execution Start
