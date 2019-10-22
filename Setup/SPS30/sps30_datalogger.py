@@ -271,7 +271,7 @@ initialize()
 
 # opening or creating the file (if it does not exist
 dt = datetime.now()
-filename = 'scd30_' + str(dt.year)+'-'+str(dt.month)+'-'+str(dt.day)+'_'+str(dt.hour)+'-'+str(dt.minute)+'-'+str(dt.second) + '.csv'
+filename = 'sps30_' + str(dt.year)+'-'+str(dt.month)+'-'+str(dt.day)+'_'+str(dt.hour)+'-'+str(dt.minute)+'-'+str(dt.second) + '.csv'
 with open('Data/'+filename,'wt') as f:
   csv_writer = csv.writer(f)
   csv_writer.writerow(['date','time',
