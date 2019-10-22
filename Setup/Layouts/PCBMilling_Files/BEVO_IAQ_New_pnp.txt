@@ -4,7 +4,7 @@
 *eMail=
 *
 *Project=BEVO_IAQ_New
-*Date=17:03:55
+*Date=12:12:10
 *CreatedBy=Fritzing 0.9.3b.04.19.5c895d327c44a3114e5fcc9d8260daf0cbb52806
 *
 *
@@ -13,11 +13,19 @@
 *Rotation in degree (0-360, math. pos.)
 *
 *No;Value;Package;X;Y;Rotation;Side;Name
-1;;;10.262;-18.0111;0;Bottom;RTC
-2;;;-2.60624;24.6495;0;Bottom;Raspberry Pi 1
+1;;;9.11681;-29.451;0;Bottom;TXT3
+2;;;9.0671;-35.8213;0;Bottom;IMG1
 3;;;10.262;-33.2511;0;Bottom;SVM
-4;220;THT;8.99202;-39.6011;180;Bottom;R4
-5;;;8.92852;-38.3946;0;Bottom;SCD30
-6;;;10.262;-23.0911;0;Bottom;TSL
-7;;;8.99202;-27.1551;0;Bottom;SPS30
-8;220;THT;8.99202;-6.58112;180;Bottom;R3
+4;;;-2.60615;24.6495;0;Bottom;Raspberry Pi 1
+5;;;10.262;-18.0111;0;Bottom;RTC
+6;220;THT;8.99203;-6.58108;180;Bottom;R3
+7;;;6.82546;-14.06;0;Bottom;TXT3
+8;;;8.92853;-38.3946;0;Bottom;SCD30
+9;;;9.13314;-19.2811;0;Bottom;TXT3
+10;;;9.13313;-24.3611;0;Bottom;TXT3
+11;220;THT;8.99203;-39.6011;180;Bottom;R4
+12;;;8.7098;-42.1411;0;Bottom;TXT2
+13;;;8.99203;-27.1551;0;Bottom;SPS30
+14;;;6.87536;-8.97997;0;Bottom;TXT3
+15;;;8.85092;-45.0056;0;Bottom;TXT1
+16;;;10.262;-23.0911;0;Bottom;TSL
