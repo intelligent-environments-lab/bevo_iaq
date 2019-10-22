@@ -95,12 +95,12 @@ def scd30_scan():
 	the temperature in degress Celsius, and the relative humidity as a 
 	percent.
 	'''
-	
+
 	# Declare all global variables to be returned
 	global co2, tc, rh
-    co2 = 400
-    tc = 22
-    rh = 50
+	co2 = 400
+	tc = 22
+	rh = 50
 
     return {'CO2':co2,'TC':tc,'RH':rh}
 
