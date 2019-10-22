@@ -29,7 +29,7 @@ import os, signal
 import subprocess
 from subprocess import call
 import pprint
-from datetime
+import datetime
 import csv
 
 # Sensor-specific libraries
