@@ -97,7 +97,9 @@ def scd30_scan():
 	'''
 
 	# Declare all global variables to be returned
-    global co2, tc, rh
+    global co2
+    global tc
+    global rh
     co2 = 400
     tc = 22
     rh = 50
