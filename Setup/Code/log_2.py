@@ -64,7 +64,7 @@ S3_CALL_TIMESTAMP = {
 # File Handling
 # ------------------------------------------------------------------------- #
 FILEPATH = {
-    'sensirion': '/home/pi/iaq_beacon/DATA/sensirion/'
+    'sensirion': '/home/pi/bevo_iaq/DATA/sensirion/'
 }
 filename_writer = {
     'sensirion': lambda date: FILEPATH['sensirion'] + date.strftime('%Y-%m-%d') + '_sensirion.csv'
