@@ -102,7 +102,7 @@ def scd30_scan():
 	tc = 22
 	rh = 50
 
-    return {'CO2':co2,'TC':tc,'RH':rh}
+	return {'CO2':co2,'TC':tc,'RH':rh}
 
 def data_mgmt():
     '''
