@@ -33,6 +33,8 @@ import datetime
 import csv
 
 # Sensor-specific libraries
+import sps30
+import scd30
 import pigpio 
 import crcmod
 
@@ -82,8 +84,20 @@ def sps30_scan():
 
 	# Declare all global variables to be returned (n = count, c = concentration)
 	global pm_n, pm_c
-	pm_n = [0,0,0,0,0]
-	pm_c = [0,0,0,0]
+
+	ret = sps30.readDataReady()
+    if ret == -1:
+      sps30.eprint('resetting...',end='')
+      sps30.bigReset()
+      sps30.initialize()
+
+    if ret == 0:
+      time.sleep(0.1)
+
+    data = sps30.readPMValues()
+
+	pm_n = [sps30.calcFloat(data[24:30]),sps30.calcFloat(data[30:36]),sps30.calcFloat(data[36:42]),sps30.calcFloat(data[42:48]),sps30.calcFloat(data[48:54])]
+	pm_c = [calcFloat(data),calcFloat(data[6:12]),calcFloat(data[12:18]),calcFloat(data[18:24])]
 
 	return {'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],'pm_c_1':pm_c[0],'pm_c_2p5':pm_c[1],'pm_c_4':pm_c[2],'pm_c_10':pm_c[3]}
 
