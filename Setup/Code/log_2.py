@@ -28,7 +28,7 @@ import os
 
 # Sensor-specific libraries
 import sps30
-import scd30
+#import scd30
 
 # AWS libraries
 import boto3
