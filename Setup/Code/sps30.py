@@ -198,7 +198,7 @@ def readPMValues(pi,h):
   return data
 
 # Initializes the measurement
-def initialize(f_crc8,pi,h):
+def initialize():
   # Setting up communication
   PIGPIO_HOST = '127.0.0.1'
   I2C_SLAVE = 0x69
