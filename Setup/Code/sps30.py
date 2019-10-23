@@ -123,7 +123,7 @@ def startMeasurement(f_crc8,pi,h):
     if ret == True:
       return True
     eprint('startMeasurement unsuccessful, next try')
-    bigReset()
+    bigReset(pi,h)
   eprint('startMeasurement unsuccessful, giving up')
   return False
 
@@ -194,7 +194,7 @@ def printHuman(data):
 def readPMValues(pi,h):
   # READ MEASURED VALUES: 0x0300
   data = readFromAddr(0x03,0x00,59,pi,h)
-  #printHuman(data)
+  printHuman(data)
   return data
 
 # Initializes the measurement
