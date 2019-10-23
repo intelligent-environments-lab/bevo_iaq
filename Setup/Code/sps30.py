@@ -44,19 +44,19 @@ def eprint(*args, **kwargs):
   print(*args, file=sys.stderr, **kwargs)
   
 # Exits the program
-def exit_gracefully(a,b):
+def exit_gracefully(a,b,pi,h):
   print("\nexiting...")
-  stopMeasurement()
+  stopMeasurement(pi,h)
   pi.i2c_close(h)
   exit(0)
 
 # Calculates checksum
-def calcCRC(TwoBdataArray):
+def calcCRC(TwoBdataArray,f_crc8):
   byteData = ''.join(chr(x) for x in TwoBdataArray)
   return f_crc8(byteData)
 
 # Reads the number of bytes from i2c device and if the number matches the input, returns the data as bytes
-def readNBytes(n):
+def readNBytes(n,pi,h):
   '''
   Inputs:
     - n: integer specifying the number of bytes to read
@@ -75,7 +75,7 @@ def readNBytes(n):
     return False
 
 # Write the data as bytes to the device
-def i2cWrite(data):
+def i2cWrite(data,pi,h):
   '''
   Input:
     - data: an array of bytes (integer-array)
@@ -90,7 +90,7 @@ def i2cWrite(data):
   return True
 
 # Reads data given the i2c command and checks to see if the correct number of bytes are returned
-def readFromAddr(LowB,HighB,nBytes):
+def readFromAddr(LowB,HighB,nBytes,pi,h):
   '''
   Inputs:
     - LowB: two left-hand values from command
@@ -99,11 +99,11 @@ def readFromAddr(LowB,HighB,nBytes):
   Returns the data from the device or False otherwise
   '''
   for amount_tries in range(3):
-    ret = i2cWrite([LowB, HighB])
+    ret = i2cWrite([LowB, HighB],pi,h)
     if ret != True:
       eprint("readFromAddr: write try unsuccessful, next")
       continue
-    data = readNBytes(nBytes)
+    data = readNBytes(nBytes,pi,h)
     if data:
       return data
     eprint("error in readFromAddr: " + hex(LowB) + hex(HighB) + " " + str(nBytes) + "B did return Nothing")
@@ -111,7 +111,7 @@ def readFromAddr(LowB,HighB,nBytes):
   return False
 
 # Starts the measurement
-def startMeasurement():
+def startMeasurement(f_crc8,pi,h):
   '''
   Returns True is able to power up the device or False if not
   '''
@@ -119,7 +119,7 @@ def startMeasurement():
   for i in range(3):
     # START MEASUREMENT: 0x0010
     # READ MEASURED VALUES: 0x0300
-    ret = i2cWrite([0x00, 0x10, 0x03, 0x00, calcCRC([0x03,0x00])])
+    ret = i2cWrite([0x00, 0x10, 0x03, 0x00, calcCRC([0x03,0x00],f_crc8)],pi,h)
     if ret == True:
       return True
     eprint('startMeasurement unsuccessful, next try')
@@ -128,14 +128,14 @@ def startMeasurement():
   return False
 
 # Shuts down the device by writing [0x01, 0x04] to the device
-def stopMeasurement():
+def stopMeasurement(pi,h):
   # STOP MEASUREMENT: 0x0104
-  i2cWrite([0x01, 0x04])
+  i2cWrite([0x01, 0x04],pi,h)
 
 # Resets the device by writing [0xd3, 0x04] to the device
-def reset():
+def reset(pi,h):
   for i in range(5):
-    ret = i2cWrite([0xd3, 0x04])
+    ret = i2cWrite([0xd3, 0x04],pi,h)
     if ret == True:
       return True
     eprint('reset unsuccessful, next try in', str(0.2 * i) + 's')
@@ -144,8 +144,8 @@ def reset():
   return False
 
 # Checks to see if there is data available to read in
-def readDataReady():
-  data = readFromAddr(0x02, 0x02,3)
+def readDataReady(pi,h):
+  data = readFromAddr(0x02, 0x02,3,pi,h)
   if data == False:
     eprint("readDataReady: command unsuccessful")
     return -1
@@ -191,29 +191,77 @@ def printHuman(data):
   print("pm_typ: %f" % calcFloat(data[54:60]))
 
 # Reads data from the device and outputs it to the command line
-def readPMValues():
+def readPMValues(pi,h):
   # READ MEASURED VALUES: 0x0300
-  data = readFromAddr(0x03,0x00,59)
-  printHuman(data)
+  data = readFromAddr(0x03,0x00,59,pi,h)
+  #printHuman(data)
   return data
 
 # Initializes the measurement
-def initialize():
-  startMeasurement() or exit(1)
-  time.sleep(0.9)
+def initialize(f_crc8,pi,h):
+  # Setting up communication
+  PIGPIO_HOST = '127.0.0.1'
+  I2C_SLAVE = 0x69
+  I2C_BUS = 1
+
+  # Checking to see if device is found
+  deviceOnI2C = call("i2cdetect -y 1 0x69 0x69|grep '\--' -q", shell=True) # grep exits 0 if match found
+  if deviceOnI2C:
+    print("I2Cdetect found SPS30")
+  else:
+    print("SPS30 (0x69) not found on I2C bus")
+    exit(1)
+    
+  # Calls the exit_gracefully function when terminated from the command line
+  signal.signal(signal.SIGINT, exit_gracefully)
+  signal.signal(signal.SIGTERM, exit_gracefully)
+
+  # Checking to see if pigpio is connected - if not, the command to run it is done via a call
+  pi = pigpio.pi(PIGPIO_HOST)
+  if not pi.connected:
+    eprint("No connection to pigpio daemon at " + PIGPIO_HOST + ".")
+    try:
+      call("sudo pigpiod")
+      print("Connection to pigpio daemon successful")
+    except:
+      exit(1)
+  else:
+    print("Connection to pigpio daemon successful")
+
+  # Not sure...
+  try:
+    pi.i2c_close(0)
+  except:
+    if sys.exc_value and str(sys.exc_value) != "'unknown handle'":
+      eprint("Unknown error: ", sys.exc_type, ":", sys.exc_value)
+
+  # Opens connection between the RPi and the sensor
+  h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
+  f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
+
+  if len(sys.argv) > 1 and sys.argv[1] == "stop":
+    exit_gracefully(False,False,pi,h)
+    
+  reset(pi,h)
+  time.sleep(0.1) # note: needed after reset
+    
+  startMeasurement(f_crc8,pi,h) or exit(1)
+  
+  return pi, h
 
 # Big reset
-def bigReset():
-  global h
+def bigReset(pi,h_old):
   eprint('resetting...',end='')
-  pi.i2c_close(h)
+  pi.i2c_close(h_old)
   time.sleep(0.5)
+  I2C_SLAVE = 0x69
+  I2C_BUS = 1
   h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
   time.sleep(0.5)
-  reset()
+  reset(pi,h)
   time.sleep(0.1) # note: needed after reset
+  return h
 
-# ----- #
 # Setup 
 def sensorSetup():
 
@@ -258,41 +306,6 @@ def sensorSetup():
   f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
 
   if len(sys.argv) > 1 and sys.argv[1] == "stop":
-    exit_gracefully(False,False)
-
-# --------------- #
-# Data Collection #
-# --------------- #
-
-reset()
-time.sleep(0.1) # note: needed after reset
-
-initialize()
-
-# opening or creating the file (if it does not exist
-dt = datetime.now()
-filename = 'sps30_' + str(dt.year)+'-'+str(dt.month)+'-'+str(dt.day)+'_'+str(dt.hour)+'-'+str(dt.minute)+'-'+str(dt.second) + '.csv'
-with open('Data/'+filename,'wt') as f:
-  csv_writer = csv.writer(f)
-  csv_writer.writerow(['date','time',
-		       'pm0.5_count','pm1_count','pm2.5_count','pm4_count','pm10_count',
-		       'pm1_concentration','pm2.5_concentration','pm4_concentration','pm10_concentration'])
-	# data logging loop
-  while True:
-    ret = readDataReady()
-    if ret == -1:
-      eprint('resetting...',end='')
-      bigReset()
-      initialize()
-      continue
-
-    if ret == 0:
-      time.sleep(0.1)
-      continue
-
-    data = readPMValues()
-    # Writing to file (see header above for each calculation refers to)
-    csv_writer.writerow([time.strftime('%m/%d/%y'),time.strftime('%H:%M:%S'),
-			 calcFloat(data[24:30]),calcFloat(data[30:36]),calcFloat(data[36:42]),calcFloat(data[42:48]),calcFloat(data[48:54]),
-			 calcFloat(data),calcFloat(data[6:12]),calcFloat(data[12:18]),calcFloat(data[18:24])])
-    time.sleep(0.9)
+    exit_gracefully(False,False,pi,h)
+    
+  return pi,h,f_crc8
