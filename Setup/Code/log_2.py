@@ -1,42 +1,34 @@
 
 # ------------------------------------------------------------------------- #
-# log_2															  		    #
+# log_2															   #
 # ------------------------------------------------------------------------- #
 # Description: The log_2 python file is responsible for running the         #
-# Sensirion SPS30 and SCD30 sensors. Two user-created libraries are			#
+# Sensirion SPS30 and SCD30 sensors. Two user-created libraries are		   #
 # imported to create the sensor instances. An infinite loop runs that takes #
-# measurements from the sensors and stores it in a csv file	locally. Data	#
-# are pushed to an AWS S3 bucket periodically as well.						#		
-# ------------------------------------------------------------------------- #
-# The University of Texas at Austin											#
-# Intelligent Environments Laboratory (IEL)									#
-# Author: Hagen Fritz														#
-#	With notable contributions from:										#
-#	- Sepehr Bastami														#
-#	- Dr. William Waites													#
-#	- Kingsley Nweye														#
+# measurements from the sensors and stores it in a csv file	locally. Data	   #
+# are pushed to an AWS S3 bucket periodically as well.					   #		
+# -------------------------------------------------------------------------   #
+# The University of Texas at Austin								         #
+# Intelligent Environments Laboratory (IEL)								#
+# Author: Hagen Fritz													#
+#	With notable contributions from:									#
+#	- Sepehr Bastami													#
+#	- Dr. William Waites												#
+#	- Kingsley Nweye													#
 # Project: Indoor Environmental Quality and Sleep Quality					#
-# Email: hagenfritz@utexas.edu												#
+# Email: hagenfritz@utexas.edu											#
 # ------------------------------------------------------------------------- #	
 
 # General libraries
 import time
-import hashlib
 import logging
-import struct
-import sys
-import os, signal
-import subprocess
-from subprocess import call
-import pprint
 import datetime
 import csv
+import os
 
 # Sensor-specific libraries
 import sps30
 import scd30
-import pigpio 
-import crcmod
 
 # AWS libraries
 import boto3
@@ -75,31 +67,31 @@ filename_writer = {
 # Functions
 # ------------------------------------------------------------------------- #
 def sps30_scan():
-	'''
-	Measures different particulate matter counts and concentrations in the
-	room. Data are stored locally and to AWS S3 bucket.
-	Returns dictionary containing counts for 0.5, 1, 2.5 , 4, and 10 microns
-	in diameter and concentrations for 1, 2.5, 4, and 10 microns in diameter.
-	'''
+    '''
+    Measures different particulate matter counts and concentrations in the
+    room. Data are stored locally and to AWS S3 bucket.
+    Returns dictionary containing counts for 0.5, 1, 2.5 , 4, and 10 microns
+    in diameter and concentrations for 1, 2.5, 4, and 10 microns in diameter.
+    '''
+    
+    # Declare all global variables to be returned (n = count, c = concentration)
+    global pm_n, pm_c
 
-	# Declare all global variables to be returned (n = count, c = concentration)
-	global pm_n, pm_c
-
-	ret = sps30.readDataReady()
+    ret = sps30.readDataReady()
     if ret == -1:
       sps30.eprint('resetting...',end='')
       sps30.bigReset()
       sps30.initialize()
-
+    
     if ret == 0:
       time.sleep(0.1)
-
+    
     data = sps30.readPMValues()
 
-	pm_n = [sps30.calcFloat(data[24:30]),sps30.calcFloat(data[30:36]),sps30.calcFloat(data[36:42]),sps30.calcFloat(data[42:48]),sps30.calcFloat(data[48:54])]
-	pm_c = [calcFloat(data),calcFloat(data[6:12]),calcFloat(data[12:18]),calcFloat(data[18:24])]
+    pm_n = [sps30.calcFloat(data[24:30]),sps30.calcFloat(data[30:36]),sps30.calcFloat(data[36:42]),sps30.calcFloat(data[42:48]),sps30.calcFloat(data[48:54])]
+    pm_c = [sps30.calcFloat(data),sps30.calcFloat(data[6:12]),sps30.calcFloat(data[12:18]),sps30.calcFloat(data[18:24])]
 
-	return {'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],'pm_c_1':pm_c[0],'pm_c_2p5':pm_c[1],'pm_c_4':pm_c[2],'pm_c_10':pm_c[3]}
+    return {'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],'pm_c_1':pm_c[0],'pm_c_2p5':pm_c[1],'pm_c_4':pm_c[2],'pm_c_10':pm_c[3]}
 
 def scd30_scan():
 	'''
