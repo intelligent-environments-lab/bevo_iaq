@@ -76,17 +76,19 @@ def sps30_scan():
     
     # Declare all global variables to be returned (n = count, c = concentration)
     global pm_n, pm_c
+    
+    pi, h = sps30.initialize()
 
-    ret = sps30.readDataReady()
+    ret = sps30.readDataReady(pi,h)
     if ret == -1:
       sps30.eprint('resetting...',end='')
-      sps30.bigReset()
-      sps30.initialize()
+      sps30.bigReset(pi,h)
+      pi, h = sps30.initialize()
     
     if ret == 0:
       time.sleep(0.1)
     
-    data = sps30.readPMValues()
+    data = sps30.readPMValues(pi,h)
 
     pm_n = [sps30.calcFloat(data[24:30]),sps30.calcFloat(data[30:36]),sps30.calcFloat(data[36:42]),sps30.calcFloat(data[42:48]),sps30.calcFloat(data[48:54])]
     pm_c = [sps30.calcFloat(data),sps30.calcFloat(data[6:12]),sps30.calcFloat(data[12:18]),sps30.calcFloat(data[18:24])]
