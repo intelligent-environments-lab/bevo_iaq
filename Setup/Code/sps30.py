@@ -16,6 +16,7 @@
 #   Measurement Process:
 #   - readDataReady()
 #       - readFromAddr()
+#           - i2cWrite()
 #       - readNBytes()
 #   - ReadPMValues
 #       - readFromAddr()

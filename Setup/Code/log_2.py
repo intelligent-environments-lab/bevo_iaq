@@ -77,13 +77,14 @@ def sps30_scan():
     # Declare all global variables to be returned (n = count, c = concentration)
     global pm_n, pm_c
     
-    pi, h = sps30.initialize()
+    crc, pi, h = sps30.setupSensor()
+    sps30.initialize(crc,pi,h)
 
     ret = sps30.readDataReady(pi,h)
     if ret == -1:
         sps30.eprint('resetting...',end='')
-        sps30.bigReset(pi,h)
-        pi, h = sps30.initialize()
+        pi, h = sps30.bigReset(pi,h)
+        sps30.initialize(crc,pi,h)
     
     if ret == 0:
         time.sleep(0.1)
