@@ -66,7 +66,7 @@ filename_writer = {
 
 # Functions
 # ------------------------------------------------------------------------- #
-def sps30_scan():
+def sps30_scan(crc_sps, pi_sps, h_sps):
     '''
     Measures different particulate matter counts and concentrations in the
     room. Data are stored locally and to AWS S3 bucket.
@@ -77,10 +77,6 @@ def sps30_scan():
     # Declare all global variables to be returned (n = count, c = concentration)
     global pm_n, pm_c
     
-    crc, pi, h = sps30.setupSensor()
-    print("SCD30 set up properly with")
-    print("  handle:",h)
-    print("  pi:",pi)
     power_on = sps30.startMeasurement(crc,pi,h)
 
     if power_on:
@@ -111,7 +107,7 @@ def sps30_scan():
     pi.i2c_close(h)
     return {'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],'pm_c_1':pm_c[0],'pm_c_2p5':pm_c[1],'pm_c_4':pm_c[2],'pm_c_10':pm_c[3]}
 
-def scd30_scan():
+def scd30_scan(crc_scd, pi_scd, h_scd):
     '''
     Measures the carbon dioxide concentration, temperature, and relative
     humidity in the room. Data are stored locally and to AWS S3 bucket.
@@ -124,10 +120,6 @@ def scd30_scan():
     global co2, tc, rh
     
     try:
-        crc, pi, h = scd30.setupSensor()
-        print("SCD30 set up properly with")
-        print("  handle:",h)
-        print("  pi:",pi)
         
         co2, tc, rh = scd30.calcCO2Values(pi,h,5)
         
@@ -270,6 +262,16 @@ def main():
     return: void
     '''
     print('Running IAQ Beacon\n')
+    
+    crc_sps, pi_sps, h_sps = sps30.setupSensor()
+    print("SCD30 set up properly with")
+    print("  handle:",h_sps)
+    print("  pi:",pi_sps)
+    
+    crc_scd, pi_scd, h_scd = scd30.setupSensor()
+    print("SCD30 set up properly with")
+    print("  handle:",h_scd)
+    print("  pi:",pi_scd)
 
     # Begin loop for sensor scans
     i = 1
@@ -278,11 +280,11 @@ def main():
         try:
             # SPS30 scan
             print('Running SPS30 (pm) scan...')
-            sps30_scan()
+            sps30_scan(crc_sps, pi_sps, h_sps)
 
             # SCD30 scan
             print('Running SCD30 (T,RH,CO2) scan...')
-            scd30_scan()
+            scd30_scan(crc_scd, pi_scd, h_scd)
         except OSError as e:
                 print('OSError for I/O on a sensor. sleeping 10 seconds...')
                 time.sleep(10)
