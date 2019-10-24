@@ -92,11 +92,11 @@ def setupSensor():
     
 def startMeasurement(f_crc8, pi, h):
     '''
-    Starts the measurement sequence and sets the measurement interval
+    Starts the measurement sequence and sets the measurement interval to 2
     '''
-    setMeasInterval(1,pi,h)
+    setMeasInterval(pi,h)
 
-def setMeasInterval(interval,pi,h):
+def setMeasInterval(pi,h):
     '''
     Sets the measurement interval
     '''
@@ -105,15 +105,10 @@ def setMeasInterval(interval,pi,h):
         eprint("setMeasInterval: command unsuccesful")
         exit(1)
 
-    if read_meas_result != interval:
+    if read_meas_result != 2:
     # if not the specified interval, set it
-        eprint("setMeasInterval: setting interval to",interval)
-        if interval == 1:
-            ret = i2cWrite([0x46, 0x00, 0x00, 0x01, 0xE3],pi,h)
-        elif interval == 2:
-            ret = i2cWrite([0x46, 0x00, 0x00, 0x02, 0xE3],pi,h)
-        else:
-            ret = i2cWrite([0x46, 0x00, 0x00, 0x05, 0xE3],pi,h)
+        eprint("setMeasInterval: setting interval to",2)
+        ret = i2cWrite([0x46, 0x00, 0x00, 0x02, 0xE3],pi,h)
         if ret == -1:
             exit(1)
         readMeasInterval(pi,h)
@@ -170,7 +165,7 @@ def readDataReady(pi,h):
         print("readDataReady: data found")
         return 1
     else:
-        eprint("readDataReady: no data available; saving dummy values")
+        eprint("readDataReady: no data available")
         return 0
     
 def readFromAddr(LowB,HighB,nBytes,pi,h):
@@ -219,6 +214,29 @@ def readCO2Values(pi,h):
     data = readFromAddr(0x03,0x00,18,pi,h)
     printHuman(data)
     return data
+
+def calcCO2Values(pi,h):
+    co2s = []
+    tcs = []
+    rhs = []
+    while len(rhs) < 5:
+        ret = readDataReady(pi,h)
+        if ret == 0:
+            wait_time = 2
+            print("  Waiting for",wait_time, "second(s) and checking again")
+            time.sleep(wait_time)
+            
+        elif ret == 1:
+            data = readCO2Values(pi,h)
+            co2s.append(calcFloat(data,[0,1,3,4]))
+            tcs.append(calcFloat(data,[6,7,9,10]))
+            rhs.append(calcFloat(data,[12,13,15,16]))
+            
+        else:
+            eprint('resetting...',end='')
+            pi, h = bigReset(pi,h)
+    
+    return sum(co2s)/float(len(co2s)),sum(tcs)/float(len(tcs)),sum(rhs)/float(len(rhs))
 
 # Helper Functions
 # --------------------------------------------------------------------------- #
