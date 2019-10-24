@@ -81,14 +81,22 @@ def setupSensor():
         # Opens connection between the RPi and the sensor with handle h
         h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
         f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
+        
+        startMeasurement(f_crc8, pi, h)
       
         return f_crc8, pi, h
 
     else:
         print("SCD30 (0x61) not found on I2C bus")
         return False
+    
+def startMeasurement(f_crc8, pi, h):
+    '''
+    Starts the measurement sequence and sets the measurement interval
+    '''
+    setMeasInterval(1,pi,h)
 
-def setMeasInterval(pi,h,interval):
+def setMeasInterval(interval,pi,h):
     '''
     Sets the measurement interval
     '''
