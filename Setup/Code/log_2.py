@@ -78,13 +78,13 @@ def sps30_scan():
     global pm_n, pm_c
     
     crc, pi, h = sps30.setupSensor()
-    sps30.startMeasurement(crc,pi,h)
+    #sps30.startMeasurement(crc,pi,h)
 
     ret = sps30.readDataReady(pi,h)
     if ret == -1:
         sps30.eprint('resetting...',end='')
         pi, h = sps30.bigReset(pi,h)
-        sps30.startMeasurement(crc,pi,h)
+        #sps30.startMeasurement(crc,pi,h)
     
     if ret == 0:
         time.sleep(0.1)
@@ -119,12 +119,14 @@ def scd30_scan():
         
     if ret == 0:
         time.sleep(0.1)
-        
-    data = scd30.readCO2Values(pi,h)
-    
-    co2 = scd30.calcFloat(data,[0,1,3,4])
-    tc = scd30.calcFloat(data,[6,7,9,10])
-    rh = scd30.calcFloat(data,[12,13,15,16])
+        data = scd30.readCO2Values(pi,h)
+        co2 = scd30.calcFloat(data,[0,1,3,4])
+        tc = scd30.calcFloat(data,[6,7,9,10])
+        rh = scd30.calcFloat(data,[12,13,15,16])
+    else:
+        co2 = 0
+        tc = 0
+        rh = 0
 
     return {'CO2':co2,'TC':tc,'RH':rh}
 

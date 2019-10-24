@@ -59,9 +59,9 @@ def setupSensor():
     # Checking to see if device is found
     deviceOnI2C = call("i2cdetect -y 1 0x61 0x61|grep '\--' -q", shell=True) # grep exits 0 if match found
     if deviceOnI2C:
-        print("I2Cdetect found SPS30")
+        print("I2Cdetect found SCD30")
     else:
-        print("SPS30 (0x61) not found on I2C bus")
+        print("SCD30 (0x61) not found on I2C bus")
         exit(1)
     
     # Calls the exit_gracefully function when terminated from the command line
@@ -92,9 +92,6 @@ def setupSensor():
 
     if len(sys.argv) > 1 and sys.argv[1] == "stop":
         exit_gracefully(False,False,pi,h)
-    
-    #reset(pi,h)
-    #time.sleep(0.1) # note: needed after reset
   
     return f_crc8, pi, h
 

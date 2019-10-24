@@ -105,7 +105,7 @@ def startMeasurement(f_crc8,pi,h):
     or False if not
     '''
     ret = -1
-    for i in range(3):
+    for i in range(2):
         # START MEASUREMENT: 0x0010
         # READ MEASURED VALUES: 0x0300
         ret = i2cWrite([0x00, 0x10, 0x03, 0x00, calcCRC([0x03,0x00],f_crc8)],pi,h)
@@ -218,7 +218,7 @@ def reset(pi,h):
     '''
     Tries to reset the device by writing [0xd3, 0x04] (reset command) to the it
     '''
-    for i in range(3):
+    for i in range(2):
         ret = i2cWrite([0xd3, 0x04],pi,h)
         if ret == True:
             return True
