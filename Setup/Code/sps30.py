@@ -223,7 +223,9 @@ def calcPMValues(pi,h,n):
             
         loop_count += 1
         
-    return pm_n/5, pm_c/5
+    pm_n_new = [x / n for x in pm_n]
+    pm_c_new = [x / n for x in pm_c]
+    return pm_n_new, pm_c_new
 
 # Helper Functions
 # --------------------------------------------------------------------------- #

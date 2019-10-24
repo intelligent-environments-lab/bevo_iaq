@@ -95,6 +95,7 @@ def startMeasurement(f_crc8, pi, h):
     Starts the measurement sequence and sets the measurement interval to 2
     '''
     setMeasInterval(pi,h)
+    # Add the command for continuous measurement?
 
 def setMeasInterval(pi,h):
     '''
@@ -126,7 +127,6 @@ def readMeasInterval(pi,h):
     if count == 3:
         if len(data) == 3:
             interval = int(data[0])*256 + int(data[1])
-            print(interval)
             return interval
         else:
             eprint("readMeasInterval: no array len 3 returned, instead " + str(len(data)) + "type: " + str(type(data)))
