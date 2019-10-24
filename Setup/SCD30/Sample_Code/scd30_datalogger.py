@@ -85,11 +85,10 @@ def i2cWrite(data):
   return True
 
 
-def read_meas_interval():
+def readMeasInterval():
 	ret = i2cWrite([0x46, 0x00])
 	if ret == -1:
 		return -1
-
 	try:
 		(count, data) = pi.i2c_read_device(h, 3)
 	except:
@@ -99,7 +98,6 @@ def read_meas_interval():
 	if count == 3:
 		if len(data) == 3:
 			interval = int(data[0])*256 + int(data[1])
-			#print "measurement interval: " + str(interval) + "s, checksum " + str(data[2])
 			return interval
 		else:
 			eprint("error: no array len 3 returned, instead " + str(len(data)) + "type: " + str(type(data)))
@@ -108,17 +106,21 @@ def read_meas_interval():
   
 	return -1
 
-read_meas_result = read_meas_interval()
-if read_meas_result == -1:
-	exit(1)
+def setMeasInterval():
+    '''
+    Sets the measurement interval
+    '''
+    read_meas_result = readMeasInterval()
+    if read_meas_result == -1:
+        exit(1)
 
-if read_meas_result != 2:
-# if not every 2s, set it
-	eprint("setting interval to 2")
-	ret = i2cWrite([0x46, 0x00, 0x00, 0x02, 0xE3])
-  	if ret == -1:
-    		exit(1)
-  	read_meas_interval()
+    if read_meas_result != 2:
+    # if not every 2s, set it
+        eprint("setting interval to 2")
+        ret = i2cWrite([0x46, 0x00, 0x00, 0x02, 0xE3])
+        if ret == -1:
+            exit(1)
+        readMeasInterval()
 
 
 #trigger cont meas

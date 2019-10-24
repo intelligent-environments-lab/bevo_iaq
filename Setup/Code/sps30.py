@@ -7,6 +7,7 @@
 # Description: This module includes all the relevant functions to properly use
 # the Sensirion SPS30 Sensor. To take a measurement, the following functions
 # are run in this order:
+#
 #   Start-Up Process:
 #   - setupSensor()
 #   - initialize()
@@ -21,6 +22,13 @@
 #   - ReadPMValues
 #       - readFromAddr()
 #       - readNBytes()
+# --------------------------------------------------------------------------- #
+# The University of Texas at Austin								         
+# Intelligent Environments Laboratory (IEL)								
+# Author: Hagen Fritz												
+# Project: Indoor Environmental Quality and Sleep Quality					
+# Email: hagenfritz@utexas.edu											
+# --------------------------------------------------------------------------- #	
 
 from __future__ import print_function
 
