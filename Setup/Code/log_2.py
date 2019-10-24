@@ -78,13 +78,13 @@ def sps30_scan():
     global pm_n, pm_c
     
     crc, pi, h = sps30.setupSensor()
-    sps30.initialize(crc,pi,h)
+    sps30.startMeasurement(crc,pi,h)
 
     ret = sps30.readDataReady(pi,h)
     if ret == -1:
         sps30.eprint('resetting...',end='')
         pi, h = sps30.bigReset(pi,h)
-        sps30.initialize(crc,pi,h)
+        sps30.startMeasurement(crc,pi,h)
     
     if ret == 0:
         time.sleep(0.1)
