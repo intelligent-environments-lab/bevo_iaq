@@ -88,42 +88,49 @@ def setupSensor():
         print("SCD30 (0x61) not found on I2C bus")
         return False
 
-def setMeasInterval(pi,h):
+def setMeasInterval(pi,h,interval):
     '''
     Sets the measurement interval
     '''
     read_meas_result = readMeasInterval(pi,h)
     if read_meas_result == -1:
+        eprint("setMeasInterval: command unsuccesful")
         exit(1)
 
-    if read_meas_result != 2:
-    # if not every 2s, set it
-        eprint("setting interval to 2")
-        ret = i2cWrite([0x46, 0x00, 0x00, 0x02, 0xE3],pi,h)
+    if read_meas_result != interval:
+    # if not the specified interval, set it
+        eprint("setMeasInterval: setting interval to",interval)
+        if interval == 1:
+            ret = i2cWrite([0x46, 0x00, 0x00, 0x01, 0xE3],pi,h)
+        elif interval == 2:
+            ret = i2cWrite([0x46, 0x00, 0x00, 0x02, 0xE3],pi,h)
+        else:
+            ret = i2cWrite([0x46, 0x00, 0x00, 0x05, 0xE3],pi,h)
         if ret == -1:
             exit(1)
         readMeasInterval(pi,h)
         
 def readMeasInterval(pi,h):
-	ret = i2cWrite([0x46, 0x00],pi,h)
-	if ret == -1:
-		return -1
-	try:
-		(count, data) = pi.i2c_read_device(h, 3)
-	except:
-		eprint("error: i2c_read failed")
-		exit(1)
+    ret = i2cWrite([0x46, 0x00],pi,h)
+    if ret == -1:
+        return -1
+    try:
+        (count, data) = pi.i2c_read_device(h, 3)
+    except:
+        eprint("readMeasInterval: i2c_read failed")
+        return -1
 
-	if count == 3:
-		if len(data) == 3:
-			interval = int(data[0])*256 + int(data[1])
-			return interval
-		else:
-			eprint("error: no array len 3 returned, instead " + str(len(data)) + "type: " + str(type(data)))
-	else:
-		"error: read measurement interval didnt return 3B"
+    if count == 3:
+        if len(data) == 3:
+            interval = int(data[0])*256 + int(data[1])
+            print(interval)
+            return interval
+        else:
+            eprint("readMeasInterval: no array len 3 returned, instead " + str(len(data)) + "type: " + str(type(data)))
+    else:
+        eprint("readMeasInterval: read measurement interval didnt return 3B")
   
-	return -1
+    return -1
 
 def i2cWrite(data,pi,h):
     '''
@@ -152,6 +159,7 @@ def readDataReady(pi,h):
         eprint("readDataReady: command unsuccessful")
         return -1
     if data and data[1]:
+        print("readDataReady: data found")
         return 1
     else:
         eprint("readDataReady: no data available; saving dummy values")
@@ -187,7 +195,7 @@ def readNBytes(n,pi,h):
         (count, data) = pi.i2c_read_device(h, n)
     except:
         eprint("error: i2c_read failed")
-        exit(1)
+        return False
 
     if count == n:
         return data

@@ -111,7 +111,9 @@ def scd30_scan():
     
     try:
         crc, pi, h = scd30.setupSensor()
-        print("SCD30 set up properly with\n\t handle:",h,"\n\t pi:",pi)
+        print("SCD30 set up properly with")
+        print("  handle:",h)
+        print("  pi:",pi)
         
         ret = scd30.readDataReady(pi,h)
         if ret == -1:
