@@ -154,6 +154,7 @@ def readDataReady(pi,h):
     if data and data[1]:
         return 1
     else:
+        eprint("readDataReady: no data available; saving dummy values")
         return 0
     
 def readFromAddr(LowB,HighB,nBytes,pi,h):

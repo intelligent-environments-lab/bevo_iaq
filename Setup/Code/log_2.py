@@ -111,20 +111,25 @@ def scd30_scan():
     
     try:
         crc, pi, h = scd30.setupSensor()
-        print('SCD30 set up properly with\n\thandle:',h,'\n\tpi:',pi)
+        print("SCD30 set up properly with\n\t handle:",h,"\n\t pi:",pi)
         
         ret = scd30.readDataReady(pi,h)
         if ret == -1:
             scd30.eprint('resetting...',end='')
             pi, h = scd30.bigReset(pi,h)
-            exit(1)
             
-        if ret == 0:
+        elif ret == 0:
             time.sleep(0.1)
+            co2 = 0
+            tc = 0
+            rh = 0
+            
+        elif ret == 1:
             data = scd30.readCO2Values(pi,h)
             co2 = scd30.calcFloat(data,[0,1,3,4])
             tc = scd30.calcFloat(data,[6,7,9,10])
             rh = scd30.calcFloat(data,[12,13,15,16])
+            
         else:
             co2 = 0
             tc = 0
@@ -275,7 +280,7 @@ def main():
         try:
             # SPS30 scan
             print('Running SPS30 (pm) scan...')
-            sps30_scan()
+            #sps30_scan()
 
             # SCD30 scan
             print('Running SCD30 (T,RH,CO2) scan...')
