@@ -152,7 +152,7 @@ def scd30_scan():
                 tc = 0
                 rh = 0
         else:
-            scd30.calcCO2Values(pi,h)
+            co2, tc, rh = scd30.calcCO2Values(pi,h)
     except:
         print('Problem opening connection to SCD30')
         co2 = 0
