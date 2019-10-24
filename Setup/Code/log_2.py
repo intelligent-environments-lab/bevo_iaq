@@ -81,20 +81,25 @@ def sps30_scan():
     #sps30.startMeasurement(crc,pi,h)
 
     ret = sps30.readDataReady(pi,h)
-    if ret == -1:
-        sps30.eprint('resetting...',end='')
-        pi, h = sps30.bigReset(pi,h)
-        #sps30.startMeasurement(crc,pi,h)
-    
-    if ret == 0:
-        time.sleep(0.1)
-        data = sps30.readPMValues(pi,h)
-        pm_n = [sps30.calcFloat(data[24:30]),sps30.calcFloat(data[30:36]),sps30.calcFloat(data[36:42]),sps30.calcFloat(data[42:48]),sps30.calcFloat(data[48:54])]
-        pm_c = [sps30.calcFloat(data),sps30.calcFloat(data[6:12]),sps30.calcFloat(data[12:18]),sps30.calcFloat(data[18:24])]
+    old = False
+    if old:
+        if ret == -1:
+            sps30.eprint('resetting...',end='')
+            pi, h = sps30.bigReset(pi,h)
+            #sps30.startMeasurement(crc,pi,h)
+        
+        if ret == 0:
+            time.sleep(0.1)
+            data = sps30.readPMValues(pi,h)
+            pm_n = [sps30.calcFloat(data[24:30]),sps30.calcFloat(data[30:36]),sps30.calcFloat(data[36:42]),sps30.calcFloat(data[42:48]),sps30.calcFloat(data[48:54])]
+            pm_c = [sps30.calcFloat(data),sps30.calcFloat(data[6:12]),sps30.calcFloat(data[12:18]),sps30.calcFloat(data[18:24])]
+        else:
+            pm_n = [0,0,0,0,0]
+            pm_c = [0,0,0,0]
     else:
-        pm_n = [0,0,0,0,0]
-        pm_c = [0,0,0,0]
+        pm_n, pm_c = sps30.calcPMValues(pi,h,5)    
 
+    pi.i2c_close(h)
     return {'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],'pm_c_1':pm_c[0],'pm_c_2p5':pm_c[1],'pm_c_4':pm_c[2],'pm_c_10':pm_c[3]}
 
 def scd30_scan():
@@ -123,6 +128,7 @@ def scd30_scan():
         tc = -100
         rh = -100
 
+    pi.i2c_close(h)
     return {'CO2':co2,'TC':tc,'RH':rh}
 
 def data_mgmt():
