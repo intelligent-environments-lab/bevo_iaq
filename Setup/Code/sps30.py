@@ -63,10 +63,6 @@ def setupSensor():
     else:
         print("SPS30 (0x69) not found on I2C bus")
         exit(1)
-    
-    # Calls the exit_gracefully function when terminated from the command line
-    signal.signal(signal.SIGINT, exit_gracefully)
-    signal.signal(signal.SIGTERM, exit_gracefully)
 
     # Checking to see if pigpio is connected - if not, the command to run it is done via a call
     pi = pigpio.pi(PIGPIO_HOST)
@@ -80,22 +76,14 @@ def setupSensor():
     else:
         print("Connection to pigpio daemon successful")
 
-    # Not sure...
     try:
         pi.i2c_close(0)
     except:
-        if sys.exc_value and str(sys.exc_value) != "'unknown handle'":
-            eprint("Unknown error: ", sys.exc_type, ":", sys.exc_value)
+        print("Could not close connection on handle 0")
 
     # Opens connection between the RPi and the sensor
     h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
     f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
-
-    if len(sys.argv) > 1 and sys.argv[1] == "stop":
-        exit_gracefully(False,False,pi,h)
-    
-    reset(pi,h)
-    time.sleep(0.1) # note: needed after reset
   
     return f_crc8, pi, h
 
@@ -104,7 +92,6 @@ def startMeasurement(f_crc8,pi,h):
     Returns True if able to power up the device and connect to the sensor
     or False if not
     '''
-    ret = -1
     for i in range(2):
         # START MEASUREMENT: 0x0010
         # READ MEASURED VALUES: 0x0300
@@ -195,6 +182,48 @@ def readPMValues(pi,h):
     data = readFromAddr(0x03,0x00,59,pi,h)
     printHuman(data)
     return data
+
+def calcPMValues(pi,h,n):
+    '''
+    
+    '''
+    pm_n = [0,0,0,0,0]
+    pm_c = [0,0,0,0]
+    sum_count = 0
+    loop_count = 0
+    max_loops = n*4
+    while sum_count < n:
+        if loop_count == max_loops:
+            break
+        ret = readDataReady(pi,h)
+        if ret == 0:
+            wait_time = 2
+            print("  Waiting for",wait_time, "second(s) and checking again")
+            print("  Loops left to check for data:",max_loops-loop_count)
+            time.sleep(wait_time)
+            
+        elif ret == 1:
+            sum_count += 1
+            data = readPMValues(pi,h)
+            # Number
+            pm_n[0] += calcFloat(data[24:30])
+            pm_n[1] += calcFloat(data[30:36])
+            pm_n[2] += calcFloat(data[36:42])
+            pm_n[3] += calcFloat(data[42:48])
+            pm_n[4] += calcFloat(data[48:54])
+            # Concentration
+            pm_c[0] = calcFloat(data)
+            pm_c[1] = calcFloat(data[6:12])
+            pm_c[2] = calcFloat(data[12:18])
+            pm_c[3] = calcFloat(data[18:24])
+            
+        else:
+            eprint('resetting...',end='')
+            pi, h = bigReset(pi,h)
+            
+        loop_count += 1
+        
+    return pm_n/5, pm_c/5
 
 # Helper Functions
 # --------------------------------------------------------------------------- #
