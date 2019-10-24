@@ -215,15 +215,28 @@ def readCO2Values(pi,h):
     printHuman(data)
     return data
 
-def calcCO2Values(pi,h):
+def calcCO2Values(pi,h,n):
+    '''
+    Takes an average of n measurements and returns the CO2 concetration,
+    temperature in C, and relative humidity as a percent. The default
+    measurement interval for the SCD30 is 2 seconds, meaning that the time for
+    this code to execute should be approximately 2*n seconds. A loop counter
+    ensures that if there is a problem communicating with the sensor, that we 
+    don't get stuck in an infinite loop.
+    '''
     co2s = []
     tcs = []
     rhs = []
-    while len(rhs) < 5:
+    loop_count = 0
+    max_loops = n*4
+    while len(rhs) < n:
+        if loop_count == max_loops:
+            break
         ret = readDataReady(pi,h)
         if ret == 0:
             wait_time = 2
             print("  Waiting for",wait_time, "second(s) and checking again")
+            print("  Loops left to check for data:",max_loops-loop_count)
             time.sleep(wait_time)
             
         elif ret == 1:
@@ -235,6 +248,8 @@ def calcCO2Values(pi,h):
         else:
             eprint('resetting...',end='')
             pi, h = bigReset(pi,h)
+            
+        loop_count += 1
     
     return sum(co2s)/float(len(co2s)),sum(tcs)/float(len(tcs)),sum(rhs)/float(len(rhs))
 
@@ -286,6 +301,6 @@ def printHuman(data):
         - data: string of digits holding the measured data
     Prints the data to the terminal screen
     '''
-    print("gas_ppm{sensor=\"SCD30\",gas=\"CO2\"} %f" % calcFloat(data,[0,1,3,4]))
-    print("temperature_degC{sensor=\"SCD30\"} %f" % calcFloat(data,[6,7,9,10]))
-    print("humidity_rel_percent{sensor=\"SCD30\"} %f" % calcFloat(data,[12,13,15,16]))
+    print("  CO2: %f" % calcFloat(data,[0,1,3,4]))
+    print("  TC: %f" % calcFloat(data,[6,7,9,10]))
+    print("  RH: %f" % calcFloat(data,[12,13,15,16]))

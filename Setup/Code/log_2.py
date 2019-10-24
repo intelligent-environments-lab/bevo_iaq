@@ -115,49 +115,13 @@ def scd30_scan():
         print("  handle:",h)
         print("  pi:",pi)
         
-        old = False
-        if old == True:
-            ret = scd30.readDataReady(pi,h)
-            if ret == -1:
-                scd30.eprint('resetting...',end='')
-                pi, h = scd30.bigReset(pi,h)
-                
-            elif ret == 0:
-                wait_time = 2
-                print("  Waiting for",wait_time, "second(s) and checking again")
-                time.sleep(wait_time)
-                ret = scd30.readDataReady(pi,h)
-                if ret == -1:
-                    scd30.eprint('resetting...',end='')
-                    pi, h = scd30.bigReset(pi,h)
-                elif ret == 1:
-                    data = scd30.readCO2Values(pi,h)
-                    co2 = scd30.calcFloat(data,[0,1,3,4])
-                    tc = scd30.calcFloat(data,[6,7,9,10])
-                    rh = scd30.calcFloat(data,[12,13,15,16])
-                else:
-                    print("  Saving dummy values")
-                    co2 = 0
-                    tc = 0
-                    rh = 0
-                
-            elif ret == 1:
-                data = scd30.readCO2Values(pi,h)
-                co2 = scd30.calcFloat(data,[0,1,3,4])
-                tc = scd30.calcFloat(data,[6,7,9,10])
-                rh = scd30.calcFloat(data,[12,13,15,16])
-                
-            else:
-                co2 = 0
-                tc = 0
-                rh = 0
-        else:
-            co2, tc, rh = scd30.calcCO2Values(pi,h)
+        co2, tc, rh = scd30.calcCO2Values(pi,h,5)
+        
     except:
-        print('Problem opening connection to SCD30')
-        co2 = 0
-        tc = 0
-        rh = 0
+        print('Problem opening connection to SCD30; saving dummy values')
+        co2 = -100
+        tc = -100
+        rh = -100
 
     return {'CO2':co2,'TC':tc,'RH':rh}
 
