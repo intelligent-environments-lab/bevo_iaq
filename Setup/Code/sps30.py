@@ -98,12 +98,6 @@ def setupSensor():
     time.sleep(0.1) # note: needed after reset
   
     return f_crc8, pi, h
-    
-def initialize(f_crc8,pi,h):
-    '''
-    Initializes the sensor and the measurement
-    '''
-    startMeasurement(f_crc8,pi,h) or exit(1)
 
 def startMeasurement(f_crc8,pi,h):
     '''
@@ -224,7 +218,7 @@ def reset(pi,h):
     '''
     Tries to reset the device by writing [0xd3, 0x04] (reset command) to the it
     '''
-    for i in range(5):
+    for i in range(3):
         ret = i2cWrite([0xd3, 0x04],pi,h)
         if ret == True:
             return True
