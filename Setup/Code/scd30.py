@@ -60,41 +60,33 @@ def setupSensor():
     deviceOnI2C = call("i2cdetect -y 1 0x61 0x61|grep '\--' -q", shell=True) # grep exits 0 if match found
     if deviceOnI2C:
         print("I2Cdetect found SCD30")
+
+        # Checking to see if pigpio is connected - if not, the command to run it is done via a call
+        pi = pigpio.pi(PIGPIO_HOST)
+        if not pi.connected:
+            eprint("No connection to pigpio daemon at " + PIGPIO_HOST + ".")
+            try:
+                call("sudo pigpiod")
+                print("Connection to pigpio daemon successful")
+            except:
+                exit(1)
+        else:
+            print("Connection to pigpio daemon successful")
+    
+        try:
+            pi.i2c_close(0)
+        except:
+            print("Could not close connection on handle 0")
+    
+        # Opens connection between the RPi and the sensor with handle h
+        h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
+        f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
+      
+        return f_crc8, pi, h
+
     else:
         print("SCD30 (0x61) not found on I2C bus")
-        exit(1)
-    
-    # Calls the exit_gracefully function when terminated from the command line
-    signal.signal(signal.SIGINT, exit_gracefully)
-    signal.signal(signal.SIGTERM, exit_gracefully)
-
-    # Checking to see if pigpio is connected - if not, the command to run it is done via a call
-    pi = pigpio.pi(PIGPIO_HOST)
-    if not pi.connected:
-        eprint("No connection to pigpio daemon at " + PIGPIO_HOST + ".")
-        try:
-            call("sudo pigpiod")
-            print("Connection to pigpio daemon successful")
-        except:
-            exit(1)
-    else:
-        print("Connection to pigpio daemon successful")
-
-    try:
-        pi.i2c_close(0)
-    except:
-        if sys.exc_value and str(sys.exc_value) != "'unknown handle'":
-            eprint("Unknown error: ", sys.exc_type, ":", sys.exc_value)
-
-    # Opens connection between the RPi and the sensor
-    h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
-    print(h)
-    f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
-
-    if len(sys.argv) > 1 and sys.argv[1] == "stop":
-        exit_gracefully(False,False,pi,h)
-  
-    return f_crc8, pi, h
+        return False
 
 def setMeasInterval(pi,h):
     '''
@@ -220,14 +212,6 @@ def eprint(*args, **kwargs):
     '''
     print(*args, file=sys.stderr, **kwargs)
   
-def exit_gracefully(a,b,pi,h):
-    '''
-    Exits the program gracefully upon user command
-    '''
-    print("\nexiting...")
-    #stopMeasurement(pi,h)
-    pi.i2c_close(h)
-    exit(0)
     
 def bigReset(pi,h_old):
     '''

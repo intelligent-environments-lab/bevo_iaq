@@ -109,21 +109,28 @@ def scd30_scan():
     # Declare all global variables to be returned
     global co2, tc, rh
     
-    crc, pi, h = scd30.setupSensor()
-    
-    ret = scd30.readDataReady(pi,h)
-    if ret == -1:
-        scd30.eprint('resetting...',end='')
-        pi, h = scd30.bigReset(pi,h)
-        exit(1)
+    try:
+        crc, pi, h = scd30.setupSensor()
+        print('SCD30 set up properly with\n\thandle:',h,'\n\tpi:',pi)
         
-    if ret == 0:
-        time.sleep(0.1)
-        data = scd30.readCO2Values(pi,h)
-        co2 = scd30.calcFloat(data,[0,1,3,4])
-        tc = scd30.calcFloat(data,[6,7,9,10])
-        rh = scd30.calcFloat(data,[12,13,15,16])
-    else:
+        ret = scd30.readDataReady(pi,h)
+        if ret == -1:
+            scd30.eprint('resetting...',end='')
+            pi, h = scd30.bigReset(pi,h)
+            exit(1)
+            
+        if ret == 0:
+            time.sleep(0.1)
+            data = scd30.readCO2Values(pi,h)
+            co2 = scd30.calcFloat(data,[0,1,3,4])
+            tc = scd30.calcFloat(data,[6,7,9,10])
+            rh = scd30.calcFloat(data,[12,13,15,16])
+        else:
+            co2 = 0
+            tc = 0
+            rh = 0
+    except:
+        print('Problem opening connection to SCD30')
         co2 = 0
         tc = 0
         rh = 0
