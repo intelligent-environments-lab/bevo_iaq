@@ -66,7 +66,7 @@ filename_writer = {
 
 # Functions
 # ------------------------------------------------------------------------- #
-def sps30_scan(crc_sps, pi_sps, h_sps):
+def sps30_scan(crc, pi, h):
     '''
     Measures different particulate matter counts and concentrations in the
     room. Data are stored locally and to AWS S3 bucket.
@@ -107,7 +107,7 @@ def sps30_scan(crc_sps, pi_sps, h_sps):
     pi.i2c_close(h)
     return {'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],'pm_c_1':pm_c[0],'pm_c_2p5':pm_c[1],'pm_c_4':pm_c[2],'pm_c_10':pm_c[3]}
 
-def scd30_scan(crc_scd, pi_scd, h_scd):
+def scd30_scan(crc, pi, h):
     '''
     Measures the carbon dioxide concentration, temperature, and relative
     humidity in the room. Data are stored locally and to AWS S3 bucket.
