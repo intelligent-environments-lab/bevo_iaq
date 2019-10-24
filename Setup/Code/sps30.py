@@ -318,9 +318,9 @@ def printHuman(data):
         - data: string of digits holding the measured data
     Prints the data to the terminal screen
     '''
-    print("pm0.5 count: %f" % calcFloat(data[24:30]))
-    print("pm1   count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[30:36]), calcFloat(data) ) )
-    print("pm2.5 count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[36:42]), calcFloat(data[6:12]) ) )
-    print("pm4   count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[42:48]), calcFloat(data[12:18]) ) )
-    print("pm10  count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[48:54]), calcFloat(data[18:24]) ) )
-    print("pm_typ: %f" % calcFloat(data[54:60]))
+    print("  pm0.5 count: %f" % calcFloat(data[24:30]))
+    print("  pm1   count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[30:36]), calcFloat(data) ) )
+    print("  pm2.5 count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[36:42]), calcFloat(data[6:12]) ) )
+    print("  pm4   count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[42:48]), calcFloat(data[12:18]) ) )
+    print("  pm10  count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[48:54]), calcFloat(data[18:24]) ) )
+    print("  pm_typ: %f" % calcFloat(data[54:60]))
