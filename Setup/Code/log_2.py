@@ -81,12 +81,12 @@ def sps30_scan():
 
     ret = sps30.readDataReady(pi,h)
     if ret == -1:
-      sps30.eprint('resetting...',end='')
-      sps30.bigReset(pi,h)
-      pi, h = sps30.initialize()
+        sps30.eprint('resetting...',end='')
+        sps30.bigReset(pi,h)
+        pi, h = sps30.initialize()
     
     if ret == 0:
-      time.sleep(0.1)
+        time.sleep(0.1)
     
     data = sps30.readPMValues(pi,h)
 
