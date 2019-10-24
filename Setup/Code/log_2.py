@@ -280,7 +280,7 @@ def main():
         try:
             # SPS30 scan
             print('Running SPS30 (pm) scan...')
-            #sps30_scan()
+            sps30_scan()
 
             # SCD30 scan
             print('Running SCD30 (T,RH,CO2) scan...')
