@@ -88,6 +88,7 @@ def setupSensor():
 
     # Opens connection between the RPi and the sensor
     h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
+    print(h)
     f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
 
     if len(sys.argv) > 1 and sys.argv[1] == "stop":
