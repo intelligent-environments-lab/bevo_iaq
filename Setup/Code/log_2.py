@@ -104,7 +104,7 @@ def sps30_scan(crc, pi, h):
         pm_n = [-1,-1,-1,-1,-1]
         pm_c = [-1,-1,-1,-1]
     
-    pi.i2c_close(h)
+    #pi.i2c_close(h)
     return {'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],'pm_c_1':pm_c[0],'pm_c_2p5':pm_c[1],'pm_c_4':pm_c[2],'pm_c_10':pm_c[3]}
 
 def scd30_scan(crc, pi, h):
@@ -129,7 +129,7 @@ def scd30_scan(crc, pi, h):
         tc = -100
         rh = -100
 
-    pi.i2c_close(h)
+    #pi.i2c_close(h)
     return {'CO2':co2,'TC':tc,'RH':rh}
 
 def data_mgmt():
@@ -286,9 +286,9 @@ def main():
             print('Running SCD30 (T,RH,CO2) scan...')
             scd30_scan(crc_scd, pi_scd, h_scd)
         except OSError as e:
-                print('OSError for I/O on a sensor. sleeping 10 seconds...')
-                time.sleep(10)
-                continue
+            print('OSError for I/O on a sensor. sleeping 10 seconds...')
+            time.sleep(10)
+            continue
         
         # Data management
         print("Running data management...")
