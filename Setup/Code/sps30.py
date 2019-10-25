@@ -180,7 +180,7 @@ def readPMValues(pi,h):
     '''
     # READ MEASURED VALUES: 0x0300
     data = readFromAddr(0x03,0x00,59,pi,h)
-    printHuman(data)
+    #printHuman(data)
     return data
 
 def calcPMValues(pi,h,n):
@@ -212,10 +212,10 @@ def calcPMValues(pi,h,n):
             pm_n[3] += calcFloat(data[42:48])
             pm_n[4] += calcFloat(data[48:54])
             # Concentration
-            pm_c[0] = calcFloat(data)
-            pm_c[1] = calcFloat(data[6:12])
-            pm_c[2] = calcFloat(data[12:18])
-            pm_c[3] = calcFloat(data[18:24])
+            pm_c[0] += calcFloat(data[0:6])
+            pm_c[1] += calcFloat(data[6:12])
+            pm_c[2] += calcFloat(data[12:18])
+            pm_c[3] += calcFloat(data[18:24])
             
         else:
             eprint('resetting...',end='')
@@ -223,9 +223,15 @@ def calcPMValues(pi,h,n):
             
         loop_count += 1
         
-    pm_n_new = [x / n for x in pm_n]
-    pm_c_new = [x / n for x in pm_c]
-    return pm_n_new, pm_c_new
+    for i in range(len(pm_n)):
+        pm_n[i] = pm_n[i]/5
+    
+    for i in range(len(pm_c)):
+        pm_c[i] = pm_c[i]/5
+        
+    printHuman(pm_n,pm_c)
+        
+    return pm_n, pm_c
 
 # Helper Functions
 # --------------------------------------------------------------------------- #
@@ -312,7 +318,17 @@ def calcFloat(sixBArray):
     first = float_values[0]
     return first
 
-def printHuman(data):
+def printHuman(n,c):
+    '''
+    
+    '''
+    print("  pm0.5 count: %f" % n[0]))
+    print("  pm1   count: {0:.3f} concentration: {1:.3f}".format( n[1], c[0] ))
+    print("  pm2.5 count: {0:.3f} concentration: {1:.3f}".format( n[2], c[1] ) )
+    print("  pm4   count: {0:.3f} concentration: {1:.3f}".format( n[3], c[2] ) )
+    print("  pm10  count: {0:.3f} concentration: {1:.3f}".format( n[4], c[3] ) )
+    
+def printHuman_old(data):
     '''
     Inputs:
         - data: string of digits holding the measured data

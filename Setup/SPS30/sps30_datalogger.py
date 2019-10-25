@@ -294,5 +294,5 @@ with open('Data/'+filename,'wt') as f:
     # Writing to file (see header above for each calculation refers to)
     csv_writer.writerow([time.strftime('%m/%d/%y'),time.strftime('%H:%M:%S'),
 			 calcFloat(data[24:30]),calcFloat(data[30:36]),calcFloat(data[36:42]),calcFloat(data[42:48]),calcFloat(data[48:54]),
-			 calcFloat(data),calcFloat(data[6:12]),calcFloat(data[12:18]),calcFloat(data[18:24])])
+			 calcFloat(data[0:6]]),calcFloat(data[6:12]),calcFloat(data[12:18]),calcFloat(data[18:24])])
     time.sleep(0.9)
