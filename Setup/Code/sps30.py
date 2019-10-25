@@ -322,7 +322,7 @@ def printHuman(n,c):
     '''
     
     '''
-    print("  pm0.5 count: %f" % n[0]))
+    print("  pm0.5 count: %f" % n[0])
     print("  pm1   count: {0:.3f} concentration: {1:.3f}".format( n[1], c[0] ))
     print("  pm2.5 count: {0:.3f} concentration: {1:.3f}".format( n[2], c[1] ) )
     print("  pm4   count: {0:.3f} concentration: {1:.3f}".format( n[3], c[2] ) )
