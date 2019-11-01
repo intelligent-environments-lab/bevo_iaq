@@ -96,7 +96,7 @@ def tsl2591_scan(i2c):
     return data
 
 def data_mgmt():
-    # Store combined sensor data locally and remotely
+    # Store sensirion sensor data locally and remotely
     timestamp = datetime.datetime.now()
     data_header = [
         'Timestamp',
@@ -114,7 +114,7 @@ def data_mgmt():
         'Visible': visible,
         'Infrared': infrared
     }]
-    key = 'combined'
+    key = 'sensirion'
     write_csv(
         key=key,
         date=timestamp,
