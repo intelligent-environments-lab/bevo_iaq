@@ -33,42 +33,33 @@ def createSensor():
     return i2c
 
 #*****************************************
-'''NOTICE: CHANGE path + CHANGE bucket name + CHANGE dictionary keys'''
-'''NOTICE: turn this off to do testing until figure out AWS database configuration'''
-
 # AWS setup for file upload to S3 bucket.
-# AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
-# AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-# BUCKET_NAME = os.environ['BUCKET_NAME']
-#
-# s3 = boto3.client(
-#     's3',
-#     aws_access_key_id = AWS_ACCESS_KEY_ID,
-#     aws_secret_access_key = AWS_SECRET_ACCESS_KEY
-# )
-# S3_FILEPATH = {
-#     'occ': 'RLP/test_beacon/OCC/DATA/occupancy/',
-#     'combined': 'RLP/test_beacon/OCC/DATA/combined/'
-# }
-# S3_CALL_FREQUENCY = datetime.timedelta(minutes=30)
-# S3_CALL_TIMESTAMP = {
-#     'occ': datetime.datetime.now(),
-#     'combined': datetime.datetime.now()
-# }
+AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+BUCKET_NAME = os.environ['BUCKET_NAME']
+
+s3 = boto3.client(
+    's3',
+    aws_access_key_id = AWS_ACCESS_KEY_ID,
+    aws_secret_access_key = AWS_SECRET_ACCESS_KEY
+)
+S3_FILEPATH = {
+    'sensirion':'ECJ/test_beacon/DATA/sensirion/'
+}
+S3_CALL_FREQUENCY = datetime.timedelta(minutes=2)
+S3_CALL_TIMESTAMP = {
+    'sensirion': datetime.datetime.now()
+}
 #*****************************************
 # File handling
 FILEPATH = {
-    'combined': '/home/pi/bevobeacon2.0/Setup/Sample_Code/DATA/'
+    'sensirion':'/home/pi/bevo_iaq/DATA/sensirion/'
 }
 filename_writer = {
-    'combined': lambda date: FILEPATH['combined'] + date.strftime('%Y-%m-%d') + '_combined.csv'
+    'sensirion': lambda date: FILEPATH['sensirion'] + date.strftime('%Y-%m-%d') + '_sensirion.csv'
 }
-
 #*****************************************
 # import functions for each of the sensors
-'''
-NOTICE: Should we remove the bled_scan() and button_config()??
-'''
 def sgp30_scan(i2c):
     # Declare all global variables for use outside the functions
     global eCO2, TVOC
@@ -132,16 +123,15 @@ def data_mgmt():
     )
 
     # Control on S3 call frequency
-    '''NOTICE: turn this off to do testing until figure out AWS database configuration'''
-    # if timestamp - S3_CALL_TIMESTAMP[key] >= S3_CALL_FREQUENCY:
-    #     aws_s3_upload_file(
-    #         filename=filename_writer[key](date=timestamp),
-    #         s3_bucket=BUCKET_NAME,
-    #         s3_filepath=S3_FILEPATH[key]
-    #     )
-    #     S3_CALL_TIMESTAMP[key] = timestamp
-    # else:
-    #     print('Upload to S3 bucket delayed.')
+    if timestamp - S3_CALL_TIMESTAMP[key] >= S3_CALL_FREQUENCY:
+        aws_s3_upload_file(
+            filename=filename_writer[key](date=timestamp),
+            s3_bucket=BUCKET_NAME,
+            s3_filepath=S3_FILEPATH[key]
+        )
+        S3_CALL_TIMESTAMP[key] = timestamp
+    else:
+        print('Upload to S3 bucket delayed.')
 
 def write_csv(key, date, data_header, data):
     '''
@@ -163,16 +153,15 @@ def write_csv(key, date, data_header, data):
             for i in range(1,history_limit):
                 history_date = date - datetime.timedelta(days=i)
                 history_file = filename_writer[key](date=history_date)
-                '''NOTICE: turn this off to do testing until figure out AWS database configuration'''
-                # if os.path.isfile(history_file):
-                #     aws_s3_upload_file(
-                #         filename=history_file,
-                #         s3_bucket=BUCKET_NAME,
-                #         s3_filepath=S3_FILEPATH[key]
-                #     )
-                #     break
-                # else:
-                #     pass
+                if os.path.isfile(history_file):
+                    aws_s3_upload_file(
+                        filename=history_file,
+                        s3_bucket=BUCKET_NAME,
+                        s3_filepath=S3_FILEPATH[key]
+                    )
+                    break
+                else:
+                    pass
             # Now create new file locally
             with open(filename, mode='w+') as data_file:
                 csv_dict_writer = csv.DictWriter(data_file, fieldnames=data_header)
