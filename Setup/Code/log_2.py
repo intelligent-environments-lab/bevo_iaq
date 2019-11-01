@@ -81,7 +81,7 @@ def sps30_scan(crc, pi, h):
     power_on = sps30.startMeasurement(crc,pi,h)
 
     if power_on:
-        old = False
+        old = True
         if old:
             ret = sps30.readDataReady(pi,h)
             if ret == -1:
