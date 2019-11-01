@@ -15,6 +15,7 @@ import csv
 import datetime
 import os
 import traceback
+import logging
 
 # Import sensor-specific libraries
 import adafruit_sgp30
