@@ -44,19 +44,19 @@ s3 = boto3.client(
     aws_secret_access_key = AWS_SECRET_ACCESS_KEY
 )
 S3_FILEPATH = {
-    'sensirion':'ECJ/test_beacon/DATA/sensirion/'
+    'adafruit':'ECJ/test_beacon/DATA/adafruit/'
 }
 S3_CALL_FREQUENCY = datetime.timedelta(minutes=2)
 S3_CALL_TIMESTAMP = {
-    'sensirion': datetime.datetime.now()
+    'adafruit': datetime.datetime.now()
 }
 #*****************************************
 # File handling
 FILEPATH = {
-    'sensirion':'/home/pi/bevo_iaq/DATA/sensirion/'
+    'adafruit':'/home/pi/bevo_iaq/DATA/adafruit/'
 }
 filename_writer = {
-    'sensirion': lambda date: FILEPATH['sensirion'] + date.strftime('%Y-%m-%d') + '_sensirion.csv'
+    'adafruit': lambda date: FILEPATH['adafruit'] + date.strftime('%Y-%m-%d') + '_adafruit.csv'
 }
 #*****************************************
 # import functions for each of the sensors
@@ -96,7 +96,7 @@ def tsl2591_scan(i2c):
     return data
 
 def data_mgmt():
-    # Store sensirion sensor data locally and remotely
+    # Store adafruit sensor data locally and remotely
     timestamp = datetime.datetime.now()
     data_header = [
         'Timestamp',
@@ -114,7 +114,7 @@ def data_mgmt():
         'Visible': visible,
         'Infrared': infrared
     }]
-    key = 'sensirion'
+    key = 'adafruit'
     write_csv(
         key=key,
         date=timestamp,
