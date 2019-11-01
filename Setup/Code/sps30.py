@@ -230,7 +230,8 @@ def calcPMValues(pi,h,n):
     for i in range(len(pm_c)):
         pm_c[i] = pm_c[i]/5
         
-    printHuman(pm_n,pm_c)
+    printHuman_old(data)
+    #printHuman(pm_n,pm_c)
         
     return pm_n, pm_c
 
