@@ -46,6 +46,7 @@ s3 = boto3.client(
     aws_access_key_id = AWS_ACCESS_KEY_ID,
     aws_secret_access_key = AWS_SECRET_ACCESS_KEY
 )
+
 S3_FILEPATH = {
     'sensirion': 'ECJ/test_beacon/DATA/sensirion/'
 }
@@ -80,7 +81,7 @@ def sps30_scan(crc, pi, h):
     power_on = sps30.startMeasurement(crc,pi,h)
 
     if power_on:
-        old = True
+        old = False
         if old:
             ret = sps30.readDataReady(pi,h)
             if ret == -1:
