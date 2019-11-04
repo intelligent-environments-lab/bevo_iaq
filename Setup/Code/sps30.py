@@ -298,6 +298,7 @@ def calcCRC(TwoBdataArray,f_crc8):
     Calculates checksum and returns the value
     '''
     byteData = ''.join(chr(x) for x in TwoBdataArray)
+    print(byteData)
     return f_crc8(byteData)
 
 def calcInteger(sixBArray):
