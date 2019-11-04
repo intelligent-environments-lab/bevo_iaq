@@ -180,7 +180,7 @@ def readPMValues(pi,h):
     '''
     # READ MEASURED VALUES: 0x0300
     data = readFromAddr(0x03,0x00,59,pi,h)
-    #printHuman(data)
+    printHuman(data)
     return data
 
 def calcPMValues(pi,h,n):
