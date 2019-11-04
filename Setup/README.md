@@ -93,7 +93,7 @@
 
  This repository holds all the necessary code needed to run the BEVO IAQ Sensor Platform. After setting up the Raspberry Pi, installing the necessary dependencies, and making all the hardware connections - the platform should be ready to go. 
  
-### Installing Necessary Packages/Libraries
+### Installing Necessary Sensor Packages/Libraries
 In addition to the packages specified above, the following set of packages have to be installed on to the RPi to use the current version of the code. 
 
 #### Adafruit Sensors
@@ -112,14 +112,28 @@ $ sudo pip3 install adafruit-circuitpython-sgp30
 #### Sensirion
 To use the Sensirion sensors, one needs to install the following packages:
 
-**Pi GPIO**
+**Pi GPIO** ([Documentation](http://abyz.me.uk/rpi/pigpio/python.html))
 ```
 $ sudo apt-get install python-pigpio
 ```
 
-**Checksum**
+**Checksum** ([Documentation](http://crcmod.sourceforge.net/crcmod.html#module-crcmod))
 ```
 $ sudo apt-get install python-crcmod
+```
+
+### Using Amazon Web Services
+First to use Amazon Web Services (AWS), we need to install a few packages. For AWS to work with both sensor brands, we need use both versions of pip to get it to work for Python 2 and 3. 
+```
+$ sudo pip install boto3
+$ sudo pip3 install boto3
+```
+
+The code supports the use of RPi environment variables which must be stored in the ```/etc/environment``` directory of the RPi. The following variables need to be declared with your appropriate string value within the angled brackets:
+```
+AWS_ACCESS_KEY_ID = '<AWS_ACCES_KEY_ID>'
+AWS_SECRET_ACCESS_KEY = '<AWS_SECRET_ACCESS_KEY>'
+BUCKET_NAME = '<BUCKET_NAME>'
 ```
  
 ## Sensor Hardware Connection
