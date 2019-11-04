@@ -37,6 +37,8 @@ from botocore.exceptions import ClientError
 # AWS Setup
 # ------------------------------------------------------------------------- #
 # AWS setup for file upload to S3 bucket.
+# These variables have to be established in the RPi's /etc/environment with the
+# strings below
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 BUCKET_NAME = os.environ['BUCKET_NAME']
@@ -50,7 +52,7 @@ s3 = boto3.client(
 S3_FILEPATH = {
     'sensirion': 'ECJ/test_beacon/DATA/sensirion/'
 }
-S3_CALL_FREQUENCY = datetime.timedelta(minutes=2)
+S3_CALL_FREQUENCY = datetime.timedelta(days=1)
 S3_CALL_TIMESTAMP = {
     'sensirion': datetime.datetime.now()
 }
@@ -249,32 +251,27 @@ def main():
     print('Running IAQ Beacon\n')
     
     crc_sps, pi_sps, h_sps = sps30.setupSensor()
-    print("SCD30 set up properly with")
-    print("  handle:",h_sps)
-    print("  pi:",pi_sps)
-    
     crc_scd, pi_scd, h_scd = scd30.setupSensor()
-    print("SCD30 set up properly with")
-    print("  handle:",h_scd)
-    print("  pi:",pi_scd)
 
     # Begin loop for sensor scans
     i = 1
     try:
         while True:
             print('*'*20 + ' LOOP %d '%i + '*'*20)
+            
+            # SPS30 scan
+            print('Running SPS30 (pm) scan...')
             try:
-                # SPS30 scan
-                print('Running SPS30 (pm) scan...')
                 sps30_scan(crc_sps, pi_sps, h_sps)
-    
-                # SCD30 scan
-                print('Running SCD30 (T,RH,CO2) scan...')
+            except:
+                print('SPS30 scan failed')
+
+            # SCD30 scan
+            print('Running SCD30 (T,RH,CO2) scan...')
+            try:
                 scd30_scan(crc_scd, pi_scd, h_scd)
-            except OSError as e:
-                print('OSError for I/O on a sensor. sleeping 10 seconds...')
-                time.sleep(10)
-                continue
+            except:
+                print('SCD30 scan failed')
             
             # Data management
             print("Running data management...")

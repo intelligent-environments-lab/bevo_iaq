@@ -206,7 +206,6 @@ def calcPMValues(pi,h,n):
             sum_count += 1
             data = readPMValues(pi,h)
             # Number
-            printHuman(pm_n,pm_c)
             pm_n[0] += calcFloat(data[24:30])
             pm_n[1] += calcFloat(data[30:36])
             pm_n[2] += calcFloat(data[36:42])
@@ -229,9 +228,6 @@ def calcPMValues(pi,h,n):
     
     for i in range(len(pm_c)):
         pm_c[i] = pm_c[i]/5
-        
-    printHuman_old(data)
-    #printHuman(pm_n,pm_c)
         
     return pm_n, pm_c
 
