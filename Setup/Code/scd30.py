@@ -270,7 +270,7 @@ def bigReset(pi,h_old):
     Performs a big reset i.e. closes the connection with the sensor and
     restarts it.
     '''
-    eprint('resetting...',end='')
+    eprint('Big reset...',end='')
     # Closing the connection and waiting for shutdown
     pi.i2c_close(h_old)
     # Re-initializing

@@ -92,6 +92,7 @@ def startMeasurement(f_crc8,pi,h):
     Returns True if able to power up the device and connect to the sensor
     or False if not
     '''
+    print('Starting measurement...')
     for i in range(2):
         # START MEASUREMENT: 0x0010
         # READ MEASURED VALUES: 0x0300
@@ -180,7 +181,7 @@ def readPMValues(pi,h):
     '''
     # READ MEASURED VALUES: 0x0300
     data = readFromAddr(0x03,0x00,59,pi,h)
-    #printHuman(data)
+    printHuman(data)
     return data
 
 def calcPMValues(pi,h,n):
@@ -206,7 +207,6 @@ def calcPMValues(pi,h,n):
             sum_count += 1
             data = readPMValues(pi,h)
             # Number
-            printHuman(pm_n,pm_c)
             pm_n[0] += calcFloat(data[24:30])
             pm_n[1] += calcFloat(data[30:36])
             pm_n[2] += calcFloat(data[36:42])
@@ -229,9 +229,6 @@ def calcPMValues(pi,h,n):
     
     for i in range(len(pm_c)):
         pm_c[i] = pm_c[i]/5
-        
-    printHuman_old(data)
-    #printHuman(pm_n,pm_c)
         
     return pm_n, pm_c
 
@@ -257,6 +254,7 @@ def reset(pi,h):
     '''
     Tries to reset the device by writing [0xd3, 0x04] (reset command) to the it
     '''
+    print('resetting...')
     for i in range(2):
         ret = i2cWrite([0xd3, 0x04],pi,h)
         if ret == True:
@@ -273,7 +271,7 @@ def bigReset(pi,h_old):
     Performs a big reset i.e. closes the connection with the sensor and
     restarts it.
     '''
-    eprint('resetting...',end='')
+    eprint('Big reset...',end='')
     # Closing the connection and waiting for shutdown
     pi.i2c_close(h_old)
     # Re-initializing
@@ -290,6 +288,7 @@ def stopMeasurement(pi,h):
     '''
     Shuts down the device by writing [0x01, 0x04] to it
     '''
+    print('Stopping measurement...')
     # STOP MEASUREMENT: 0x0104
     i2cWrite([0x01, 0x04],pi,h)
     
@@ -298,6 +297,7 @@ def calcCRC(TwoBdataArray,f_crc8):
     Calculates checksum and returns the value
     '''
     byteData = ''.join(chr(x) for x in TwoBdataArray)
+    print(byteData)
     return f_crc8(byteData)
 
 def calcInteger(sixBArray):

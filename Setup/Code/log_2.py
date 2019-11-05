@@ -50,7 +50,7 @@ s3 = boto3.client(
 S3_FILEPATH = {
     'sensirion': 'ECJ/test_beacon/DATA/sensirion/'
 }
-S3_CALL_FREQUENCY = datetime.timedelta(minutes=2)
+S3_CALL_FREQUENCY = datetime.timedelta(days=1)
 S3_CALL_TIMESTAMP = {
     'sensirion': datetime.datetime.now()
 }
@@ -78,12 +78,17 @@ def sps30_scan(crc, pi, h):
     # Declare all global variables to be returned (n = count, c = concentration)
     global pm_n, pm_c
     
-    power_on = sps30.startMeasurement(crc,pi,h)
-
-    if power_on:
-        pm_n, pm_c = sps30.calcPMValues(pi,h,5)    
+    if sps30.reset(pi,h):
+        power_on = sps30.startMeasurement(crc,pi,h)
+    
+        if power_on:
+            pm_n, pm_c = sps30.calcPMValues(pi,h,5)
+        else:
+            print('Problem opening connection to SPS30; saving dummy values')
+            pm_n = [-1,-1,-1,-1,-1]
+            pm_c = [-1,-1,-1,-1]
     else:
-        print('Problem opening connection to SCD30; saving dummy values')
+        print('Problem resetting; saving dummy values')
         pm_n = [-1,-1,-1,-1,-1]
         pm_c = [-1,-1,-1,-1]
 

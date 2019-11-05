@@ -2,7 +2,7 @@
 
  The following sections detail how to setup the different components of the BEVO Beacon IAQ. Each section should be completed in the order written. 
 
- ## Raspberry Pi 3|B+
+## Raspberry Pi 3|B+
  This file outlines the basics of setting up a Raspberry Pi 3|B+ (RPi), outlining the necessary components/libraries needed, how to install the Raspbian Buster Lite Operating System (OS), and how to set up the OS properly. 
 
  ![RPi3](https://www.raspberrypi.org/app/uploads/2018/03/770A5842-1612x1080.jpg)
@@ -79,7 +79,7 @@
  - [I2C](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c)
  - [SPI](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-spi)
 
- ### Cloning GitHub Repository
+### Cloning GitHub Repository
  Once connected to WiFi, using a GitHub repository makes updating and sharing files easy between two systems and others. The following steps will help to ensure that you can clone your GitHub repository to the RPi and start using git. 
 
  1. Check the Date
@@ -92,44 +92,49 @@
  5. Move into the new directory and type ```$ git status``` to see if the clone worked correctly. 
 
  This repository holds all the necessary code needed to run the BEVO IAQ Sensor Platform. After setting up the Raspberry Pi, installing the necessary dependencies, and making all the hardware connections - the platform should be ready to go. 
+ 
+### Installing Necessary Sensor Packages/Libraries
+In addition to the packages specified above, the following set of packages have to be installed on to the RPi to use the current version of the code. 
 
- ### Updating Python (Version 3.7.0)
- The Raspbian OS at the time these instructions were written installs a more primitive version of Python. Some of the sensors on board require Python 2 while others require the newer Python 3. To upgrade to version 3.7.0, follow these instructions:
+#### Adafruit Sensors
+To allow use of the adafruit sensors, one needs to run the following two commands:
 
- 1. Use the command line to install the following dependencies (this is completed in one line on the command line):
- ```
- $ sudo apt-get install -y build-essential tk-dev libncurses5-dev libncursesw5-dev libreadline6-dev libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev libffi-dev
- ```
- 2. Change directories to the location you would like to install Python and then download Python 3.7.0 from their website:
- ```
- $ wget https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tgz
- ```
- 3. Install and compile Python
- ```
- $ sudo tar zxf Python-3.7.0.tgz
- $ cd Python-3.7.0
- $ sudo ./configure
- $ sudo make -j 4
- $ sudo make altinstall
- ```
-
- ### Authentication with HTTPS Clone
-If the github repository was cloned via HTTPS then every time you push/pull, GitHub will ask for authentification. To counteract this, enter the following two commands:
+**Light Sensor** ([TSL2591](https://www.adafruit.com/product/1980))
 ```
-$ git config credential.helper store
-$ git push https://github.com/owner/repository.git
+$ sudo pip3 install adafruit-circuitpython-tsl2591
 ```
 
-Then it will prompt you for your username and password (for the last time)
+**TVOC Sensor** ([SGP30](https://www.adafruit.com/product/3709))
 ```
-Username for 'https://github.com': <USERNAME>
-Password for 'https://USERNAME@github.com': <PASSWORD
+$ sudo pip3 install adafruit-circuitpython-sgp30
 ```
 
-However you can set your credientials to expire after a certain time by replacing the first line with the following where the time is given in seconds. 
+#### Sensirion
+To use the Sensirion sensors, one needs to install the following packages:
+
+**Pi GPIO** ([Documentation](http://abyz.me.uk/rpi/pigpio/python.html))
 ```
-$ git config --global credential.helper 'cache --timeout 7200'
- ```
+$ sudo apt-get install python-pigpio
+```
+
+**Checksum** ([Documentation](http://crcmod.sourceforge.net/crcmod.html#module-crcmod))
+```
+$ sudo apt-get install python-crcmod
+```
+
+### Using Amazon Web Services
+First to use Amazon Web Services (AWS), we need to install a few packages. For AWS to work with both sensor brands, we need use both versions of pip to get it to work for Python 2 and 3. 
+```
+$ sudo pip install boto3
+$ sudo pip3 install boto3
+```
+
+The code supports the use of RPi environment variables which must be stored in the ```/etc/environment``` directory of the RPi. The following variables need to be declared with your appropriate string value within the angled brackets:
+```
+AWS_ACCESS_KEY_ID = '<AWS_ACCES_KEY_ID>'
+AWS_SECRET_ACCESS_KEY = '<AWS_SECRET_ACCESS_KEY>'
+BUCKET_NAME = '<BUCKET_NAME>'
+```
  
 ## Sensor Hardware Connection
 The next few sections outline how to connect the sensors to the RPi. 
