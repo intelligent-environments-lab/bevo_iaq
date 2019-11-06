@@ -115,7 +115,7 @@ def i2cWrite(data,pi,h):
     try:
         pi.i2c_write_device(h, data)
     except Exception as e:
-        pprint.pprint(e)
+        #pprint.pprint(e)
         #eprint("error in i2c_write:", e.__doc__ + ":",  e.value)
         return -1
     return True
