@@ -176,14 +176,12 @@ def readNBytes(n,pi,h):
         eprint("error: read bytes didnt return " + str(n) + "B")
         return False
     
-def readPMValues(pi,h,verbose):
+def readPMValues(pi,h):
     '''
     Reads in the Pm values and returns the data.
     '''
     # READ MEASURED VALUES: 0x0300
     data = readFromAddr(0x03,0x00,59,pi,h)
-    if verbose:
-        printHuman(data)
     return data
 
 def calcPMValues(pi,h,n,verbose):
@@ -208,7 +206,7 @@ def calcPMValues(pi,h,n,verbose):
             
         elif ret == 1:
             sum_count += 1
-            data = readPMValues(pi,h,verbose)
+            data = readPMValues(pi,h)
             # Number
             pm_n[0] += calcFloat(data[24:30])
             pm_n[1] += calcFloat(data[30:36])
@@ -231,6 +229,9 @@ def calcPMValues(pi,h,n,verbose):
     
     for i in range(len(pm_c)):
         pm_c[i] = pm_c[i]/5
+        
+    if verbose:
+        printHuman(pm_n,pm_c)
         
     return pm_n, pm_c
 
