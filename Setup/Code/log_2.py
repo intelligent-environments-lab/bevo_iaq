@@ -83,6 +83,7 @@ def sps30_scan(crc, pi, h, verbose):
     global pm_n, pm_c
     
     if sps30.reset(pi,h):
+        time.sleep(1)
         power_on = sps30.startMeasurement(crc,pi,h)
     
         if power_on:
