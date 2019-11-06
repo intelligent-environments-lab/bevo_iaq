@@ -149,7 +149,7 @@ def readFromAddr(LowB,HighB,nBytes,pi,h):
     for amount_tries in range(3):
         ret = i2cWrite([LowB, HighB],pi,h)
         if ret != True:
-            eprint("readFromAddr: write try unsuccessful, next")
+            #eprint("readFromAddr: write try unsuccessful, next")
             continue
         data = readNBytes(nBytes,pi,h)
         if data:
@@ -208,7 +208,7 @@ def calcPMValues(pi,h,n,verbose):
             
         elif ret == 1:
             sum_count += 1
-            data = readPMValues(pi,h)
+            data = readPMValues(pi,h,verbose)
             # Number
             pm_n[0] += calcFloat(data[24:30])
             pm_n[1] += calcFloat(data[30:36])
@@ -222,7 +222,6 @@ def calcPMValues(pi,h,n,verbose):
             pm_c[3] += calcFloat(data[18:24])
             
         else:
-            eprint('resetting...',end='')
             pi, h = bigReset(pi,h)
             
         loop_count += 1
@@ -243,15 +242,6 @@ def eprint(*args, **kwargs):
     Error print function
     '''
     print(*args, file=sys.stderr, **kwargs)
-  
-def exit_gracefully(a,b,pi,h):
-    '''
-    Exits the program gracefully upon user command
-    '''
-    print("\nexiting...")
-    stopMeasurement(pi,h)
-    pi.i2c_close(h)
-    exit(0)
     
 def reset(pi,h):
     '''
@@ -262,7 +252,7 @@ def reset(pi,h):
         ret = i2cWrite([0xd3, 0x04],pi,h)
         if ret == True:
             return True
-        eprint('reset unsuccessful, next try in', str(0.2 * i) + 's')
+        #eprint('reset unsuccessful, next try in', str(0.2 * i) + 's')
         time.sleep(0.2 * i)
     eprint('reset unsuccessful')
     return False
