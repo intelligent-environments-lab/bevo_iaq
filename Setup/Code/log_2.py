@@ -65,6 +65,10 @@ filename_writer = {
     'sensirion': lambda date: FILEPATH['sensirion'] + date.strftime('%Y-%m-%d') + '_sensirion.csv'
 }
 
+# General Setup
+# ------------------------------------------------------------------------- #
+verbose = False
+
 # Functions
 # ------------------------------------------------------------------------- #
 def sps30_scan(crc, pi, h):
