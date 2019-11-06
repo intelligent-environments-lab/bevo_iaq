@@ -100,7 +100,7 @@ def startMeasurement(f_crc8,pi,h):
         if ret == True:
             return True
         else:
-            eprint('startMeasurement unsuccessful, next try')
+            #eprint('startMeasurement unsuccessful, next try')
             pi, h = bigReset(pi,h)
             
     eprint('startMeasurement unsuccessful, giving up')
@@ -116,21 +116,22 @@ def i2cWrite(data,pi,h):
         pi.i2c_write_device(h, data)
     except Exception as e:
         pprint.pprint(e)
-        eprint("error in i2c_write:", e.__doc__ + ":",  e.value)
+        #eprint("error in i2c_write:", e.__doc__ + ":",  e.value)
         return -1
     return True
 
 # Measurement Recording Functions
 # --------------------------------------------------------------------------- #
     
-def readDataReady(pi,h):
+def readDataReady(pi,h,verbose):
     '''
     Checks to see if there is data available to read in
     Returns -1 if no data or 1 if there is
     '''
     data = readFromAddr(0x02, 0x02,3,pi,h)
     if data == False:
-        eprint("readDataReady: command unsuccessful")
+        if verbose:
+            eprint("readDataReady: command unsuccessful")
         return -1
     if data and data[1]:
         return 1
@@ -175,16 +176,17 @@ def readNBytes(n,pi,h):
         eprint("error: read bytes didnt return " + str(n) + "B")
         return False
     
-def readPMValues(pi,h):
+def readPMValues(pi,h,verbose):
     '''
     Reads in the Pm values and returns the data.
     '''
     # READ MEASURED VALUES: 0x0300
     data = readFromAddr(0x03,0x00,59,pi,h)
-    printHuman(data)
+    if verbose:
+        printHuman(data)
     return data
 
-def calcPMValues(pi,h,n):
+def calcPMValues(pi,h,n,verbose):
     '''
     
     '''
@@ -196,11 +198,12 @@ def calcPMValues(pi,h,n):
     while sum_count < n:
         if loop_count == max_loops:
             break
-        ret = readDataReady(pi,h)
+        ret = readDataReady(pi,h,verbose)
         if ret == 0:
             wait_time = 2
-            print("  Waiting for",wait_time, "second(s) and checking again")
-            print("  Loops left to check for data:",max_loops-loop_count)
+            if verbose:
+                print("  Waiting for",wait_time, "second(s) and checking again")
+                print("  Loops left to check for data:",max_loops-loop_count)
             time.sleep(wait_time)
             
         elif ret == 1:
@@ -329,16 +332,3 @@ def printHuman(n,c):
     print("  pm2.5 count: {0:.3f} concentration: {1:.3f}".format( n[2], c[1] ) )
     print("  pm4   count: {0:.3f} concentration: {1:.3f}".format( n[3], c[2] ) )
     print("  pm10  count: {0:.3f} concentration: {1:.3f}".format( n[4], c[3] ) )
-    
-def printHuman_old(data):
-    '''
-    Inputs:
-        - data: string of digits holding the measured data
-    Prints the data to the terminal screen
-    '''
-    print("  pm0.5 count: %f" % calcFloat(data[24:30]))
-    print("  pm1   count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[30:36]), calcFloat(data) ) )
-    print("  pm2.5 count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[36:42]), calcFloat(data[6:12]) ) )
-    print("  pm4   count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[42:48]), calcFloat(data[12:18]) ) )
-    print("  pm10  count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[48:54]), calcFloat(data[18:24]) ) )
-    print("  pm_typ: %f" % calcFloat(data[54:60]))
