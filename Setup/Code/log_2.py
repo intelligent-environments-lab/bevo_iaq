@@ -71,7 +71,7 @@ verbose = False
 
 # Functions
 # ------------------------------------------------------------------------- #
-def sps30_scan(crc, pi, h):
+def sps30_scan(crc, pi, h, verbose):
     '''
     Measures different particulate matter counts and concentrations in the
     room. Data are stored locally and to AWS S3 bucket.
@@ -86,7 +86,7 @@ def sps30_scan(crc, pi, h):
         power_on = sps30.startMeasurement(crc,pi,h)
     
         if power_on:
-            pm_n, pm_c = sps30.calcPMValues(pi,h,5)
+            pm_n, pm_c = sps30.calcPMValues(pi,h,5,verbose)
         else:
             print('Problem opening connection to SPS30; saving dummy values')
             pm_n = [-1,-1,-1,-1,-1]
@@ -98,7 +98,7 @@ def sps30_scan(crc, pi, h):
 
     return {'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],'pm_c_1':pm_c[0],'pm_c_2p5':pm_c[1],'pm_c_4':pm_c[2],'pm_c_10':pm_c[3]}
 
-def scd30_scan(crc, pi, h):
+def scd30_scan(crc, pi, h, verbose):
     '''
     Measures the carbon dioxide concentration, temperature, and relative
     humidity in the room. Data are stored locally and to AWS S3 bucket.
@@ -111,7 +111,7 @@ def scd30_scan(crc, pi, h):
     global co2, tc, rh
     
     try:
-        co2, tc, rh = scd30.calcCO2Values(pi,h,5)
+        co2, tc, rh = scd30.calcCO2Values(pi,h,5,verbose)
         
     except:
         print('Problem opening connection to SCD30; saving dummy values')
@@ -270,11 +270,11 @@ def main():
             try:
                 # SPS30 scan
                 print('Running SPS30 (pm) scan...')
-                sps30_scan(crc_sps, pi_sps, h_sps)
+                sps30_scan(crc_sps, pi_sps, h_sps, verbose)
     
                 # SCD30 scan
                 print('Running SCD30 (T,RH,CO2) scan...')
-                scd30_scan(crc_scd, pi_scd, h_scd)
+                scd30_scan(crc_scd, pi_scd, h_scd, verbose)
             except OSError as e:
                 print('OSError for I/O on a sensor. sleeping 10 seconds...')
                 time.sleep(10)
