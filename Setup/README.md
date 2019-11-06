@@ -59,8 +59,9 @@
  $ sudo apt-get update
  $ sudo apt-get upgrade
  ```
- then install pip3 installer:
+ then install pip and pip3 installer:
  ```
+ $ sudo python get-pip.py
  $ sudo apt-get install python3-pip
  ```
  and upgrade setup tools:
