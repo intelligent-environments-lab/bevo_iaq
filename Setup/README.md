@@ -117,6 +117,15 @@ To use the Sensirion sensors, one needs to install the following packages:
 ```
 $ sudo apt-get install python-pigpio
 ```
+The Pi GPIO needs to be activiated on every boot of the RPi, so to ensure that this happens each time you can edit the bash file. From anywhere, type:
+```
+$ sudo nano ~/.bashrc
+```
+At the bottom of the file, add the two lines of code:
+```python
+# To activate Pi GPIO
+sudo pigpiod
+```
 
 **Checksum** ([Documentation](http://crcmod.sourceforge.net/crcmod.html#module-crcmod))
 ```
@@ -130,12 +139,14 @@ $ sudo pip install boto3
 $ sudo pip3 install boto3
 ```
 
-The code supports the use of RPi environment variables which must be stored in the ```/etc/environment``` directory of the RPi. The following variables need to be declared with your appropriate string value within the angled brackets:
+The code supports the use of RPi profiles which means one must edit the ```/etc/profile``` of the RPi. The following lines should be added to the bottom of the file, with your appropriate string value within the angled brackets:
+```C
+export AWS_ACCESS_KEY_ID='<AWS_ACCES_KEY_ID>'
+export AWS_SECRET_ACCESS_KEY='<AWS_SECRET_ACCESS_KEY>'
+export BUCKET_NAME='<BUCKET_NAME>'
 ```
-AWS_ACCESS_KEY_ID = '<AWS_ACCES_KEY_ID>'
-AWS_SECRET_ACCESS_KEY = '<AWS_SECRET_ACCESS_KEY>'
-BUCKET_NAME = '<BUCKET_NAME>'
-```
+
+**NOTE**: You must type the above lines EXACTLY as you see them. Any extra spaces added will make the exports unusable. 
  
 ## Sensor Hardware Connection
 The next few sections outline how to connect the sensors to the RPi. 
