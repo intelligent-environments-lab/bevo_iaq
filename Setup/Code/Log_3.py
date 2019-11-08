@@ -1,12 +1,9 @@
 # **********************************************************************
 # The University of Texas at Austin                                    *
 # Intelligent Environments Laboratory (IEL)                            *
-# Author: Sepehr Bastami					                           *
-#	With notable contributions from:			                       *
-#	Dr. William Waites					                               *
-#	Kingsley Nweye						                               *
-# Project: Occupant-Cenetered Control Systems for BAS Integration      *
-# Email: sepehr.bastami@utexas.edu                                     *
+# Author: Hagen Fritz and Dung Le					                   *
+# Project:                                                             *
+# Email: hoangdung.le@utexas.edu                                       *
 # **********************************************************************
 
 # Import NOTE: This code can only be executed with a 'Sudo -E python3 <filename.py>'
@@ -26,6 +23,9 @@ from busio import I2C
 # AWS libraries
 import boto3
 from botocore.exceptions import ClientError
+
+# Verbose Global Variable
+verbose = True
 
 # Create I2C Object for sensors
 # Also sets setup mode for GPIO to BCM
@@ -132,7 +132,8 @@ def data_mgmt():
         )
         S3_CALL_TIMESTAMP[key] = timestamp
     else:
-        print('Upload to S3 bucket delayed.')
+        if verbose:
+            print('Upload to S3 bucket delayed.')
 
 def write_csv(key, date, data_header, data):
     '''
@@ -168,16 +169,19 @@ def write_csv(key, date, data_header, data):
                 csv_dict_writer = csv.DictWriter(data_file, fieldnames=data_header)
                 csv_dict_writer.writeheader()
                 csv_dict_writer.writerows(data)
-                print('Wrote data for first time to:', filename)
+                if verbose:
+                    print('Wrote data for first time to:', filename)
         else:
             # Append to already existing file
             with open(filename, mode='a') as data_file:
                 csv_dict_writer = csv.DictWriter(data_file, fieldnames=data_header)
                 csv_dict_writer.writerows(data)
-                print('Appended data to:', filename)
+                if verbose:
+                    print('Appended data to:', filename)
     except Exception as e:
         traceback.format_exc()
-        print(type(e).__name__ + ': ' + str(e))
+        if verbose:
+            print(type(e).__name__ + ': ' + str(e))
 
 def aws_s3_upload_file(filename,s3_bucket,s3_filepath):
     '''
@@ -194,12 +198,15 @@ def aws_s3_upload_file(filename,s3_bucket,s3_filepath):
         s3_filename = s3_filepath + format(filename.split('/')[-1])
         s3.upload_file(filename, s3_bucket, s3_filename)
         logging.debug(filename, 'was uploaded to', s3_bucket)
-        print(filename, 'was uploaded to  AWS S3 bucket:', s3_bucket)
+        if verbose:
+            print(filename, 'was uploaded to  AWS S3 bucket:', s3_bucket)
     except ClientError as e:
-        print(type(e).__name__ + ': ' + str(e))
+        if verbose:
+            print(type(e).__name__ + ': ' + str(e))
         logging.error(e)
     except FileNotFoundError as e:
-        print(type(e).__name__ + ': ' + str(e))
+        if verbose:
+            print(type(e).__name__ + ': ' + str(e))
         logging.error(e)
 
 def main():
