@@ -130,6 +130,8 @@ def sps30_scan():
     if len(sys.argv) > 1 and sys.argv[1] == "stop":
         return False
 
+    sps30.setupSensor(f_crc8,pi,h)
+
     # --------------- #
     # Data Collection #
     # --------------- #

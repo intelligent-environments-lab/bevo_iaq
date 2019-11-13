@@ -25,9 +25,21 @@ import pprint
 from datetime import datetime
 import csv
 
+global f_crc8
+global pi
+global h
+
 # --------- #
 # Functions #
 # --------- #
+
+def setupSensor(crc,pi,h):
+  '''
+  Sets ups the sensor with the given attributes
+  '''
+  f_crc8 = crc
+  pi = pi
+  h = h
 
 # Calculates checksum
 def calcCRC(TwoBdataArray):
