@@ -145,7 +145,7 @@ def sps30_scan():
 
     ret = sps30.readDataReady()
     if ret == -1:
-        print('resetting...',end='')
+        print('resetting...')
         sps30.bigReset()
         sps30.initialize()
         continue
