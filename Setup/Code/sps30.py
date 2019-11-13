@@ -25,7 +25,6 @@ import pprint
 from datetime import datetime
 import csv
 
-global f_crc8
 global pi
 global h
 
@@ -33,17 +32,17 @@ global h
 # Functions #
 # --------- #
 
-def setupSensor(crc,pi,h):
+def setupSensor(pi,h):
   '''
   Sets ups the sensor with the given attributes
   '''
-  f_crc8 = crc
   pi = pi
   h = h
 
 # Calculates checksum
 def calcCRC(TwoBdataArray):
   byteData = ''.join(chr(x) for x in TwoBdataArray)
+  f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
   return f_crc8(byteData)
 
 # Reads the number of bytes from i2c device and if the number matches the input, returns the data as bytes
