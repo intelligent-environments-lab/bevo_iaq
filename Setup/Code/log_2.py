@@ -105,8 +105,8 @@ def sps30_scan():
         return False
       
     # Calls the exit_gracefully function when terminated from the command line
-    signal.signal(signal.SIGINT, exit_gracefully)
-    signal.signal(signal.SIGTERM, exit_gracefully)
+    signal.signal(signal.SIGINT, sps30.exit_gracefully)
+    signal.signal(signal.SIGTERM, sps30.exit_gracefully)
 
     # Checking to see if pigpio is connected - if not, the command to run it is done via a call
     pi = pigpio.pi(PIGPIO_HOST)
@@ -151,7 +151,7 @@ def sps30_scan():
 
     if ret == 0:
         time.sleep(0.1)
-        
+
     data = sps30.readPMValues()
     
     # Count
