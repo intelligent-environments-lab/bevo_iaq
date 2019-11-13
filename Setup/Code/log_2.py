@@ -319,11 +319,6 @@ def main():
     '''
     print('Running IAQ Beacon\n')
     
-    crc_sps, pi_sps, h_sps = sps30.setupSensor()
-    print("SCD30 set up properly with")
-    print("  handle:",h_sps)
-    print("  pi:",pi_sps)
-    
     crc_scd, pi_scd, h_scd = scd30.setupSensor()
     print("SCD30 set up properly with")
     print("  handle:",h_scd)
