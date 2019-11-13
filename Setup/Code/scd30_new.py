@@ -191,13 +191,13 @@ def takeMeasurement():
 		rh += temp[0]
 
 		print("Concentration (ppm)")
-	    print("---------------------------------------")
-	    print("CO2: {0:.1f}".format(co2/(i+1)))
-	    print("Environmental Variables")
-	    print("---------------------------------------")
-	    print("T (C): {0:.1f}".format(t/(i+1)))
-	    print("RH (%): {0:.1f}".format(rh/(i+1)))
-	    print("---------------------------------------")
+		print("---------------------------------------")
+		print("CO2: {0:.1f}".format(co2/(i+1)))
+		print("Environmental Variables")
+		print("---------------------------------------")
+		print("T (C): {0:.1f}".format(t/(i+1)))
+		print("RH (%): {0:.1f}".format(rh/(i+1)))
+		print("---------------------------------------")
 
 		#print("gas_ppm{sensor=\"SCD30\",gas=\"CO2\"} %f" % co2/(i+1))
 		#print("temperature_degC{sensor=\"SCD30\"} %f" % t/(i+1))
