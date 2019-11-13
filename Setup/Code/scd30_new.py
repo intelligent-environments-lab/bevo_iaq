@@ -179,13 +179,16 @@ def takeMeasurement():
 			exit(1)
 
 		struct_co2 = struct.pack('>BBBB', data[0], data[1], data[3], data[4])
-		co2 += float(struct.unpack('>f', struct_co2))
+		temp += struct.unpack('>f', struct_co2)
+		co2 += temp[0]
 
 		struct_T = struct.pack('>BBBB', data[6], data[7], data[9], data[10])
-		t += float(struct.unpack('>f', struct_T))
+		temp += struct.unpack('>f', struct_T)
+		t += temp[0]
 
 		struct_rH = struct.pack('>BBBB', data[12], data[13], data[15], data[16])
-		rh += float(struct.unpack('>f', struct_rH))
+		temp += struct.unpack('>f', struct_rH)
+		rh += temp[0]
 
 		print("gas_ppm{sensor=\"SCD30\",gas=\"CO2\"} %f" % co2/(i+1))
 		print("temperature_degC{sensor=\"SCD30\"} %f" % t/(i+1))
