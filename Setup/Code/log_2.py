@@ -33,7 +33,7 @@ from subprocess import call
 import crcmod
 import pigpio
 import sps30_new
-import scd30
+import scd30_new
 
 # AWS libraries
 import boto3
@@ -87,15 +87,11 @@ def sps30_scan():
     # Declare all global variables to be returned (n = count, c = concentration)
     global pm_n, pm_c
 
-    # ----- #
-    # Setup #
-    # ----- #
-
     pm_n, pm_c = sps30_new.takeMeasurement()
 
     return {'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],'pm_c_1':pm_c[0],'pm_c_2p5':pm_c[1],'pm_c_4':pm_c[2],'pm_c_10':pm_c[3]}
 
-def scd30_scan(crc, pi, h, verbose):
+def scd30_scan():
     '''
     Measures the carbon dioxide concentration, temperature, and relative
     humidity in the room. Data are stored locally and to AWS S3 bucket.
@@ -106,15 +102,8 @@ def scd30_scan(crc, pi, h, verbose):
 
     # Declare all global variables to be returned
     global co2, tc, rh
-    
-    try:
-        co2, tc, rh = scd30.calcCO2Values(pi,h,5,verbose)
-        
-    except:
-        print('Problem opening connection to SCD30; saving dummy values')
-        co2 = -100
-        tc = -100
-        rh = -100
+
+    tc, rh, co2 = scd30_new.takeMeasurement()
 
     return {'CO2':co2,'TC':tc,'RH':rh}
 
@@ -248,11 +237,6 @@ def main():
     return: void
     '''
     print('Running IAQ Beacon\n')
-    
-    crc_scd, pi_scd, h_scd = scd30.setupSensor()
-    print("SCD30 set up properly with")
-    print("  handle:",h_scd)
-    print("  pi:",pi_scd)
 
     # Begin loop for sensor scans
     i = 1
@@ -266,7 +250,7 @@ def main():
     
                 # SCD30 scan
                 print('Running SCD30 (T,RH,CO2) scan...')
-                scd30_scan(crc_scd, pi_scd, h_scd, verbose)
+                scd30_scan()
             except OSError as e:
                 print('OSError for I/O on a sensor. sleeping 10 seconds...')
                 time.sleep(10)

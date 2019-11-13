@@ -275,33 +275,40 @@ def takeMeasurement():
   # Data Collection #
   # --------------- #
 
-  reset()
-  time.sleep(0.1) # note: needed after reset
+  for i in range(5):
+    reset()
+    time.sleep(0.1) # note: needed after reset
 
-  initialize()
-
-  ret = readDataReady()
-  if ret == -1:
-    eprint('resetting...',end='')
-    bigReset()
     initialize()
 
-  if ret == 0:
-    time.sleep(0.1)
+    ret = readDataReady()
+    if ret == -1:
+      eprint('resetting...',end='')
+      bigReset()
+      initialize()
 
-  data = readPMValues()
+    if ret == 0:
+      time.sleep(0.1)
 
-  # Count 
-  pm_n[0] = calcFloat(data[24:30])
-  pm_n[1] = calcFloat(data[30:36])
-  pm_n[2] = calcFloat(data[36:42])
-  pm_n[3] = calcFloat(data[42:48])
-  pm_n[4] = calcFloat(data[48:54])
+    data = readPMValues()
 
-  # Concentration
-  pm_c[0] = calcFloat(data)
-  pm_c[1] = calcFloat(data[6:12])
-  pm_c[2] = calcFloat(data[12:18])
-  pm_c[3] = calcFloat(data[18:24])
+    # Count 
+    pm_n[0] += calcFloat(data[24:30])
+    pm_n[1] += calcFloat(data[30:36])
+    pm_n[2] += calcFloat(data[36:42])
+    pm_n[3] += calcFloat(data[42:48])
+    pm_n[4] += calcFloat(data[48:54])
+
+    # Concentration
+    pm_c[0] += calcFloat(data)
+    pm_c[1] += calcFloat(data[6:12])
+    pm_c[2] += calcFloat(data[12:18])
+    pm_c[3] += calcFloat(data[18:24])
+    time.sleep(0.9)
+
+  for i in range(len(pm_n)):
+    pm_n[i] /= 5
+  for i in range(len(pm_c)):
+    pm_c[i] /= 5
 
   return pm_n, pm_c
