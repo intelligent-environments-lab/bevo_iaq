@@ -108,7 +108,7 @@ def setMeasInterval(pi,h):
 
     if read_meas_result != 2:
     # if not the specified interval, set it
-        eprint("setMeasInterval: setting interval to",2)
+        #eprint("setMeasInterval: setting interval to",2)
         ret = i2cWrite([0x46, 0x00, 0x00, 0x02, 0xE3],pi,h)
         if ret == -1:
             exit(1)
@@ -144,28 +144,31 @@ def i2cWrite(data,pi,h):
     try:
         pi.i2c_write_device(h, data)
     except Exception as e:
-        pprint.pprint(e)
-        eprint("error in i2c_write:", e.__doc__ + ":",  e.value)
+        #pprint.pprint(e)
+        #eprint("error in i2c_write:", e.__doc__ + ":",  e.value)
         return -1
     return True
 
 # Measurement Recording Functions
 # --------------------------------------------------------------------------- #
 
-def readDataReady(pi,h):
+def readDataReady(pi,h,verbose):
     '''
     Checks to see if there is data available to read in
     Returns -1 if no data or 1 if there is
     '''
     data = readFromAddr(0x02, 0x02,3,pi,h)
     if data == False:
-        eprint("readDataReady: command unsuccessful")
+        if verbose:
+            eprint("readDataReady: command unsuccessful")
         return -1
     if data and data[1]:
-        print("readDataReady: data found")
+        if verbose:
+            print("readDataReady: data found")
         return 1
     else:
-        eprint("readDataReady: no data available")
+        if verbose:
+            eprint("readDataReady: no data available")
         return 0
     
 def readFromAddr(LowB,HighB,nBytes,pi,h):
@@ -179,7 +182,7 @@ def readFromAddr(LowB,HighB,nBytes,pi,h):
     for amount_tries in range(3):
         ret = i2cWrite([LowB, HighB],pi,h)
         if ret != True:
-            eprint("readFromAddr: write try unsuccessful, next")
+            #eprint("readFromAddr: write try unsuccessful, next")
             continue
         data = readNBytes(nBytes,pi,h)
         if data:
@@ -206,16 +209,17 @@ def readNBytes(n,pi,h):
         eprint("error: read bytes didnt return " + str(n) + "B")
         return False
     
-def readCO2Values(pi,h):
+def readCO2Values(pi,h,verbose):
     '''
     Reads in the CO2, T, and RH values and returns the data.
     '''
     # READ MEASURED VALUES: 0x0300
     data = readFromAddr(0x03,0x00,18,pi,h)
-    printHuman(data)
+    if verbose:
+        printHuman(data)
     return data
 
-def calcCO2Values(pi,h,n):
+def calcCO2Values(pi,h,n,verbose):
     '''
     Takes an average of n measurements and returns the CO2 concetration,
     temperature in C, and relative humidity as a percent. The default
@@ -232,15 +236,16 @@ def calcCO2Values(pi,h,n):
     while len(rhs) < n:
         if loop_count == max_loops:
             break
-        ret = readDataReady(pi,h)
+        ret = readDataReady(pi,h,verbose)
         if ret == 0:
             wait_time = 2
-            print("  Waiting for",wait_time, "second(s) and checking again")
-            print("  Loops left to check for data:",max_loops-loop_count)
+            if verbose:
+                print("  Waiting for",wait_time, "second(s) and checking again")
+                print("  Loops left to check for data:",max_loops-loop_count)
             time.sleep(wait_time)
             
         elif ret == 1:
-            data = readCO2Values(pi,h)
+            data = readCO2Values(pi,h,verbose)
             co2s.append(calcFloat(data,[0,1,3,4]))
             tcs.append(calcFloat(data,[6,7,9,10]))
             rhs.append(calcFloat(data,[12,13,15,16]))
