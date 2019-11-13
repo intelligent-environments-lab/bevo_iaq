@@ -194,12 +194,24 @@ def takeMeasurement():
       - data: string of digits holding the measured data
     Prints the data to the terminal screen
     '''
-    print("pm0.5 count: %f" % calcFloat(data[24:30]))
-    print("pm1   count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[30:36]), calcFloat(data) ) )
-    print("pm2.5 count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[36:42]), calcFloat(data[6:12]) ) )
-    print("pm4   count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[42:48]), calcFloat(data[12:18]) ) )
-    print("pm10  count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[48:54]), calcFloat(data[18:24]) ) )
-    print("pm_typ: %f" % calcFloat(data[54:60]))
+    print("Concentration (ug/m3)")
+    print("---------------------------------------")
+    print("PM1: {0:.3f}\tPM2.5: {0:.3f}\tPM4: {0:.3f}\tPM10: {0:.3f}".format(calcFloat(data), calcFloat(data[6:12]), calcFloat(data[12:18]), calcFloat(data[18:24])))
+    print("Count (#/L)")
+    print("---------------------------------------")
+    print("PM0.5 count: {0:.3f}".format(calcFloat(data[24:30])))
+    print("PM1   count: {0:.3f}".format(calcFloat(data[30:36])))
+    print("PM2.5 count: {0:.3f}".format(calcFloat(data[36:42])))
+    print("PM4   count: {0:.3f}".format(calcFloat(data[42:48])))
+    print("PM10  count: {0:.3f}".format(calcFloat(data[48:54])))
+    print("---------------------------------------")
+
+    #print("pm0.5 count: %f" % calcFloat(data[24:30]))
+    #print("pm1   count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[30:36]), calcFloat(data) ) )
+    #print("pm2.5 count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[36:42]), calcFloat(data[6:12]) ) )
+    #print("pm4   count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[42:48]), calcFloat(data[12:18]) ) )
+    #print("pm10  count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[48:54]), calcFloat(data[18:24]) ) )
+    #print("pm_typ: %f" % calcFloat(data[54:60]))
 
   # Reads data from the device and outputs it to the command line
   def readPMValues():
@@ -276,6 +288,7 @@ def takeMeasurement():
   # --------------- #
 
   for i in range(5):
+    count = 0
     reset()
     time.sleep(0.1) # note: needed after reset
 
@@ -292,23 +305,27 @@ def takeMeasurement():
 
     data = readPMValues()
 
-    # Count 
-    pm_n[0] += calcFloat(data[24:30])
-    pm_n[1] += calcFloat(data[30:36])
-    pm_n[2] += calcFloat(data[36:42])
-    pm_n[3] += calcFloat(data[42:48])
-    pm_n[4] += calcFloat(data[48:54])
+    pm_typical = calcFloat(data[54:60])
+    if pm_typical > 0:
+      count += 1
+      # Count 
+      pm_n[0] += calcFloat(data[24:30])
+      pm_n[1] += calcFloat(data[30:36])
+      pm_n[2] += calcFloat(data[36:42])
+      pm_n[3] += calcFloat(data[42:48])
+      pm_n[4] += calcFloat(data[48:54])
 
-    # Concentration
-    pm_c[0] += calcFloat(data)
-    pm_c[1] += calcFloat(data[6:12])
-    pm_c[2] += calcFloat(data[12:18])
-    pm_c[3] += calcFloat(data[18:24])
+      # Concentration
+      pm_c[0] += calcFloat(data)
+      pm_c[1] += calcFloat(data[6:12])
+      pm_c[2] += calcFloat(data[12:18])
+      pm_c[3] += calcFloat(data[18:24])
+
     time.sleep(0.9)
 
   for i in range(len(pm_n)):
-    pm_n[i] /= 5
+    pm_n[i] /= count
   for i in range(len(pm_c)):
-    pm_c[i] /= 5
+    pm_c[i] /= count
 
   return pm_n, pm_c

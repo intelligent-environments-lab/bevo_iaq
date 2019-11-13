@@ -179,20 +179,29 @@ def takeMeasurement():
 			exit(1)
 
 		struct_co2 = struct.pack('>BBBB', data[0], data[1], data[3], data[4])
-		temp += struct.unpack('>f', struct_co2)
+		temp = struct.unpack('>f', struct_co2)
 		co2 += temp[0]
 
 		struct_T = struct.pack('>BBBB', data[6], data[7], data[9], data[10])
-		temp += struct.unpack('>f', struct_T)
+		temp = struct.unpack('>f', struct_T)
 		t += temp[0]
 
 		struct_rH = struct.pack('>BBBB', data[12], data[13], data[15], data[16])
-		temp += struct.unpack('>f', struct_rH)
+		temp = struct.unpack('>f', struct_rH)
 		rh += temp[0]
 
-		print("gas_ppm{sensor=\"SCD30\",gas=\"CO2\"} %f" % co2/(i+1))
-		print("temperature_degC{sensor=\"SCD30\"} %f" % t/(i+1))
-		print("humidity_rel_percent{sensor=\"SCD30\"} %f" % rh/(i+1))
+		print("Concentration (ppm)")
+	    print("---------------------------------------")
+	    print("CO2: {0:.1f}".format(co2/(i+1)))
+	    print("Environmental Variables")
+	    print("---------------------------------------")
+	    print("T (C): {0:.1f}".format(t/(i+1)))
+	    print("RH (%): {0:.1f}".format(rh/(i+1)))
+	    print("---------------------------------------")
+
+		#print("gas_ppm{sensor=\"SCD30\",gas=\"CO2\"} %f" % co2/(i+1))
+		#print("temperature_degC{sensor=\"SCD30\"} %f" % t/(i+1))
+		#print("humidity_rel_percent{sensor=\"SCD30\"} %f" % rh/(i+1))
 		time.sleep(1)
 
 	return t/5.0, rh/5.0, co2/5.0
