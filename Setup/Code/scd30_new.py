@@ -42,9 +42,9 @@ def takeMeasurement():
 	global pi
 	global h
 
-	co2 = 0
-	t = 0
-	rh = 0
+	co2 = (0)
+	t = (0)
+	rh = (0)
 
 	def eprint(*args, **kwargs):
 		print(*args, file=sys.stderr, **kwargs)
