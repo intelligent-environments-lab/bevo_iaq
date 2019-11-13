@@ -24,9 +24,14 @@ import time
 import logging
 import datetime
 import csv
-import os
+import os, signal
+import sys
+import struct
+from subprocess import call
 
 # Sensor-specific libraries
+import crcmod
+import pigpio
 import sps30
 import scd30
 
@@ -71,7 +76,7 @@ verbose = False
 
 # Functions
 # ------------------------------------------------------------------------- #
-def sps30_scan(crc, pi, h, verbose):
+def sps30_scan():
     '''
     Measures different particulate matter counts and concentrations in the
     room. Data are stored locally and to AWS S3 bucket.
@@ -81,21 +86,88 @@ def sps30_scan(crc, pi, h, verbose):
     
     # Declare all global variables to be returned (n = count, c = concentration)
     global pm_n, pm_c
-    
-    if sps30.reset(pi,h):
-        time.sleep(1)
-        power_on = sps30.startMeasurement(crc,pi,h)
-    
-        if power_on:
-            pm_n, pm_c = sps30.calcPMValues(pi,h,5,verbose)
-        else:
-            print('Problem opening connection to SPS30; saving dummy values')
-            pm_n = [-1,-1,-1,-1,-1]
-            pm_c = [-1,-1,-1,-1]
+
+    # ----- #
+    # Setup #
+    # ----- #
+
+    # Setting up communication
+    PIGPIO_HOST = '127.0.0.1'
+    I2C_SLAVE = 0x69
+    I2C_BUS = 1
+
+    # Checking to see if device is found
+    deviceOnI2C = call("i2cdetect -y 1 0x69 0x69|grep '\--' -q", shell=True) # grep exits 0 if match found
+    if deviceOnI2C:
+        print("I2Cdetect found SPS30")
     else:
-        print('Problem resetting; saving dummy values')
-        pm_n = [-1,-1,-1,-1,-1]
-        pm_c = [-1,-1,-1,-1]
+        print("SPS30 (0x69) not found on I2C bus")
+        return False
+      
+    # Calls the exit_gracefully function when terminated from the command line
+    signal.signal(signal.SIGINT, exit_gracefully)
+    signal.signal(signal.SIGTERM, exit_gracefully)
+
+    # Checking to see if pigpio is connected - if not, the command to run it is done via a call
+    pi = pigpio.pi(PIGPIO_HOST)
+    if not pi.connected:
+        print("No connection to pigpio daemon at " + PIGPIO_HOST + ".")
+        try:
+            call("sudo pigpiod")
+            print("Connection to pigpio daemon successful")
+        except:
+            return False
+    else:
+        print("Connection to pigpio daemon successful")
+
+    # Not sure...
+    try:
+        pi.i2c_close(0)
+    except:
+        if sys.exc_value and str(sys.exc_value) != "'unknown handle'":
+            print("Unknown error: ", sys.exc_type, ":", sys.exc_value)
+
+    # Opens connection between the RPi and the sensor
+    h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
+    f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
+
+    if len(sys.argv) > 1 and sys.argv[1] == "stop":
+        sps30.exit_gracefully(False,False)
+
+    # --------------- #
+    # Data Collection #
+    # --------------- #
+
+    sps30.reset()
+    time.sleep(0.1) # note: needed after reset
+
+    sps30.initialize()
+
+    ret = sps30.readDataReady()
+    if ret == -1:
+        print('resetting...',end='')
+        sps30.bigReset()
+        sps30.initialize()
+        continue
+
+    if ret == 0:
+        time.sleep(0.1)
+        continue
+
+    data = sps30.readPMValues()
+    
+    # Count
+    pm_n[0] = sps30.calcFloat(data[24:30])
+    pm_n[1] = sps30.calcFloat(data[30:36])
+    pm_n[2] = sps30.calcFloat(data[36:42])
+    pm_n[3] = sps30.calcFloat(data[42:48])
+    pm_n[4] = sps30.calcFloat(data[48:54])
+
+    # Concentration
+    pm_c[0] = sps30.calcFloat(data)
+    pm_c[1] = sps30.calcFloat(data[6:12])
+    pm_c[2] = sps30.calcFloat(data[12:18])
+    pm_c[3] = sps30.calcFloat(data[18:24])
 
     return {'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],'pm_c_1':pm_c[0],'pm_c_2p5':pm_c[1],'pm_c_4':pm_c[2],'pm_c_10':pm_c[3]}
 
@@ -271,7 +343,9 @@ def main():
             try:
                 # SPS30 scan
                 print('Running SPS30 (pm) scan...')
-                sps30_scan(crc_sps, pi_sps, h_sps, verbose)
+                if not sps30_scan():
+                    pm_n = [-1,-1,-1,-1,-1]
+                    pm_c = [-1,-1,-1,-1]
     
                 # SCD30 scan
                 print('Running SCD30 (T,RH,CO2) scan...')
@@ -303,38 +377,3 @@ def main():
 main()
 
 # ------------------------------------------------------------------------- #
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
