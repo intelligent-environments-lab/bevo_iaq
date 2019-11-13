@@ -103,10 +103,6 @@ def sps30_scan():
     else:
         print("SPS30 (0x69) not found on I2C bus")
         return False
-      
-    # Calls the exit_gracefully function when terminated from the command line
-    signal.signal(signal.SIGINT, sps30.exit_gracefully)
-    signal.signal(signal.SIGTERM, sps30.exit_gracefully)
 
     # Checking to see if pigpio is connected - if not, the command to run it is done via a call
     pi = pigpio.pi(PIGPIO_HOST)
@@ -132,7 +128,7 @@ def sps30_scan():
     f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
 
     if len(sys.argv) > 1 and sys.argv[1] == "stop":
-        sps30.exit_gracefully(False,False)
+        return False
 
     # --------------- #
     # Data Collection #
