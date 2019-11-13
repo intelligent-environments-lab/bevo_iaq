@@ -157,7 +157,7 @@ def takeMeasurement():
 	for i in range(5):
 
 		for j in range(10):
-			print('Looking for data - attempt:',j+1)
+			#print('Looking for data - attempt:',j+1)
 			ret = i2cWrite([0x02, 0x02])
 			if ret == -1:
 				exit(1)
@@ -170,7 +170,7 @@ def takeMeasurement():
 			if data[1] == 1:
 				break
 			else:
-				time.sleep(0.1)
+				time.sleep(0.2)
 
 		#read measurement
 		i2cWrite([0x03, 0x00])
