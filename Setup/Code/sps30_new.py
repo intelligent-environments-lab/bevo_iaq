@@ -205,6 +205,8 @@ def takeMeasurement():
     print("PM4   count: {0:.3f}".format(calcFloat(data[42:48])))
     print("PM10  count: {0:.3f}".format(calcFloat(data[48:54])))
     print("---------------------------------------")
+    print("Typical Size: {0:.3f}".format(calcFloat(data[54:60])))
+    print("---------------------------------------")
 
     #print("pm0.5 count: %f" % calcFloat(data[24:30]))
     #print("pm1   count: {0:.3f} concentration: {1:.3f}".format( calcFloat(data[30:36]), calcFloat(data) ) )
@@ -287,8 +289,8 @@ def takeMeasurement():
   # Data Collection #
   # --------------- #
 
+  count = 1
   for i in range(5):
-    count = 0
     reset()
     time.sleep(0.1) # note: needed after reset
 
@@ -322,6 +324,7 @@ def takeMeasurement():
       pm_c[3] += calcFloat(data[18:24])
 
     time.sleep(0.9)
+
 
   for i in range(len(pm_n)):
     pm_n[i] /= count
