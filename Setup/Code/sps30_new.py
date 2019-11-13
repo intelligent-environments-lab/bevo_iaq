@@ -309,7 +309,6 @@ def takeMeasurement():
 
     pm_typical = calcFloat(data[54:60])
     if pm_typical > 0:
-      count += 1
       # Count 
       pm_n[0] += calcFloat(data[24:30])
       pm_n[1] += calcFloat(data[30:36])
@@ -322,6 +321,8 @@ def takeMeasurement():
       pm_c[1] += calcFloat(data[6:12])
       pm_c[2] += calcFloat(data[12:18])
       pm_c[3] += calcFloat(data[18:24])
+      
+      count += 1
 
     time.sleep(0.9)
 
