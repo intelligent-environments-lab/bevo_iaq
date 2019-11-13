@@ -52,6 +52,12 @@
  4. Click "Register Wireless Device"
  5. Enter the MAC address you copied down earlier, give the device a name, and register
  6. A textbox will appear with the devices password. Now when you edit *wpa_supplicant.conf* in step 2 above, use "utexas-iot" as the ssid name and enter the password inside quotation marks with **no spaces** for the password. 
+ 
+### Attaching to Virtual Private Network (VPN)
+
+#### Resources
+1. [General Process](https://medium.com/@KyleARector/logmein-hamachi-on-raspberry-pi-ad2ba3619f3a)
+2. [Exception when using RPi Zero](https://community.logmein.com/t5/LogMeIn-Hamachi-Discussions/Raspberry-Pi-quot-illegal-instruction-quot/td-p/201479)
 
  ### Update RPi OS and Python
  Run the two lines below:
