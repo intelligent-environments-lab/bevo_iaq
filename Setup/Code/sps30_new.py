@@ -224,84 +224,84 @@ def takeMeasurement():
     reset()
     time.sleep(0.1) # note: needed after reset
 
-# ----- #
-# Setup #
-# ----- #
+  # ----- #
+  # Setup #
+  # ----- #
 
-# Setting up communication
-PIGPIO_HOST = '127.0.0.1'
-I2C_SLAVE = 0x69
-I2C_BUS = 1
+  # Setting up communication
+  PIGPIO_HOST = '127.0.0.1'
+  I2C_SLAVE = 0x69
+  I2C_BUS = 1
 
-# Checking to see if device is found
-deviceOnI2C = call("i2cdetect -y 1 0x69 0x69|grep '\--' -q", shell=True) # grep exits 0 if match found
-if deviceOnI2C:
-  print("I2Cdetect found SPS30")
-else:
-  print("SPS30 (0x69) not found on I2C bus")
-  exit(1)
-  
-# Calls the exit_gracefully function when terminated from the command line
-signal.signal(signal.SIGINT, exit_gracefully)
-signal.signal(signal.SIGTERM, exit_gracefully)
-
-# Checking to see if pigpio is connected - if not, the command to run it is done via a call
-pi = pigpio.pi(PIGPIO_HOST)
-if not pi.connected:
-  eprint("No connection to pigpio daemon at " + PIGPIO_HOST + ".")
-  try:
-    call("sudo pigpiod")
-    print("Connection to pigpio daemon successful")
-  except:
+  # Checking to see if device is found
+  deviceOnI2C = call("i2cdetect -y 1 0x69 0x69|grep '\--' -q", shell=True) # grep exits 0 if match found
+  if deviceOnI2C:
+    print("I2Cdetect found SPS30")
+  else:
+    print("SPS30 (0x69) not found on I2C bus")
     exit(1)
-else:
-  print("Connection to pigpio daemon successful")
+    
+  # Calls the exit_gracefully function when terminated from the command line
+  signal.signal(signal.SIGINT, exit_gracefully)
+  signal.signal(signal.SIGTERM, exit_gracefully)
 
-# Not sure...
-try:
-  pi.i2c_close(0)
-except:
-  if sys.exc_value and str(sys.exc_value) != "'unknown handle'":
-    eprint("Unknown error: ", sys.exc_type, ":", sys.exc_value)
+  # Checking to see if pigpio is connected - if not, the command to run it is done via a call
+  pi = pigpio.pi(PIGPIO_HOST)
+  if not pi.connected:
+    eprint("No connection to pigpio daemon at " + PIGPIO_HOST + ".")
+    try:
+      call("sudo pigpiod")
+      print("Connection to pigpio daemon successful")
+    except:
+      exit(1)
+  else:
+    print("Connection to pigpio daemon successful")
 
-# Opens connection between the RPi and the sensor
-h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
-f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
+  # Not sure...
+  try:
+    pi.i2c_close(0)
+  except:
+    if sys.exc_value and str(sys.exc_value) != "'unknown handle'":
+      eprint("Unknown error: ", sys.exc_type, ":", sys.exc_value)
 
-if len(sys.argv) > 1 and sys.argv[1] == "stop":
-  exit_gracefully(False,False)
+  # Opens connection between the RPi and the sensor
+  h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
+  f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
 
-# --------------- #
-# Data Collection #
-# --------------- #
+  if len(sys.argv) > 1 and sys.argv[1] == "stop":
+    exit_gracefully(False,False)
 
-reset()
-time.sleep(0.1) # note: needed after reset
+  # --------------- #
+  # Data Collection #
+  # --------------- #
 
-initialize()
+  reset()
+  time.sleep(0.1) # note: needed after reset
 
-ret = readDataReady()
-if ret == -1:
-  eprint('resetting...',end='')
-  bigReset()
   initialize()
 
-if ret == 0:
-  time.sleep(0.1)
+  ret = readDataReady()
+  if ret == -1:
+    eprint('resetting...',end='')
+    bigReset()
+    initialize()
 
-data = readPMValues()
+  if ret == 0:
+    time.sleep(0.1)
 
-# Count 
-pm_n[0] = sps30.calcFloat(data[24:30])
-pm_n[1] = sps30.calcFloat(data[30:36])
-pm_n[2] = sps30.calcFloat(data[36:42])
-pm_n[3] = sps30.calcFloat(data[42:48])
-pm_n[4] = sps30.calcFloat(data[48:54])
+  data = readPMValues()
 
-# Concentration
-pm_c[0] = sps30.calcFloat(data)
-pm_c[1] = sps30.calcFloat(data[6:12])
-pm_c[2] = sps30.calcFloat(data[12:18])
-pm_c[3] = sps30.calcFloat(data[18:24])
+  # Count 
+  pm_n[0] = sps30.calcFloat(data[24:30])
+  pm_n[1] = sps30.calcFloat(data[30:36])
+  pm_n[2] = sps30.calcFloat(data[36:42])
+  pm_n[3] = sps30.calcFloat(data[42:48])
+  pm_n[4] = sps30.calcFloat(data[48:54])
 
-return pm_n, pm_c
+  # Concentration
+  pm_c[0] = sps30.calcFloat(data)
+  pm_c[1] = sps30.calcFloat(data[6:12])
+  pm_c[2] = sps30.calcFloat(data[12:18])
+  pm_c[3] = sps30.calcFloat(data[18:24])
+
+  return pm_n, pm_c
