@@ -148,12 +148,10 @@ def sps30_scan():
         print('resetting...')
         sps30.bigReset()
         sps30.initialize()
-        continue
 
     if ret == 0:
         time.sleep(0.1)
-        continue
-
+        
     data = sps30.readPMValues()
     
     # Count
