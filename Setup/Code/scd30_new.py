@@ -178,22 +178,17 @@ def takeMeasurement():
 		if data == False:
 			exit(1)
 		struct_co2 = struct.pack('>BBBB', data[0], data[1], data[3], data[4])
-		float_co2 += struct.unpack('>f', struct_co2)
+		co2 += struct.unpack('>f', struct_co2)
 
 		struct_T = struct.pack('>BBBB', data[6], data[7], data[9], data[10])
-		float_T += struct.unpack('>f', struct_T)
+		t += struct.unpack('>f', struct_T)
 
 		struct_rH = struct.pack('>BBBB', data[12], data[13], data[15], data[16])
-		float_rH += struct.unpack('>f', struct_rH)
+		rh += struct.unpack('>f', struct_rH)
 
-		if float_co2 > 0.0:
-			print("gas_ppm{sensor=\"SCD30\",gas=\"CO2\"} %f" % float_co2/(i+1))
-
-		print("temperature_degC{sensor=\"SCD30\"} %f" % float_T/(i+1))
-
-		if float_rH > 0.0:
-			print("humidity_rel_percent{sensor=\"SCD30\"} %f" % float_rH/(i+1))
-
+		print("gas_ppm{sensor=\"SCD30\",gas=\"CO2\"} %f" % co2/(i+1))
+		print("temperature_degC{sensor=\"SCD30\"} %f" % t/(i+1))
+		print("humidity_rel_percent{sensor=\"SCD30\"} %f" % rh/(i+1))
 		time.sleep(1)
 
-	return float_T/5, float_rH/5, float_co2/5
+	return t/5, rh/5, co2/5

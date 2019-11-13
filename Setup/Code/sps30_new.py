@@ -44,8 +44,8 @@ def takeMeasurement():
   global h
   global f_crc8
 
-  pm_n = [-1,-1,-1,-1,-1]
-  pm_c = [-1,-1,-1,-1]
+  pm_n = [0.0,0.0,0.0,0.0,0.0]
+  pm_c = [0.0,0.0,0.0,0.0]
   # --------- #
   # Functions #
   # --------- #
