@@ -285,11 +285,9 @@ if ret == -1:
   eprint('resetting...',end='')
   bigReset()
   initialize()
-  continue
 
 if ret == 0:
   time.sleep(0.1)
-  continue
 
 data = readPMValues()
 
