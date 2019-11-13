@@ -28,17 +28,6 @@ import csv
 # --------- #
 # Functions #
 # --------- #
-  
-# Error print function
-def eprint(*args, **kwargs):
-  print(*args, file=sys.stderr, **kwargs)
-  
-# Exits the program
-def exit_gracefully(a,b):
-  print("\nexiting...")
-  stopMeasurement()
-  pi.i2c_close(h)
-  exit(0)
 
 # Calculates checksum
 def calcCRC(TwoBdataArray):
@@ -55,13 +44,13 @@ def readNBytes(n):
   try:
     (count, data) = pi.i2c_read_device(h, n)
   except:
-    eprint("error: i2c_read failed")
-    exit(1)
+    print("error: i2c_read failed")
+    return False
 
   if count == n:
     return data
   else:
-    eprint("error: read bytes didnt return " + str(n) + "B")
+    print("error: read bytes didnt return " + str(n) + "B")
     return False
 
 # Write the data as bytes to the device
@@ -74,8 +63,7 @@ def i2cWrite(data):
   try:
     pi.i2c_write_device(h, data)
   except Exception as e:
-    pprint.pprint(e)
-    eprint("error in i2c_write:", e.__doc__ + ":",  e.value)
+    print("error in i2c_write:")
     return -1
   return True
 
@@ -91,13 +79,13 @@ def readFromAddr(LowB,HighB,nBytes):
   for amount_tries in range(3):
     ret = i2cWrite([LowB, HighB])
     if ret != True:
-      eprint("readFromAddr: write try unsuccessful, next")
+      print("readFromAddr: write try unsuccessful, next")
       continue
     data = readNBytes(nBytes)
     if data:
       return data
-    eprint("error in readFromAddr: " + hex(LowB) + hex(HighB) + " " + str(nBytes) + "B did return Nothing")
-  eprint("readFromAddr: write tries(3) exceeded")
+    print("error in readFromAddr: " + hex(LowB) + hex(HighB) + " " + str(nBytes) + "B did return Nothing")
+  print("readFromAddr: write tries(3) exceeded")
   return False
 
 # Starts the measurement
@@ -112,9 +100,9 @@ def startMeasurement():
     ret = i2cWrite([0x00, 0x10, 0x03, 0x00, calcCRC([0x03,0x00])])
     if ret == True:
       return True
-    eprint('startMeasurement unsuccessful, next try')
+    print('startMeasurement unsuccessful, next try')
     bigReset()
-  eprint('startMeasurement unsuccessful, giving up')
+  print('startMeasurement unsuccessful, giving up')
   return False
 
 # Shuts down the device by writing [0x01, 0x04] to the device
@@ -128,16 +116,16 @@ def reset():
     ret = i2cWrite([0xd3, 0x04])
     if ret == True:
       return True
-    eprint('reset unsuccessful, next try in', str(0.2 * i) + 's')
+    print('reset unsuccessful, next try in', str(0.2 * i) + 's')
     time.sleep(0.2 * i)
-  eprint('reset unsuccessful')
+  print('reset unsuccessful')
   return False
 
 # Checks to see if there is data available to read in
 def readDataReady():
   data = readFromAddr(0x02, 0x02,3)
   if data == False:
-    eprint("readDataReady: command unsuccessful")
+    print("readDataReady: command unsuccessful")
     return -1
   if data and data[1]:
     return 1
@@ -189,13 +177,13 @@ def readPMValues():
 
 # Initializes the measurement
 def initialize():
-  startMeasurement() or exit(1)
+  startMeasurement()
   time.sleep(0.9)
 
 # Big reset
 def bigReset():
   global h
-  eprint('resetting...',end='')
+  print('resetting...',end='')
   pi.i2c_close(h)
   time.sleep(0.5)
   h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
