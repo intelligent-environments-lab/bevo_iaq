@@ -234,6 +234,7 @@ def takeMeasurement(pi_in,h_in):
 
   # Big reset
   def bigReset():
+    global h
     eprint('resetting...',end='')
     pi.i2c_close(h)
     time.sleep(0.5)
