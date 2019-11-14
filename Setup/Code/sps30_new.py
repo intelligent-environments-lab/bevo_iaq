@@ -51,10 +51,6 @@ def takeMeasurement(pi_in,h_in):
   pm_n = [0.0,0.0,0.0,0.0,0.0]
   pm_c = [0.0,0.0,0.0,0.0]
 
-  # Calls the exit_gracefully function when terminated from the command line
-  signal.signal(signal.SIGINT, exit_gracefully)
-  signal.signal(signal.SIGTERM, exit_gracefully)
-
   # --------- #
   # Functions #
   # --------- #
