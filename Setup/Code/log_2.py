@@ -232,10 +232,10 @@ def aws_s3_upload_file(filename,s3_bucket,s3_filepath):
         logging.error(e)
 
 def main():
-    '''
-    Manages sensors and data storage on device.\n
-    return: void
-    '''
+	'''
+	Manages sensors and data storage on device.\n
+	return: void
+	'''
 	print('Running IAQ Beacon\n')
 
 	# ------------ #
@@ -296,37 +296,37 @@ def main():
 		print("Unknown Error")
 
 	# Begin loop for sensor scans
-    i = 1
-    try:
-        while True:
-            print('*'*20 + ' LOOP %d '%i + '*'*20)
-            try:
-                # SPS30 scan
-                print('Running SPS30 (pm) scan...')
-                sps30_scan(pi,h_sps)
-    
-                # SCD30 scan
-                print('Running SCD30 (T,RH,CO2) scan...')
-                scd30_scan(pi,h_scd)
-            except OSError as e:
-                print('OSError for I/O on a sensor. sleeping 10 seconds...')
-                time.sleep(10)
-                continue
-            
-            # Data management
-            print("Running data management...")
-            data_mgmt()
-    
-            # Prepare for next loop
-            delay = 10 #seconds
-            print('Waiting', delay, 'seconds before rescanning...')
-            #assert False
-            time.sleep(delay)
-            print('*'*20 + ' END ' + '*'*20)
-            print('Rescanning...')
-            i += 1
-    except KeyboardInterrupt:
-        print('User stopped operation')
+	i = 1
+	try:
+		while True:
+			print('*'*20 + ' LOOP %d '%i + '*'*20)
+			try:
+				# SPS30 scan
+				print('Running SPS30 (pm) scan...')
+				sps30_scan(pi,h_sps)
+
+				# SCD30 scan
+				print('Running SCD30 (T,RH,CO2) scan...')
+				scd30_scan(pi,h_scd)
+			except OSError as e:
+				print('OSError for I/O on a sensor. sleeping 10 seconds...')
+				time.sleep(10)
+				continue
+
+			# Data management
+			print("Running data management...")
+			data_mgmt()
+
+			# Prepare for next loop
+			delay = 10 #seconds
+			print('Waiting', delay, 'seconds before rescanning...')
+			#assert False
+			time.sleep(delay)
+			print('*'*20 + ' END ' + '*'*20)
+			print('Rescanning...')
+			i += 1
+	except KeyboardInterrupt:
+		print('User stopped operation')
 
 # ------------------------------------------------------------------------- #
 
