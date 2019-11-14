@@ -260,7 +260,7 @@ def main():
 	PIGPIO_HOST = '127.0.0.1'
 	# Checking to see if pigpio is connected - if not, the command to run it is done via a call
 	pi = pigpio.pi(PIGPIO_HOST)
-	if not pi_sps.connected:
+	if not pi.connected:
 		print("No connection to pigpio daemon at " + PIGPIO_HOST + ".")
 		try:
 			call("sudo pigpiod")
