@@ -208,5 +208,6 @@ def takeMeasurement():
 		time.sleep(1)
 
 	pi.i2c_close(h)
+	pi.close()
 
 	return t/count, rh/count, co2/count
