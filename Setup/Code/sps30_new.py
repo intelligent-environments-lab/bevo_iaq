@@ -234,10 +234,11 @@ def takeMeasurement(pi_in,h_in):
 
   # Big reset
   def bigReset():
-    global h
     eprint('resetting...',end='')
     pi.i2c_close(h)
     time.sleep(0.5)
+    I2C_BUS = 1
+    I2C_Slave = 0x69
     h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
     time.sleep(0.5)
     reset()
