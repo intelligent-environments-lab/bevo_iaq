@@ -236,7 +236,7 @@ def main():
     Manages sensors and data storage on device.\n
     return: void
     '''
-    print('Running IAQ Beacon\n')
+	print('Running IAQ Beacon\n')
 
 	# ------------ #
 	# Sensor Setup #
@@ -251,7 +251,7 @@ def main():
 		exit(1)
 
 	scdOnI2C = call("i2cdetect -y 1 0x61 0x61|grep '\--' -q", shell=True) # grep exits 0 if match found
-	if spsOnI2C:
+	if scdOnI2C:
 		print("I2Cdetect found SCD30")
 	else:
 		print("SCD30 (0x61) not found on I2C bus")
