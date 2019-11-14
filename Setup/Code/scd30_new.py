@@ -33,7 +33,7 @@ import struct
 import sys
 import crcmod # aptitude install python-crcmod
 
-def takeMeasurement(pi_in,h_in):
+def takeMeasurement():
 	'''
 	Gets some values
 	'''
@@ -42,15 +42,36 @@ def takeMeasurement(pi_in,h_in):
 	global pi
 	global h
 
-	pi = pi_in
-	h = h_in
-
 	co2 = 0.0
 	t = 0.0
 	rh = 0.0
 
 	def eprint(*args, **kwargs):
 		print(*args, file=sys.stderr, **kwargs)
+
+	PIGPIO_HOST = '127.0.0.1'
+
+	pi = pigpio.pi(PIGPIO_HOST)
+	if not pi.connected:
+		eprint("no connection to pigpio daemon at " + PIGPIO_HOST + ".")
+		exit(1)
+
+	I2C_SLAVE = 0x61
+	I2C_BUS = 1
+
+	try:
+		pi.i2c_close(0)
+	except:
+		if sys.exc_value and str(sys.exc_value) != "'unknown handle'":
+			eprint("Unknown error: ", sys.exc_type, ":", sys.exc_value)
+
+	try:
+		h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
+	except:
+		eprint("i2c open failed")
+		exit(1)
+
+	# read meas interval (not documented, but works)
 
 	def read_n_bytes(n):
 
@@ -185,5 +206,7 @@ def takeMeasurement(pi_in,h_in):
 		#print("temperature_degC{sensor=\"SCD30\"} %f" % t/(i+1))
 		#print("humidity_rel_percent{sensor=\"SCD30\"} %f" % rh/(i+1))
 		time.sleep(1)
+
+	pi.i2c_close(h)
 
 	return t/count, rh/count, co2/count

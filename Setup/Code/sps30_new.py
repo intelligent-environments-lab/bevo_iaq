@@ -35,7 +35,7 @@ import pprint
 from datetime import datetime
 import csv
 
-def takeMeasurement(pi_in,h_in):
+def takeMeasurement():
   '''
   Gets some values
   '''
@@ -44,13 +44,8 @@ def takeMeasurement(pi_in,h_in):
   global h
   global f_crc8
 
-  pi = pi_in
-  h = h_in
-  f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
-
   pm_n = [0.0,0.0,0.0,0.0,0.0]
   pm_c = [0.0,0.0,0.0,0.0]
-
   # --------- #
   # Functions #
   # --------- #
@@ -238,12 +233,57 @@ def takeMeasurement(pi_in,h_in):
     eprint('resetting...',end='')
     pi.i2c_close(h)
     time.sleep(0.5)
-    I2C_BUS = 1
-    I2C_Slave = 0x69
     h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
     time.sleep(0.5)
     reset()
     time.sleep(0.1) # note: needed after reset
+
+  # ----- #
+  # Setup #
+  # ----- #
+
+  # Setting up communication
+  PIGPIO_HOST = '127.0.0.1'
+  I2C_SLAVE = 0x69
+  I2C_BUS = 1
+
+  # Checking to see if device is found
+  deviceOnI2C = call("i2cdetect -y 1 0x69 0x69|grep '\--' -q", shell=True) # grep exits 0 if match found
+  if deviceOnI2C:
+    print("I2Cdetect found SPS30")
+  else:
+    print("SPS30 (0x69) not found on I2C bus")
+    exit(1)
+    
+  # Calls the exit_gracefully function when terminated from the command line
+  signal.signal(signal.SIGINT, exit_gracefully)
+  signal.signal(signal.SIGTERM, exit_gracefully)
+
+  # Checking to see if pigpio is connected - if not, the command to run it is done via a call
+  pi = pigpio.pi(PIGPIO_HOST)
+  if not pi.connected:
+    eprint("No connection to pigpio daemon at " + PIGPIO_HOST + ".")
+    try:
+      call("sudo pigpiod")
+      print("Connection to pigpio daemon successful")
+    except:
+      exit(1)
+  else:
+    print("Connection to pigpio daemon successful")
+
+  # Not sure...
+  try:
+    pi.i2c_close(0)
+  except:
+    if sys.exc_value and str(sys.exc_value) != "'unknown handle'":
+      eprint("Unknown error: ", sys.exc_type, ":", sys.exc_value)
+
+  # Opens connection between the RPi and the sensor
+  h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
+  f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
+
+  if len(sys.argv) > 1 and sys.argv[1] == "stop":
+    exit_gracefully(False,False)
 
   # --------------- #
   # Data Collection #
@@ -291,5 +331,7 @@ def takeMeasurement(pi_in,h_in):
     pm_n[i] /= count
   for i in range(len(pm_c)):
     pm_c[i] /= count
+
+  pi.i2c_close(h)
 
   return pm_n, pm_c

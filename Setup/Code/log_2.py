@@ -76,7 +76,7 @@ verbose = False
 
 # Functions
 # ------------------------------------------------------------------------- #
-def sps30_scan(pi,h):
+def sps30_scan():
     '''
     Measures different particulate matter counts and concentrations in the
     room. Data are stored locally and to AWS S3 bucket.
@@ -87,11 +87,11 @@ def sps30_scan(pi,h):
     # Declare all global variables to be returned (n = count, c = concentration)
     global pm_n, pm_c
 
-    pm_n, pm_c = sps30_new.takeMeasurement(pi,h)
+    pm_n, pm_c = sps30_new.takeMeasurement()
 
     return {'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],'pm_c_1':pm_c[0],'pm_c_2p5':pm_c[1],'pm_c_4':pm_c[2],'pm_c_10':pm_c[3]}
 
-def scd30_scan(pi,h):
+def scd30_scan():
     '''
     Measures the carbon dioxide concentration, temperature, and relative
     humidity in the room. Data are stored locally and to AWS S3 bucket.
@@ -103,7 +103,7 @@ def scd30_scan(pi,h):
     # Declare all global variables to be returned
     global co2, tc, rh
 
-    tc, rh, co2 = scd30_new.takeMeasurement(pi,h)
+    tc, rh, co2 = scd30_new.takeMeasurement()
 
     return {'CO2':co2,'TC':tc,'RH':rh}
 
@@ -232,101 +232,44 @@ def aws_s3_upload_file(filename,s3_bucket,s3_filepath):
         logging.error(e)
 
 def main():
-	'''
-	Manages sensors and data storage on device.\n
-	return: void
-	'''
-	print('Running IAQ Beacon\n')
+    '''
+    Manages sensors and data storage on device.\n
+    return: void
+    '''
+    print('Running IAQ Beacon\n')
 
-	# ------------ #
-	# Sensor Setup #
-	# ------------ #
-
-	# Checking to see if devices are found
-	spsOnI2C = call("i2cdetect -y 1 0x69 0x69|grep '\--' -q", shell=True) # grep exits 0 if match found
-	if spsOnI2C:
-		print("I2Cdetect found SPS30")
-	else:
-		print("SPS30 (0x69) not found on I2C bus")
-		exit(1)
-
-	scdOnI2C = call("i2cdetect -y 1 0x61 0x61|grep '\--' -q", shell=True) # grep exits 0 if match found
-	if scdOnI2C:
-		print("I2Cdetect found SCD30")
-	else:
-		print("SCD30 (0x61) not found on I2C bus")
-		exit(1)
-
-	PIGPIO_HOST = '127.0.0.1'
-	# Checking to see if pigpio is connected - if not, the command to run it is done via a call
-	pi = pigpio.pi(PIGPIO_HOST)
-	if not pi.connected:
-		print("No connection to pigpio daemon at " + PIGPIO_HOST + ".")
-		try:
-			call("sudo pigpiod")
-			print("Connection to pigpio daemon successful")
-		except:
-			exit(1)
-	else:
-		print("Connection to pigpio daemon successful")
-
-	# Setting up communication
-	I2C_BUS = 1
-	I2C_SPS_SLAVE = 0x69
-	I2C_SCD_SLAVE = 0x61
-
-	# Opens connection between the RPi and the SPS30
-	try:
-		h_sps = pi.i2c_open(I2C_BUS, I2C_SPS_SLAVE)
-	except:
-		print("i2c open failed")
-		exit(1)
-
-	# Opens connection between the RPi and the SCD30
-	try:
-		h_scd = pi.i2c_open(I2C_BUS, I2C_SCD_SLAVE)
-	except:
-		print("i2c open failed")
-		exit(1)
-
-	# Close connection to pi on handle 0
-	try:
-		pi.i2c_close(0)
-	except:
-		print("Unknown Error")
-
-	# Begin loop for sensor scans
-	i = 1
-	try:
-		while True:
-			print('*'*20 + ' LOOP %d '%i + '*'*20)
-			try:
-				# SPS30 scan
-				print('Running SPS30 (pm) scan...')
-				sps30_scan(pi,h_sps)
-
-				# SCD30 scan
-				print('Running SCD30 (T,RH,CO2) scan...')
-				scd30_scan(pi,h_scd)
-			except OSError as e:
-				print('OSError for I/O on a sensor. sleeping 10 seconds...')
-				time.sleep(10)
-				continue
-
-			# Data management
-			print("Running data management...")
-			data_mgmt()
-
-			# Prepare for next loop
-			delay = 10 #seconds
-			print('Waiting', delay, 'seconds before rescanning...')
-			#assert False
-			time.sleep(delay)
-			print('*'*20 + ' END ' + '*'*20)
-			print('Rescanning...')
-			i += 1
-	except KeyboardInterrupt:
-		print('User stopped operation')
+    # Begin loop for sensor scans
+    i = 1
+    try:
+        while True:
+            print('*'*20 + ' LOOP %d '%i + '*'*20)
+            try:
+                # SPS30 scan
+                print('Running SPS30 (pm) scan...')
+                sps30_scan()
+    
+                # SCD30 scan
+                print('Running SCD30 (T,RH,CO2) scan...')
+                scd30_scan()
+            except OSError as e:
+                print('OSError for I/O on a sensor. sleeping 10 seconds...')
+                time.sleep(10)
+                continue
+            
+            # Data management
+            print("Running data management...")
+            data_mgmt()
+    
+            # Prepare for next loop
+            delay = 60 #seconds
+            print('Waiting', delay, 'seconds before rescanning...')
+            #assert False
+            time.sleep(delay)
+            print('*'*20 + ' END ' + '*'*20)
+            print('Rescanning...')
+            i += 1
+    except KeyboardInterrupt:
+        print('User stopped operation')
 
 # ------------------------------------------------------------------------- #
 
