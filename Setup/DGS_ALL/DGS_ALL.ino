@@ -10,32 +10,32 @@
 */
 
   // O3
-  const int RX1 = 8;
-  const int TX1 = 9;
+  const int RX1 = 0;
+  const int TX1 = 1;
   SoftwareSerial SoftSerialOne(RX1,TX1);
   float TotVgas_o3 = 0;
   float TotVref_o3 = 0;
   float TotVtemp_o3 = 0;
   
   // CO
-  const int RX2 = 10;
-  const int TX2 = 11;
+  const int RX2 = 2;
+  const int TX2 = 3;
   SoftwareSerial SoftSerialTwo(RX2,TX2);
   float TotVgas_co = 0;
   float TotVref_co = 0;
   float TotVtemp_co = 0;
   
   // SO2
-  const int RX3 = 12;
-  const int TX3 = 13;
+  const int RX3 = 4;
+  const int TX3 = 5;
   SoftwareSerial SoftSerialThree(RX3,TX3);
   float TotVgas_so2 = 0;
   float TotVref_so2 = 0;
   float TotVtemp_so2 = 0;
   
   // NO2
-  const int RX4 = 14;
-  const int TX4 = 15;
+  const int RX4 = 6;
+  const int TX4 = 7;
   SoftwareSerial SoftSerialFour(RX4,TX4);
   float TotVgas_no2 = 0;
   float TotVref_no2 = 0;
