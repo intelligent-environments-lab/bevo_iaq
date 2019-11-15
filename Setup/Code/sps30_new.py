@@ -289,21 +289,24 @@ def takeMeasurement():
   # Data Collection #
   # --------------- #
 
+  reset()
+  time.sleep(0.1) # note: needed after reset
+
+  initialize()
+
   count = 1
   for i in range(5):
-    reset()
-    time.sleep(0.1) # note: needed after reset
-
-    initialize()
 
     ret = readDataReady()
     if ret == -1:
       eprint('resetting...',end='')
       bigReset()
       initialize()
+      continue
 
     if ret == 0:
       time.sleep(0.1)
+      continue
 
     data = readPMValues()
 
