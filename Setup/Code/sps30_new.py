@@ -333,6 +333,6 @@ def takeMeasurement():
     pm_c[i] /= count
 
   pi.i2c_close(h)
-  pi.close()
+  pi.stop()
 
   return pm_n, pm_c
