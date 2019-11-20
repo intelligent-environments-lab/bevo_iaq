@@ -13,16 +13,16 @@ sudo apt-get install python-pip -y # Python 2
 sudo apt-get install python3-pip -y # Python 3
 
 # Install pandas and numpy
-apt install python3-pandas -y
-apt install python3-numpy -y
+sudo apt-get install python3-pandas -y
+sudo apt-get install python3-numpy -y
 
 # Install other packages
 sudo apt-get install python-pigpio -y
 
 # Replace pigpiod service file with bug free version
-install -o root -g root -m 0644 systemd/pigpiod.service /lib/systemd/system/pigpiod.service
-systemctl enable pigpiod
-systemctl start pigpiod
+#install -o root -g root -m 0644 systemd/pigpiod.service /lib/systemd/system/pigpiod.service
+#systemctl enable pigpiod
+#systemctl start pigpiod
 
 # Write environment file for environment variables
 # *** CODE HERE ***
