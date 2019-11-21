@@ -33,13 +33,13 @@ sudo apt-get install python-pigpio -y
 # *** CODE HERE ***
 
 # Set up locale, timezone, language
-timedatectl set-timezone US/Central
+sudo timedatectl set-timezone US/Central
 
 # # Install Hamachi
 # apt upgrade
 # apt install lsb lsb-core
-wget https://www.vpn.net/installers/logmein-hamachi_2.1.0.203–1_armhf.deb
-dpkg -i logmein-hamachi_2.1.0.203–1_armhf.deb
+sudo wget https://www.vpn.net/installers/logmein-hamachi_2.1.0.203–1_armhf.deb
+sudo dpkg -i logmein-hamachi_2.1.0.203–1_armhf.deb
 # hamachi set-nick
 # hamachi login
 # hamachi attach hello@yoursite.com
