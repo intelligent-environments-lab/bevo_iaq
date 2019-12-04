@@ -3,11 +3,15 @@ This document details the basics of the Building EnVironment and Occupancy (BEVO
 
 ## Variables Measured
 
-The BEVO IAQ, in its first iteration, will be able to monitor:
+The BEVO IAQ, in its second iteration, will be able to monitor:
 -	**Temperature/Relative Humidity**: influences thermal comfort 
 -	**Carbon Dioxide**: Associated with ventilation rates and high concentrations have been shown to impair cognitive function
 -	**Total Volatile Organic Compounds**: Any airborne organic compound commonly associated with cleaning products that may cause upper respiratory irritation 
 -	**Particulate Matter**: Any airborne solid/liquid particles such as dust, pollen, or particles in smoke that are associated with inflammation/irritation of upper respiratory system
+- **Sulfur Dioxide**: Typically associated with vehicle exhaust and is a known respiratory irritant
+- **Nitrogen Dioxide**: Similar to sulfur dioxide
+- **Ozone**: Secondary outdoor air pollutant that is highly reactive with organic compounds found indoors
+- **Carbon Monoxide**: Indoor air pollutant associated with incomplete combustion processes
 -	**Light Level**: To help determine when lights are on or off
 
 ## Sensors
@@ -57,9 +61,5 @@ The TSL sensor is capable of measuring the following:
 
 More on how to connect to and collect readings from the sensor can be found online [here]() or through the [setup](Setup/TSL) directory in this repository. 
 
-### Adafruit Real-Time-Clock (RTC) 
-
-![RTC](https://media.digikey.com/Photos/Adafruit%20Industries%20LLC/MFG_3295_top.jpg)
-
-The RTC is capable of keeping track of the time even when not connected to WiFi. The BEVO IAQ might not always be deployed in a location with reliable WiFi so having this sensor on board will make sure that the correct timestamp is written to the rows of the output file. 
+### SPEC 
 
