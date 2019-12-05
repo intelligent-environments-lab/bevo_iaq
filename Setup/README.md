@@ -188,8 +188,45 @@ The SVM30 and SPS30 are connected through the use of [5-pin female single connec
 For the remaining sensors, wires are cut, crimped, and plugged in with the following specifications:
 1. **SCD30**
  - Wires: blue, black, red, yellow, and green wires each cut to a length of 3 inches
+ - Female to Female connections:
+  - PCB Connection: 5x1 blue, black, red, yellow, green
+  - Sensor Connection: 4x1 red, black, green, yellow; 1x1 blue
+ - i2c Address: 61
+ - Layout:
+ ![pcb-scd30](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/PCB%20-%20SCD30.png)
+ 
+ 2. **SVM30**
+ *Note: Connectors are provided - wires do not need to be crimped*
+ - Wires: red, white, yellow, black
+ - Wire to connector
+ - i2c Address(es): 58 and 70
+ - Layout: 
+ ![pcb-svm30](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/PCB%20-%20SVM30.png)
+ 
+ 3. **SPS30**
+ *Note: Connectors are provided - wires do not need to be crimped*
+ - Wires: red, black, navy, green, yellow
+ - Wire to connector
+ - i2c Address(es): 69
+ - Layout: 
+ ![pcb-sps30](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/PCB%20-%20SPS30.png)
+ 
+ 4. **TSL**
+ - Wires: black, red, yellow, green
  - Female to Female connections
- Layout: ![pcb-scd30](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/PCB%20-%20SCD30.png)
+  - PCB Connection: 4x1 black, red, yellow, green
+  - Sensor Connection: 2x1 red, black; 2x1 yellow, green 
+ - i2c Address: 29
+ - Layout: 
+ ![pcb-tsl](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/PCB%20-%20TSL.png)
+ 
+ 5. **RPi**
+ - Wires: black, red, yellow, green
+ - Female to Female connections
+  - PCB Connection: 4x1 red, black, yellow, green
+  - RPi Connection: 5x2 (top row) red, red (fan), black, space, space (bottom row) space, yellow, green, space, black
+ - Layout:
+ ![rpi-pcb](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/RPi%20-%20PCB%20and%20Fan.png)
 
 ## Code Development
 (Under Construction)
