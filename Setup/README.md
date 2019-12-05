@@ -226,6 +226,7 @@ For the remaining sensors, wires are cut, crimped, and plugged in with the follo
   - PCB Connection: 4x1 red, black, yellow, green
   - RPi Connection: 5x2 (top row) red, red (fan), black, space, space (bottom row) space, yellow, green, space, black
  - Layout:
+ 
  ![rpi-pcb](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/RPi%20-%20PCB%20and%20Fan.png)
 
 ## Code Development
