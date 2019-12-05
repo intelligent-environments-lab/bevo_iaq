@@ -189,7 +189,7 @@ For the remaining sensors, wires are cut, crimped, and plugged in with the follo
 1. **SCD30**
  - Wires: blue, black, red, yellow, and green wires each cut to a length of 3 inches
  - Female to Female connections
- Layout: ![https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/PCB%20-%20SCD30.png]
+ Layout: ![pcb-scd30](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/PCB%20-%20SCD30.png)
 
 ## Code Development
 (Under Construction)
