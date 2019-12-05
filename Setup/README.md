@@ -162,14 +162,34 @@ The schematic below shows one possible way to connect the sensors to the RPi via
 
 ![bevo_iaq_bb](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Layouts/BEVO_IAQ_bb.png)
 
-### Printed Circuit Board Development
+### Printed Circuit Board
 A printed circuit board (PCB), shown below, was developed for this project. The PCB design does *not* allow for any direct connections to the board via headers except for the the RTC PCF8523 - the other sensors must be connected with wires.
 
 ![bevo_iaq_pcb](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Layouts/BEVO_IAQ_New_pcb.png)
 
-The sensors in the schematic above, from top to bottom, are the SCD30, SVM30, SPS30, TSL2591, and PCF8523. The SVM30 and SPS30 are connected through the use of [5-pin female single connectors](https://images-na.ssl-images-amazon.com/images/I/41WAqkLeBJL._SL500_AC_SS350_.jpg) and [4-pin female single connectors](https://images-na.ssl-images-amazon.com/images/I/411g-Ag85ML._SL500_AC_SS350_.jpg), respectively. The remaining sensors can be connected to [male-to-female headers](http://img.dxcdn.com/productimages/sku_152192_2.jpg) soldered to the bottom of the board.
+The sensors in the schematic above are labeled, and from top to bottom are:
+1. SCD30 - Carbon Dioxide, Temperature, and Relative Humidity
+2. SVM30 - Total Volatile Organic Compounds
+3. SPS30 - Particulate Matter
+4. TSL2591 - Light
+5. PCF8523 - Clock
 
-The PCB in the schematic shows the top view. The connections are routed on the bottom of the board and, from right to left, correspond to SCL, SDA, Vin, and Gnd. If there is a fifth connection, that connection is also ground i.e. SCL, SDA, Vin, Gnd, and Gnd. Two 4.7 k-Ohm resistors are connected at the top and second to bottom rows as pull-up resistors. 
+The remaining sensors are be connected with female-to-female wires after soldering male-to-male header pins to both the PCB and each individual sensor. The PCB in the schematic shows the top view where the connections are routed on the bottom of the board. There are five columns of connections on the PCB. From left to right, these columns represent specific pin connections:
+1. Extra GND connection - needed for SCD30 and SPS30 SEL pins
+2. GND connection
+3. Vin connection
+4. Serial Data (SDA) connection
+5. Serial Clock (SCL) connection
+
+Two 4.7 k-Ohm resistors are connected at the top and bottom as pull-up resistors. 
+
+The SVM30 and SPS30 are connected through the use of [5-pin female single connectors](https://images-na.ssl-images-amazon.com/images/I/41WAqkLeBJL._SL500_AC_SS350_.jpg) and [4-pin female single connectors](https://images-na.ssl-images-amazon.com/images/I/411g-Ag85ML._SL500_AC_SS350_.jpg), respectively.
+
+For the remaining sensors, wires are cut, crimped, and plugged in with the following specifications:
+1. **SCD30**: 
+ - Wires: blue, black, red, yellow, and green wires each cut to a length of 3 inches
+ - Female to Female connections
+ Layout: 
 
 ## Code Development
 (Under Construction)
