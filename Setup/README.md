@@ -186,10 +186,10 @@ Two 4.7 k-Ohm resistors are connected at the top and bottom as pull-up resistors
 The SVM30 and SPS30 are connected through the use of [5-pin female single connectors](https://images-na.ssl-images-amazon.com/images/I/41WAqkLeBJL._SL500_AC_SS350_.jpg) and [4-pin female single connectors](https://images-na.ssl-images-amazon.com/images/I/411g-Ag85ML._SL500_AC_SS350_.jpg), respectively.
 
 For the remaining sensors, wires are cut, crimped, and plugged in with the following specifications:
-1. **SCD30**: 
+1. **SCD30**
  - Wires: blue, black, red, yellow, and green wires each cut to a length of 3 inches
  - Female to Female connections
- Layout: 
+ Layout: ![https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/PCB%20-%20SCD30.png]
 
 ## Code Development
 (Under Construction)
