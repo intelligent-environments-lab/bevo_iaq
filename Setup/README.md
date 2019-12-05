@@ -193,6 +193,7 @@ For the remaining sensors, wires are cut, crimped, and plugged in with the follo
   - Sensor Connection: 4x1 red, black, green, yellow; 1x1 blue
  - i2c Address: 61
  - Layout:
+ 
  ![pcb-scd30](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/PCB%20-%20SCD30.png)
  
  2. **SVM30**
@@ -201,6 +202,7 @@ For the remaining sensors, wires are cut, crimped, and plugged in with the follo
  - Wire to connector
  - i2c Address(es): 58 and 70
  - Layout: 
+ 
  ![pcb-svm30](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/PCB%20-%20SVM30.png)
  
  3. **SPS30**
@@ -209,6 +211,7 @@ For the remaining sensors, wires are cut, crimped, and plugged in with the follo
  - Wire to connector
  - i2c Address(es): 69
  - Layout: 
+ 
  ![pcb-sps30](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/PCB%20-%20SPS30.png)
  
  4. **TSL**
@@ -218,6 +221,7 @@ For the remaining sensors, wires are cut, crimped, and plugged in with the follo
   - Sensor Connection: 2x1 red, black; 2x1 yellow, green 
  - i2c Address: 29
  - Layout: 
+ 
  ![pcb-tsl](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/PCB%20-%20TSL.png)
  
  5. **RPi**
