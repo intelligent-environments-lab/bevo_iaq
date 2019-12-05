@@ -1,17 +1,17 @@
 
 # ------------------------------------------------------------------------- #
-# log_2															   #
+# log_2				       			       		    #
 # ------------------------------------------------------------------------- #
 # Description: The log_2 python file is responsible for running the         #
-# Sensirion SPS30 and SCD30 sensors. Two user-created libraries are		   #
+# Sensirion SPS30 and SCD30 sensors. Two user-created libraries are	    #
 # imported to create the sensor instances. An infinite loop runs that takes #
-# measurements from the sensors and stores it in a csv file	locally. Data	   #
-# are pushed to an AWS S3 bucket periodically as well.					   #		
-# -------------------------------------------------------------------------   #
-# The University of Texas at Austin								         #
-# Intelligent Environments Laboratory (IEL)								#
-# Author: Hagen Fritz													#
-#	With notable contributions from:									#
+# measurements from the sensors and stores it in a csv file locally.        #
+# Data are pushed to an AWS S3 bucket periodically as well.		    #		
+# ------------------------------------------------------------------------- #
+# The University of Texas at Austin				            #
+# Intelligent Environments Laboratory (IEL)				    #
+# Author: Hagen Fritz							    #
+#	With notable contributions from:			  	    #
 #	- Sepehr Bastami													#
 #	- Dr. William Waites												#
 #	- Kingsley Nweye													#
