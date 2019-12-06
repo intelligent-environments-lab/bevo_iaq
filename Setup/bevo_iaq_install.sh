@@ -49,6 +49,7 @@ sudo python3 hamachi_setup.py
 sudo pip3 install adafruit-circuitpython-tsl2591
 sudo pip3 install adafruit-circuitpython-sgp30
 sudo apt-get install python-crcmod
+sudo pip3 install pyserial
 
 # AWS Libraries
 sudo pip install boto3
