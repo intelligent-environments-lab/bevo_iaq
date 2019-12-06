@@ -35,14 +35,15 @@ sudo apt-get install python-pigpio -y
 # Set up locale, timezone, language
 sudo timedatectl set-timezone US/Central
 
-# # Install Hamachi
-# apt upgrade
-# apt install lsb lsb-core
-sudo wget https://www.vpn.net/installers/logmein-hamachi_2.1.0.203-1_armhf.deb
-sudo dpkg -i logmein-hamachi_2.1.0.203-1_armhf.deb
-# hamachi set-nick
-# hamachi login
-# hamachi attach hello@yoursite.com
+# Install Hamachi
+#sudo wget https://www.vpn.net/installers/logmein-hamachi_2.1.0.203-1_armhf.deb
+#sudo dpkg -i logmein-hamachi_2.1.0.203-1_armhf.deb
+sudo python3 hamachi_setup.py
+#sudo rm -rf /var/lib/logmein-hamachi/
+#sudo hamachi login
+#hamachi set-nick
+#hamachi attach hello@yoursite.com
+#sudo update-rc.d logmein-hamachi defaults
 
 # Sensor Libraries
 sudo pip3 install adafruit-circuitpython-tsl2591
