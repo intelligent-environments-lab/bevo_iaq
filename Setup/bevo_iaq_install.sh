@@ -24,6 +24,10 @@ sudo apt-get install -y i2c-tools
 # Install other packages
 sudo apt-get install python-pigpio -y
 
+# Github Credentials
+git config --global user.email "hagenfritz@utexas.edu"
+git config --global user.name "hagenfritz"
+
 # Replace pigpiod service file with bug free version
 #install -o root -g root -m 0644 systemd/pigpiod.service /lib/systemd/system/pigpiod.service
 #systemctl enable pigpiod
