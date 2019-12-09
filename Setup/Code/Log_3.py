@@ -248,7 +248,7 @@ def main():
             tsl2591_scan(i2c)
 
             print('Running Sulfur Dioxide scan...')
-            SO2_scan()
+            #SO2_scan()
 
             print('Running Ozone scan...')
             O3_scan()
