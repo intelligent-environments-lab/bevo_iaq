@@ -98,7 +98,7 @@ def tsl2591_scan(i2c):
     data = {'Visible': visible, 'Infrared': infrared, 'Lux': lux}
     return data
 
-def SO2_scan:
+def SO2_scan():
     '''
 
     '''
@@ -107,7 +107,7 @@ def SO2_scan:
     data = {'SO2':so2,'T_S02':t0,'RH_SO2':rh0}
     return data
 
-def O3_scan:
+def O3_scan():
     '''
 
     '''
