@@ -125,7 +125,13 @@ def data_mgmt():
         'eCO2',
         'Lux',
         'Visible',
-        'Infrared'
+        'Infrared',
+        'SO2',
+        'T_SO2',
+        'T_RH',
+        'O3',
+        'T_O3',
+        'T_RH'
     ]
     data = [{
         'Timestamp': timestamp.strftime('%Y-%m-%d %H:%M:%S'),
@@ -133,7 +139,13 @@ def data_mgmt():
         'eCO2': eCO2,
         'Lux': lux,
         'Visible': visible,
-        'Infrared': infrared
+        'Infrared': infrared,
+        'SO2':so2,
+        'T_SO2':t0,
+        'T_RH':rh0,
+        'O3':o3,
+        'T_O3':t1,
+        'T_RH':rh1
     }]
     key = 'adafruit'
     write_csv(
