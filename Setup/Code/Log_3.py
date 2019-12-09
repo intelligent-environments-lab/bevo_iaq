@@ -15,6 +15,8 @@ import traceback
 import logging
 
 # Import sensor-specific libraries
+import serial
+import dgs
 import adafruit_sgp30
 import adafruit_tsl2591
 from board import SCL, SDA
@@ -47,7 +49,7 @@ s3 = boto3.client(
 S3_FILEPATH = {
     'adafruit':'ECJ/test_beacon/DATA/adafruit/'
 }
-S3_CALL_FREQUENCY = datetime.timedelta(minutes=2)
+S3_CALL_FREQUENCY = datetime.timedelta(minutes=5)
 S3_CALL_TIMESTAMP = {
     'adafruit': datetime.datetime.now()
 }
@@ -94,6 +96,24 @@ def tsl2591_scan(i2c):
     tsl.enabled = False
     # Return data
     data = {'Visible': visible, 'Infrared': infrared, 'Lux': lux}
+    return data
+
+def SO2_scan:
+    '''
+
+    '''
+    global so2, t0, rh0
+    so2, t0, rh0 = dgs.takeMeasurement('/dev/ttyUSB0')
+    data = {'SO2':so2,'T_S02':t0,'RH_SO2':rh0}
+    return data
+
+def O3_scan:
+    '''
+
+    '''
+    global o3, t1, rh1
+    o3, t1, rh1 = dgs.takeMeasurement('/dev/ttyUSB1')
+    data = {'O3':o3,'T_03':t1,'RH_O3':rh1}
     return data
 
 def data_mgmt():
@@ -227,6 +247,12 @@ def main():
             print('Running TSL2591 scan...')
             tsl2591_scan(i2c)
 
+            print('Running Sulfur Dioxide scan...')
+            SO2_scan()
+
+            print('Running Ozone scan...')
+            O3_scan()
+
         except OSError as e:
                 print('OSError for I/O on a sensor. sleeping 10 seconds...')
                 time.sleep(10)
@@ -237,7 +263,7 @@ def main():
         data_mgmt()
 
         # Prepare for next loop
-        delay = 60 #seconds
+        delay = 10 #seconds
         print('Waiting', delay, 'seconds before rescanning...')
         #assert False
         time.sleep(delay)
