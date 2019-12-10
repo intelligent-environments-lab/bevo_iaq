@@ -1,7 +1,7 @@
 # **********************************************************************
 # The University of Texas at Austin                                    *
 # Intelligent Environments Laboratory (IEL)                            *
-# Author: Hagen Fritz and Dung Le					                   *
+# Author: Hagen Fritz and Dung Le		                       *
 # Project:                                                             *
 # Email: hoangdung.le@utexas.edu                                       *
 # **********************************************************************
@@ -260,7 +260,7 @@ def main():
             tsl2591_scan(i2c)
 
             print('Running Sulfur Dioxide scan...')
-            #SO2_scan()
+            SO2_scan()
 
             print('Running Ozone scan...')
             O3_scan()

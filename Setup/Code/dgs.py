@@ -32,7 +32,7 @@ def takeMeasurement(device):
     '''
 
     # Connecting to device
-    ser = serial.Serial(device,write_timeout=5)
+    ser = serial.Serial(device,timeout=5,write_timeout=5)
     print("Connected to device at",device)
 
     # Getting data from device
@@ -44,9 +44,9 @@ def takeMeasurement(device):
         data = Data(line.split(", "))
 
         # Outputting
-        print("-------------------------")
+        print("----------------------------")
         print(data)
-        print("-------------------------")
+        print("----------------------------")
 
         c = data.ppb
         tc = data.temp
