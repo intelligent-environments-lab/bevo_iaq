@@ -70,6 +70,12 @@ def sgp30_scan(i2c):
     sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
     # Retrieve sensor scan data
     eCO2, TVOC = sgp30.iaq_measure()
+    # Outputting
+    if verbose:
+        print("-------------------------")
+        print("Concentration (ppb):\t"+TVOC)
+        print("Equivalent CO2 (ppm):\t"+eCO2)
+        print("-------------------------")
     # Return data
     data = {'TVOC': TVOC, 'eCO2': eCO2}
     return data
@@ -94,6 +100,13 @@ def tsl2591_scan(i2c):
         lux = 0
     # Disable the sensor and end process
     tsl.enabled = False
+    # Outputting
+    if verbose:
+        print("-------------------------")
+        print("Visible (?):\t"+visible)
+        print("Infrared (?):\t"+infrared)
+        print("Brightness (lux):\t"+lux)
+        print("-------------------------")
     # Return data
     data = {'Visible': visible, 'Infrared': infrared, 'Lux': lux}
     return data
