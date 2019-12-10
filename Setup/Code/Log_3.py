@@ -73,8 +73,8 @@ def sgp30_scan(i2c):
     # Outputting
     if verbose:
         print("-------------------------")
-        print("TVOC (ppb):\t\t"+str(TVOC))
-        print("eCO2 (ppm):\t\t"+str(eCO2))
+        print("TVOC (ppb):\t"+str(TVOC))
+        print("eCO2 (ppm):\t"+str(eCO2))
         print("-------------------------")
     # Return data
     data = {'TVOC': TVOC, 'eCO2': eCO2}
