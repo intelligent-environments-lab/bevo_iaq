@@ -73,8 +73,8 @@ def sgp30_scan(i2c):
     # Outputting
     if verbose:
         print("-------------------------")
-        print("Concentration (ppb):\t"+TVOC)
-        print("Equivalent CO2 (ppm):\t"+eCO2)
+        print("Concentration (ppb):\t"+str(TVOC))
+        print("Equivalent CO2 (ppm):\t"+str(eCO2))
         print("-------------------------")
     # Return data
     data = {'TVOC': TVOC, 'eCO2': eCO2}
@@ -103,9 +103,9 @@ def tsl2591_scan(i2c):
     # Outputting
     if verbose:
         print("-------------------------")
-        print("Visible (?):\t"+visible)
-        print("Infrared (?):\t"+infrared)
-        print("Brightness (lux):\t"+lux)
+        print("Visible (?):\t"+str(visible))
+        print("Infrared (?):\t"+str(infrared))
+        print("Brightness (lux):\t"+str(lux))
         print("-------------------------")
     # Return data
     data = {'Visible': visible, 'Infrared': infrared, 'Lux': lux}
