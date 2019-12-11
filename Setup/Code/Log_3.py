@@ -49,7 +49,7 @@ s3 = boto3.client(
 S3_FILEPATH = {
     'adafruit':'ECJ/test_beacon/DATA/adafruit/'
 }
-S3_CALL_FREQUENCY = datetime.timedelta(minutes=5)
+S3_CALL_FREQUENCY = datetime.timedelta(days=7)
 S3_CALL_TIMESTAMP = {
     'adafruit': datetime.datetime.now()
 }
@@ -111,22 +111,22 @@ def tsl2591_scan(i2c):
     data = {'Visible': visible, 'Infrared': infrared, 'Lux': lux}
     return data
 
-def SO2_scan():
+def NO2_scan():
     '''
 
     '''
-    global so2, t0, rh0
-    so2, t0, rh0 = dgs.takeMeasurement('/dev/ttyUSB0')
-    data = {'SO2':so2,'T_S02':t0,'RH_SO2':rh0}
+    global no2, t0, rh0
+    no2, t0, rh0 = dgs.takeMeasurement('/dev/ttyUSB0')
+    data = {'NO2':no2,'T_NO2':t0,'RH_NO2':rh0}
     return data
 
-def O3_scan():
+def CO_scan():
     '''
 
     '''
-    global o3, t1, rh1
-    o3, t1, rh1 = dgs.takeMeasurement('/dev/ttyUSB1')
-    data = {'O3':o3,'T_03':t1,'RH_O3':rh1}
+    global co, t1, rh1
+    co, t1, rh1 = dgs.takeMeasurement('/dev/ttyUSB1')
+    data = {'CO':co,'T_CO':t1,'RH_CO':rh1}
     return data
 
 def data_mgmt():
@@ -139,12 +139,12 @@ def data_mgmt():
         'Lux',
         'Visible',
         'Infrared',
-        'SO2',
-        'T_SO2',
-        'T_RH',
-        'O3',
-        'T_O3',
-        'T_RH'
+        'NO2',
+        'T_NO2',
+        'RH_NO2',
+        'CO',
+        'T_CO',
+        'RH_CO'
     ]
     data = [{
         'Timestamp': timestamp.strftime('%Y-%m-%d %H:%M:%S'),
@@ -273,10 +273,10 @@ def main():
             tsl2591_scan(i2c)
 
             print('Running Sulfur Dioxide scan...')
-            SO2_scan()
+            NO2_scan()
 
             print('Running Ozone scan...')
-            O3_scan()
+            CO_scan()
 
         except OSError as e:
                 print('OSError for I/O on a sensor. sleeping 10 seconds...')
@@ -288,7 +288,7 @@ def main():
         data_mgmt()
 
         # Prepare for next loop
-        delay = 10 #seconds
+        delay = 300 #seconds
         print('Waiting', delay, 'seconds before rescanning...')
         #assert False
         time.sleep(delay)

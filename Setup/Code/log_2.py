@@ -55,7 +55,7 @@ s3 = boto3.client(
 S3_FILEPATH = {
     'sensirion': 'ECJ/test_beacon/DATA/sensirion/'
 }
-S3_CALL_FREQUENCY = datetime.timedelta(days=1)
+S3_CALL_FREQUENCY = datetime.timedelta(days=7)
 S3_CALL_TIMESTAMP = {
     'sensirion': datetime.datetime.now()
 }
@@ -261,7 +261,7 @@ def main():
             data_mgmt()
     
             # Prepare for next loop
-            delay = 10 #seconds
+            delay = 300 #seconds
             print('Waiting', delay, 'seconds before rescanning...')
             #assert False
             time.sleep(delay)
