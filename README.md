@@ -8,9 +8,7 @@ The BEVO IAQ, in its second iteration, will be able to monitor:
 -	**Carbon Dioxide**: Associated with ventilation rates and high concentrations have been shown to impair cognitive function
 -	**Total Volatile Organic Compounds**: Any airborne organic compound commonly associated with cleaning products that may cause upper respiratory irritation 
 -	**Particulate Matter**: Any airborne solid/liquid particles such as dust, pollen, or particles in smoke that are associated with inflammation/irritation of upper respiratory system
-- **Sulfur Dioxide**: Typically associated with vehicle exhaust and is a known respiratory irritant
 - **Nitrogen Dioxide**: Similar to sulfur dioxide
-- **Ozone**: Secondary outdoor air pollutant that is highly reactive with organic compounds found indoors
 - **Carbon Monoxide**: Indoor air pollutant associated with incomplete combustion processes
 -	**Light Level**: To help determine when lights are on or off
 
