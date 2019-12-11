@@ -236,7 +236,18 @@ For the remaining sensors, wires are cut, crimped, and plugged in with the follo
 ## Code Development
 (Under Construction)
 
+### Running Code on Startup
+With the code ready to run, we can enable it to run on boot of the RPi. To do so we can create service files that are run during the normal power-on process. 
+1. Create the .service files (there are three such files in located [here](https://github.com/intelligent-environments-lab/bevo_iaq/tree/master/Setup/Code)
+2. Place the .service files in the ```/etc/systemd/system/``` directory
+3. You can test your service files before enabling them by typing ```$ sudo systemctl start your_service.service``` and then you can stop the test by typing ```$ sudo systemctl stop your_service.service```
+4. Once you are ready, enable the service by typing ```$ sudo systemctl enable your_service.service```
+5. Reboot your RPi and the service should run on boot in the background. 
+
+See [here](https://www.raspberrypi.org/documentation/linux/usage/systemd.md) for ruther reading.
+
 ## Calibration
+(Under Construction)
 Due to the nature of low-cost sensors, calibration needs to occur in order to improve their accuracy. 
 
 ### SPEC Sensor Initial Calibration
