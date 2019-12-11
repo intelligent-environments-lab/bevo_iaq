@@ -1,0 +1,12 @@
+[Unit]
+Description=Read and write data from Sensirion Sensors
+After=bluetooth.target
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStart = /usr/bin/python -E /home/pi/bevo_iaq/Setup/Code/log_2.py
+Restart=always
+RestartSec=60s
+
+[Install]
+WantedBy=bluetooth.target
