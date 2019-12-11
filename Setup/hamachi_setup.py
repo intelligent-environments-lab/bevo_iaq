@@ -14,4 +14,5 @@ time.sleep(5)
 os.system('sudo hamachi attach nagy@utexas.edu')
 
 # Ensuring hamachi starts on power on
-os.system('sudo update-rc.d logmein-hamachi defaults')
+os.system('scp hamachi.service /etc/systemd/system/')
+os.system('sudo systemctl enable hamachi.service')
