@@ -49,7 +49,7 @@ s3 = boto3.client(
 S3_FILEPATH = {
     'adafruit':'ECJ/test_beacon/DATA/adafruit/'
 }
-S3_CALL_FREQUENCY = datetime.timedelta(days=7)
+S3_CALL_FREQUENCY = datetime.timedelta(minutes=15)
 S3_CALL_TIMESTAMP = {
     'adafruit': datetime.datetime.now()
 }
@@ -153,12 +153,12 @@ def data_mgmt():
         'Lux': lux,
         'Visible': visible,
         'Infrared': infrared,
-        'SO2':so2,
-        'T_SO2':t0,
-        'T_RH':rh0,
-        'O3':o3,
-        'T_O3':t1,
-        'T_RH':rh1
+        'NO2':no2,
+        'T_NO2':t0,
+        'RH_NO2':rh0,
+        'CO':co,
+        'T_CO':t1,
+        'RH_CO':rh1
     }]
     key = 'adafruit'
     write_csv(
