@@ -47,19 +47,19 @@ s3 = boto3.client(
     aws_secret_access_key = AWS_SECRET_ACCESS_KEY
 )
 S3_FILEPATH = {
-    'adafruit':'ECJ/test_beacon/DATA/adafruit/'
+    'adafruit':'WCWH/spring2020/adafruit/'
 }
-S3_CALL_FREQUENCY = datetime.timedelta(minutes=15)
+S3_CALL_FREQUENCY = datetime.timedelta(days=1)
 S3_CALL_TIMESTAMP = {
     'adafruit': datetime.datetime.now()
 }
 #*****************************************
 # File handling
 FILEPATH = {
-    'adafruit':'/home/pi/bevo_iaq/DATA/adafruit/'
+    'adafruit':'/home/pi/DATA/adafruit/'
 }
 filename_writer = {
-    'adafruit': lambda date: FILEPATH['adafruit'] + date.strftime('%Y-%m-%d') + '_adafruit.csv'
+    'adafruit': lambda date: FILEPATH['adafruit'] + 'b00_' + date.strftime('%Y-%m-%d') + '.csv'
 }
 #*****************************************
 # import functions for each of the sensors

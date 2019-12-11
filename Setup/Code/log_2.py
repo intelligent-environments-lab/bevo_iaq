@@ -53,9 +53,9 @@ s3 = boto3.client(
 )
 
 S3_FILEPATH = {
-    'sensirion': 'ECJ/test_beacon/DATA/sensirion/'
+    'sensirion': 'WCWH/spring2020/sensirion/'
 }
-S3_CALL_FREQUENCY = datetime.timedelta(days=7)
+S3_CALL_FREQUENCY = datetime.timedelta(days=1)
 S3_CALL_TIMESTAMP = {
     'sensirion': datetime.datetime.now()
 }
@@ -64,10 +64,10 @@ S3_CALL_TIMESTAMP = {
 # File Handling
 # ------------------------------------------------------------------------- #
 FILEPATH = {
-    'sensirion': '/home/pi/bevo_iaq/DATA/sensirion/'
+    'sensirion': '/home/pi/DATA/sensirion/'
 }
 filename_writer = {
-    'sensirion': lambda date: FILEPATH['sensirion'] + date.strftime('%Y-%m-%d') + '_sensirion.csv'
+    'sensirion': lambda date: FILEPATH['sensirion'] + 'b00_' + date.strftime('%Y-%m-%d') + '.csv'
 }
 
 # General Setup
