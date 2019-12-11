@@ -236,3 +236,20 @@ For the remaining sensors, wires are cut, crimped, and plugged in with the follo
 ## Code Development
 (Under Construction)
 
+## Calibration
+Due to the nature of low-cost sensors, calibration needs to occur in order to improve their accuracy. 
+
+### SPEC Sensor Initial Calibration
+The SPEC sensors need an initial calibration to identify the sensitivity factor. Since the SPEC sensors are the only sensors using serial communication, we have to use a program like [picocom](https://linux.die.net/man/8/picocom) to communicate with them. The following steps allow you to view the output of the SPEC sensors:
+1. The SPEC sensors are connected via USB so check to see if they are any USB devices by typing either ```$ lsusb``` or changing into the ```/dev/``` directory and listing all directories/files. In the first case, you should see two devices that start with the name "Cyngal Integrated Products". In the latter, look for "ttyUSB0" and "ttyUSB1" in the ```/dev/``` directory.
+2. Use picocom to connect to one of the USB devices (0 or 1) with:
+```$ sudo picocom /dev/ttyUSB0```
+3. You can check which sensor you are communicating with by typing "e"
+4. These sensors need a continuous source of power to function most effectively. When you initially connect them, you should let them run for at least an hour or until the concentration has settled out. To see the measurement values, you have two options:
+ 1. Pressing enter will return one measurement
+ 2. Typing "c" will start the continuous measurement, and values will be reported every second.
+5. The output is the following: serial number, concentration (ppb), temperature (C), relative humidity, raw value 1, raw value 2, raw value 3, number of days, then hours, then minutes, then seconds that the sensor has been on. 
+6. Type "c" and check to see that the concentrations are in relative agreement. If this is the case, you can type "r" to get out of continuous measurement. 
+7. If the concentration is stable, you have two options: zero the sensor or specify the concentration in the room:
+ 1. If the concentration of the pollutant is zero, type "Z" to zero the sensor.
+ 2. if the concentration of hte pollutant is known, type "S XXX" with the known concentration in ppm.
