@@ -28,14 +28,6 @@ sudo apt-get install python-pigpio -y
 git config --global user.email "hagenfritz@utexas.edu"
 git config --global user.name "hagenfritz"
 
-# Replace pigpiod service file with bug free version
-#install -o root -g root -m 0644 systemd/pigpiod.service /lib/systemd/system/pigpiod.service
-#systemctl enable pigpiod
-#systemctl start pigpiod
-
-# Write environment file for environment variables
-# *** CODE HERE ***
-
 # Set up locale, timezone, language
 sudo timedatectl set-timezone US/Central
 
@@ -44,10 +36,9 @@ sudo timedatectl set-timezone US/Central
 #sudo dpkg -i logmein-hamachi_2.1.0.203-1_armhf.deb
 #sudo python3 hamachi_setup.py
 sudo rm -rf /var/lib/logmein-hamachi/
-sudo hamachi login
-hamachi set-nick IAQ_Beacon_01
-hamachi attach nagy@utexas.edu
-sudo update-rc.d logmein-hamachi defaults
+#sudo hamachi login
+#hamachi set-nick IAQ_Beacon_01
+#sudo update-rc.d logmein-hamachi defaults
 
 # Sensor Libraries
 sudo pip3 install adafruit-circuitpython-tsl2591
