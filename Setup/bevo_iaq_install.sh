@@ -42,12 +42,12 @@ sudo timedatectl set-timezone US/Central
 # Install Hamachi
 #sudo wget https://www.vpn.net/installers/logmein-hamachi_2.1.0.203-1_armhf.deb
 #sudo dpkg -i logmein-hamachi_2.1.0.203-1_armhf.deb
-sudo python3 hamachi_setup.py
-#sudo rm -rf /var/lib/logmein-hamachi/
-#sudo hamachi login
-#hamachi set-nick
-#hamachi attach hello@yoursite.com
-#sudo update-rc.d logmein-hamachi defaults
+#sudo python3 hamachi_setup.py
+sudo rm -rf /var/lib/logmein-hamachi/
+sudo hamachi login
+hamachi set-nick IAQ_Beacon_01
+hamachi attach nagy@utexas.edu
+sudo update-rc.d logmein-hamachi defaults
 
 # Sensor Libraries
 sudo pip3 install adafruit-circuitpython-tsl2591
