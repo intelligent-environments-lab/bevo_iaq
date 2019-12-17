@@ -174,30 +174,30 @@ def takeMeasurement():
 
 		if data == False:
 			pass
+		else:
+			struct_co2 = struct.pack('>BBBB', data[0], data[1], data[3], data[4])
+			temp_co2 = struct.unpack('>f', struct_co2)
 
-		struct_co2 = struct.pack('>BBBB', data[0], data[1], data[3], data[4])
-		temp_co2 = struct.unpack('>f', struct_co2)
+			struct_T = struct.pack('>BBBB', data[6], data[7], data[9], data[10])
+			temp_t = struct.unpack('>f', struct_T)
 
-		struct_T = struct.pack('>BBBB', data[6], data[7], data[9], data[10])
-		temp_t = struct.unpack('>f', struct_T)
+			struct_rH = struct.pack('>BBBB', data[12], data[13], data[15], data[16])
+			temp_rh = struct.unpack('>f', struct_rH)
+			
+			if temp_co2[0] > 0:
+				co2 += temp_co2[0]
+				t += temp_t[0]
+				rh += temp_rh[0]
+				count += 1
 
-		struct_rH = struct.pack('>BBBB', data[12], data[13], data[15], data[16])
-		temp_rh = struct.unpack('>f', struct_rH)
-		
-		if temp_co2[0] > 0:
-			co2 += temp_co2[0]
-			t += temp_t[0]
-			rh += temp_rh[0]
-			count += 1
-
-			print("Concentration (ppm)")
-			print("---------------------------------------")
-			print("CO2: {0:.1f}".format(co2/(i+1)))
-			print("Environmental Variables")
-			print("---------------------------------------")
-			print("T (C): {0:.1f}".format(t/(i+1)))
-			print("RH (%): {0:.1f}".format(rh/(i+1)))
-			print("---------------------------------------")
+				print("Concentration (ppm)")
+				print("---------------------------------------")
+				print("CO2: {0:.1f}".format(co2/(i+1)))
+				print("Environmental Variables")
+				print("---------------------------------------")
+				print("T (C): {0:.1f}".format(t/(i+1)))
+				print("RH (%): {0:.1f}".format(rh/(i+1)))
+				print("---------------------------------------")
 
 		#print("gas_ppm{sensor=\"SCD30\",gas=\"CO2\"} %f" % co2/(i+1))
 		#print("temperature_degC{sensor=\"SCD30\"} %f" % t/(i+1))
