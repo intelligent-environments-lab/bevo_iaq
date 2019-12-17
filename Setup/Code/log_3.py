@@ -113,18 +113,24 @@ def tsl2591_scan(i2c):
 
 def NO2_scan():
     '''
-
+	Using serial connection, reads in values for T, RH, and NO2 concentration
     '''
     global no2, t0, rh0
+    co = -100
+    t0 = -100
+    rh0 = -100
     no2, t0, rh0 = dgs.takeMeasurement('/dev/ttyUSB0')
     data = {'NO2':no2,'T_NO2':t0,'RH_NO2':rh0}
     return data
 
 def CO_scan():
     '''
-
+	Using serial connection, reads in values for T, RH, and CO concentration
     '''
     global co, t1, rh1
+    co = -100
+    t1 = -100
+    rh1 = -100
     co, t1, rh1 = dgs.takeMeasurement('/dev/ttyUSB1')
     data = {'CO':co,'T_CO':t1,'RH_CO':rh1}
     return data
