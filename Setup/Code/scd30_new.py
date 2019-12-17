@@ -69,7 +69,6 @@ def takeMeasurement():
 		h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
 	except:
 		eprint("i2c open failed")
-		exit(1)
 
 	# read meas interval (not documented, but works)
 
@@ -79,7 +78,6 @@ def takeMeasurement():
 		(count, data) = pi.i2c_read_device(h, n)
 	  except:
 	    	eprint("error: i2c_read failed")
-	    	exit(1)
 
 	  if count == n:
 	    	return data
@@ -105,7 +103,6 @@ def takeMeasurement():
 			(count, data) = pi.i2c_read_device(h, 3)
 		except:
 			eprint("error: i2c_read failed")
-			exit(1)
 
 		if count == 3:
 			if len(data) == 3:
@@ -121,14 +118,14 @@ def takeMeasurement():
 
 	read_meas_result = read_meas_interval()
 	if read_meas_result == -1:
-		exit(1)
+		pass
 
 	if read_meas_result != 2:
 	# if not every 2s, set it
 		eprint("setting interval to 2")
 		ret = i2cWrite([0x46, 0x00, 0x00, 0x02, 0xE3])
 	  	if ret == -1:
-	    		exit(1)
+	    		pass
 	  	read_meas_interval()
 
 
@@ -159,7 +156,7 @@ def takeMeasurement():
 			#print('Looking for data - attempt:',j+1)
 			ret = i2cWrite([0x02, 0x02])
 			if ret == -1:
-				exit(1)
+				pass
 
 			data = read_n_bytes(3)
 			if data == False:
@@ -176,7 +173,7 @@ def takeMeasurement():
 		data = read_n_bytes(18)
 
 		if data == False:
-			exit(1)
+			pass
 
 		struct_co2 = struct.pack('>BBBB', data[0], data[1], data[3], data[4])
 		temp_co2 = struct.unpack('>f', struct_co2)

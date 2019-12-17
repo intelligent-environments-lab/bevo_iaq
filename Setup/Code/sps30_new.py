@@ -77,7 +77,6 @@ def takeMeasurement():
       (count, data) = pi.i2c_read_device(h, n)
     except:
       eprint("error: i2c_read failed")
-      exit(1)
 
     if count == n:
       return data
@@ -224,7 +223,7 @@ def takeMeasurement():
 
   # Initializes the measurement
   def initialize():
-    startMeasurement() or exit(1)
+    startMeasurement()
     time.sleep(0.9)
 
   # Big reset
@@ -253,7 +252,6 @@ def takeMeasurement():
     print("I2Cdetect found SPS30")
   else:
     print("SPS30 (0x69) not found on I2C bus")
-    exit(1)
     
   # Calls the exit_gracefully function when terminated from the command line
   signal.signal(signal.SIGINT, exit_gracefully)
