@@ -268,20 +268,24 @@ def main():
         try:
             print('Running SGP30 scan...')
             sgp30_scan(i2c)
-
+        except OSError as e:
+                print('OSError for I/O on a sensor.')
+        try:
             print('Running TSL2591 scan...')
             tsl2591_scan(i2c)
-
-            print('Running Sulfur Dioxide scan...')
-            NO2_scan()
-
-            print('Running Ozone scan...')
-            CO_scan()
-
         except OSError as e:
-                print('OSError for I/O on a sensor. sleeping 10 seconds...')
-                time.sleep(10)
-                continue
+                print('OSError for I/O on a sensor.')
+        try:
+            print('Running Nitrogen Dioxide scan...')
+            NO2_scan()
+        except OSError as e:
+                print('OSError for I/O on a sensor.')
+
+        try:
+            print('Running Carbon Monoxide scan...')
+            CO_scan()
+        except OSError as e:
+                print('OSError for I/O on a sensor.')
 
         # Data management
         print("Running data management...")
