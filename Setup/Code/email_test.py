@@ -4,7 +4,7 @@ port = 465  # For SSL
 smtp_server = "smtp.gmail.com"
 sender_email = "IEL.Beacon.Manager@gmail.com"  # Enter your address
 receiver_email = "IEL.Beacon.Manager@gmail.com"  # Enter receiver address
-password = ZoltanIEL2019
+password = "ZoltanIEL2019"
 message = """\
 Subject: Hi there
 
