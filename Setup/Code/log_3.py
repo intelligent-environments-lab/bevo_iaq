@@ -312,7 +312,7 @@ def main():
         try:
             print('Running SGP30 scan...')
             sgp_data_new = sgp30_scan(i2c)
-            if sgp_data_new['TVOC'] == -100 and sps_data_old['TVOC'] != -100:
+            if sgp_data_new['TVOC'] == -100 and sgp_data_old['TVOC'] != -100:
                 error_email('SGP30 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
             sgp_data_old = sgp_data_new
         except OSError as e:
