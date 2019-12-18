@@ -27,6 +27,7 @@ import csv
 import os, signal
 import sys
 import struct
+import smtplib, ssl
 from subprocess import call
 
 # Sensor-specific libraries
