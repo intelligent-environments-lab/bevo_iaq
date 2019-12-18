@@ -150,6 +150,25 @@ def CO_scan():
     data = {'CO':co,'T_CO':t1,'RH_CO':rh1}
     return data
 
+def error_email(error_message):
+    '''
+    DOES NOT WORK WITH PYTHON2
+    '''
+    port = 465  # For SSL
+    smtp_server = "smtp.gmail.com"
+    sender_email = "IEL.Beacon.Manager@gmail.com"  # Enter your address
+    receiver_email = "IEL.Beacon.Manager@gmail.com"  # Enter receiver address
+    password = "ZoltanIEL2019"
+    message = """\
+    Subject: Sensor is down
+
+    {error_message}"""
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, message.format(error_message=error_message))
+
 def data_mgmt():
     # Store adafruit sensor data locally and remotely
     timestamp = datetime.datetime.now()
