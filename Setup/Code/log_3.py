@@ -6,13 +6,13 @@
 # Email: hoangdung.le@utexas.edu                                       *
 # **********************************************************************
 
-# Import NOTE: This code can only be executed with a 'Sudo -E python3 <filename.py>'
 import time
 import csv
 import datetime
 import os
 import traceback
 import logging
+import smtplib, ssl
 
 # Import sensor-specific libraries
 import serial
@@ -25,6 +25,8 @@ from busio import I2C
 # AWS libraries
 import boto3
 from botocore.exceptions import ClientError
+
+beacon = '00'
 
 # Verbose Global Variable
 verbose = True
@@ -59,17 +61,24 @@ FILEPATH = {
     'adafruit':'/home/pi/DATA/adafruit/'
 }
 filename_writer = {
-    'adafruit': lambda date: FILEPATH['adafruit'] + 'b00_' + date.strftime('%Y-%m-%d') + '.csv'
+    'adafruit': lambda date: FILEPATH['adafruit'] + 'b' + beacon + '_' + date.strftime('%Y-%m-%d') + '.csv'
 }
 #*****************************************
 # import functions for each of the sensors
 def sgp30_scan(i2c):
     # Declare all global variables for use outside the functions
     global eCO2, TVOC
-    # Instantiate sgp30 object
-    sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
-    # Retrieve sensor scan data
-    eCO2, TVOC = sgp30.iaq_measure()
+    try:
+        # Instantiate sgp30 object
+        sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
+        
+        # Retrieve sensor scan data
+        eCO2, TVOC = sgp30.iaq_measure()
+    except:
+        print('Error reading from SGP30')
+        eCO2 = -100
+        TVOC = -100
+
     # Outputting
     if verbose:
         print("-------------------------")
@@ -83,23 +92,29 @@ def sgp30_scan(i2c):
 def tsl2591_scan(i2c):
     # Declare all global variables for use outside the functions
     global lux, visible, infrared
-    # Instantiate tsl object
-    tsl = adafruit_tsl2591.TSL2591(i2c)
-    # enable sensor and wait a sec for it to get going
-    tsl.enabled = True
-    time.sleep(1)
-    # set gain and integration time; gain 0 = 1x & 1 = 16x. Integration time of 1 = 101ms
-    tsl.gain = 0
-    tsl.integration_time = 1  # 101 ms intergration time.
-    # Retrieve sensor scan data
-    lux = tsl.lux
-    visible = tsl.visible
-    infrared = tsl.infrared
-    # Check for complete darkness
-    if lux == None:
-        lux = 0
-    # Disable the sensor and end process
-    tsl.enabled = False
+    try:
+        # Instantiate tsl object
+        tsl = adafruit_tsl2591.TSL2591(i2c)
+        # enable sensor and wait a sec for it to get going
+        tsl.enabled = True
+        time.sleep(1)
+        # set gain and integration time; gain 0 = 1x & 1 = 16x. Integration time of 1 = 101ms
+        tsl.gain = 0
+        tsl.integration_time = 1  # 101 ms intergration time.
+        # Retrieve sensor scan data
+        lux = tsl.lux
+        visible = tsl.visible
+        infrared = tsl.infrared
+        # Check for complete darkness
+        if lux == None:
+            lux = 0
+        # Disable the sensor and end process
+        tsl.enabled = False
+    except:
+        print('Error reading from TSL2591')
+        lux = -100
+        visible = -100
+        infrared = -100
     # Outputting
     if verbose:
         print("-------------------------")
@@ -269,27 +284,43 @@ def main():
     i2c = createSensor()
     # Begin loop for sensor scans
     i = 1
+    sgp_data_old = {'TVOC': 0, 'eCO2': 0}
+    tsl_data_old = {'Visible': 0, 'Infrared': 0, 'Lux': 0}
+    no2_data_old = {'NO2':0,'T_NO2':0,'RH_NO2':0}
+    co_data_old = {'CO':0,'T_CO':0,'RH_CO':0}
     while True:
         print('*'*20 + ' LOOP %d '%i + '*'*20)
         try:
             print('Running SGP30 scan...')
-            sgp30_scan(i2c)
+            sgp_data_new = sgp30_scan(i2c)
+            if sgp_data_new['TVOC'] == -100 and sps_data_old['TVOC'] != -100:
+                error_email('SGP30 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
+            sgp_data_old = sgp_data_new
         except OSError as e:
                 print('OSError for I/O on a sensor.')
         try:
             print('Running TSL2591 scan...')
-            tsl2591_scan(i2c)
+            tsl_data_new = tsl2591_scan(i2c)
+            if tsl_data_new['Lux'] == -100 and tsl_data_old['Lux'] != -100:
+                error_email('TSL2591 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
+            tsl_data_old = tsl_data_new
         except OSError as e:
                 print('OSError for I/O on a sensor.')
         try:
             print('Running Nitrogen Dioxide scan...')
-            NO2_scan()
+            no2_data_new = NO2_scan()
+            if no2_data_new['NO2'] == -100 and no2_data_old['NO2'] != -100:
+                error_email('NO2 SPEC sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
+            no2_data_old = no2_data_new
         except OSError as e:
                 print('OSError for I/O on a sensor.')
 
         try:
             print('Running Carbon Monoxide scan...')
-            CO_scan()
+            co_data_new = CO_scan()
+            if co_data_new['CO'] == -100 and co_data_old['CO'] != -100:
+                error_email('CO SPEC sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
+            co_data_old = co_data_new
         except OSError as e:
                 print('OSError for I/O on a sensor.')
 

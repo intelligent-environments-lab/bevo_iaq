@@ -40,6 +40,8 @@ import scd30_new
 import boto3
 from botocore.exceptions import ClientError
 
+beacon = '00'
+
 # AWS Setup
 # ------------------------------------------------------------------------- #
 # AWS setup for file upload to S3 bucket.
@@ -68,7 +70,7 @@ FILEPATH = {
     'sensirion': '/home/pi/DATA/sensirion/'
 }
 filename_writer = {
-    'sensirion': lambda date: FILEPATH['sensirion'] + 'b00_' + date.strftime('%Y-%m-%d') + '.csv'
+    'sensirion': lambda date: FILEPATH['sensirion'] + 'b' + beacon + '_' + date.strftime('%Y-%m-%d') + '.csv'
 }
 
 # General Setup
@@ -110,7 +112,7 @@ def scd30_scan():
 
 def error_email(error_message):
     '''
-
+    DOES NOT WORK WITH PYTHON2
     '''
     port = 465  # For SSL
     smtp_server = "smtp.gmail.com"
@@ -270,14 +272,16 @@ def main():
                 print('Running SPS30 (pm) scan...')
                 sps_data_new = sps30_scan()
                 if sps_data_new['pm_n_10'] == -100 and sps_data_old['pm_n_10'] != -100:
-                    error_email('SPS30 sensor is down at '+str(datetime.datetime.now()))
+                    pass
+                    #error_email('SPS30 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
                 sps_data_old = sps_data_new
     
                 # SCD30 scan
                 print('Running SCD30 (T,RH,CO2) scan...')
                 scd_data_new = scd30_scan()
                 if scd_data_new['CO2'] == -100 and scd_data_old['CO2'] != -100:
-                    error_email('SPS30 sensor is down at '+str(datetime.datetime.now()))
+                    pass
+                    #error_email('SCD30 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
                 scd_data_old = scd_data_new
 
             except OSError as e:
