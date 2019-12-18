@@ -107,6 +107,25 @@ def scd30_scan():
 
     return {'CO2':co2,'TC':tc,'RH':rh}
 
+def error_email(error_message):
+    '''
+
+    '''
+    port = 465  # For SSL
+    smtp_server = "smtp.gmail.com"
+    sender_email = "IEL.Beacon.Manager@gmail.com"  # Enter your address
+    receiver_email = "IEL.Beacon.Manager@gmail.com"  # Enter receiver address
+    password = "ZoltanIEL2019"
+    message = """\
+    Subject: Sensor is down
+
+    {error_message}"""
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login(sender_email, password)
+        server.sendmail(sender_email, receiver_email, message.format(error_message=error_message))
+
 def data_mgmt():
     '''
     Combines and stores sensors' data locally and remotely to AWS S3 bucket.\n
@@ -240,21 +259,28 @@ def main():
 
     # Begin loop for sensor scans
     i = 1
+    sps_data_old = {'pm_n_0p5':0,'pm_n_1':0,'pm_n_2p5':0,'pm_n_4':0,'pm_n_10':0,'pm_c_1':0,'pm_c_2p5':0,'pm_c_4':0,'pm_c_10':0}
+    scd_data_old = {'CO2':0,'TC':0,'RH':0}
     try:
         while True:
             print('*'*20 + ' LOOP %d '%i + '*'*20)
             try:
                 # SPS30 scan
                 print('Running SPS30 (pm) scan...')
-                sps30_scan()
+                sps_data_new = sps30_scan()
+                if sps_data_new['pm_n_10'] == -100 and sps_data_old['pm_n_10'] != -100:
+                    error_email('SPS30 sensor is down at '+str(datetime.datetime.now()))
+                sps_data_old = sps_data_new
     
                 # SCD30 scan
                 print('Running SCD30 (T,RH,CO2) scan...')
-                scd30_scan()
+                scd_data_new = scd30_scan()
+                if scd_data_new['CO2'] == -100 and scd_data_old['CO2'] != -100:
+                    error_email('SPS30 sensor is down at '+str(datetime.datetime.now()))
+                scd_data_old = scd_data_new
+
             except OSError as e:
-                print('OSError for I/O on a sensor. sleeping 10 seconds...')
-                time.sleep(10)
-                continue
+                print('OSError for I/O on a sensor.')
             
             # Data management
             print("Running data management...")
