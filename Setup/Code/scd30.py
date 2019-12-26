@@ -174,7 +174,7 @@ def takeMeasurement():
 
 		print("Concentration (ppm)")
 		print("---------------------------------------")
-		print("CO2:", co2)
+		print("CO2:", co2/1)
 		print("Environmental Variables")
 		print("---------------------------------------")
 		print("T (C):", t)
