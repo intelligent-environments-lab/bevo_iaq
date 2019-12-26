@@ -211,7 +211,8 @@ def takeMeasurement():
   def readPMValues():
     # READ MEASURED VALUES: 0x0300
     data = readFromAddr(0x03,0x00,59)
-    printHuman(data)
+    if data != False:
+      printHuman(data)
     return data
 
   # Initializes the measurement
