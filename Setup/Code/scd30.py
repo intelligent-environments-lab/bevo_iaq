@@ -174,14 +174,12 @@ def takeMeasurement():
 
 		print("Concentration (ppm)")
 		print("---------------------------------------")
-		print("CO2: {0:.1f}".format(co2))
+		print("CO2:", co2)
 		print("Environmental Variables")
 		print("---------------------------------------")
-		print("T (C): {0:.1f}".format(t))
-		print("RH (%): {0:.1f}".format(rh))
+		print("T (C):", t)
+		print("RH (%):", rh)
 		print("---------------------------------------")
-
-	time.sleep(1)
 
 	pi.i2c_close(h)
 	pi.stop()
