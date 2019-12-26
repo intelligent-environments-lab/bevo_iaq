@@ -296,21 +296,21 @@ def takeMeasurement():
     time.sleep(0.1)
 
   data = readPMValues()
+  if data != False:
+    pm_typical = calcFloat(data[54:60])
+    if pm_typical > 0:
+      # Count 
+      pm_n[0] += calcFloat(data[24:30])
+      pm_n[1] += calcFloat(data[30:36])
+      pm_n[2] += calcFloat(data[36:42])
+      pm_n[3] += calcFloat(data[42:48])
+      pm_n[4] += calcFloat(data[48:54])
 
-  pm_typical = calcFloat(data[54:60])
-  if pm_typical > 0:
-    # Count 
-    pm_n[0] += calcFloat(data[24:30])
-    pm_n[1] += calcFloat(data[30:36])
-    pm_n[2] += calcFloat(data[36:42])
-    pm_n[3] += calcFloat(data[42:48])
-    pm_n[4] += calcFloat(data[48:54])
-
-    # Concentration
-    pm_c[0] += calcFloat(data)
-    pm_c[1] += calcFloat(data[6:12])
-    pm_c[2] += calcFloat(data[12:18])
-    pm_c[3] += calcFloat(data[18:24])
+      # Concentration
+      pm_c[0] += calcFloat(data)
+      pm_c[1] += calcFloat(data[6:12])
+      pm_c[2] += calcFloat(data[12:18])
+      pm_c[3] += calcFloat(data[18:24])
 
   pi.i2c_close(h)
   pi.stop()
