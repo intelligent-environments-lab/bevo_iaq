@@ -219,7 +219,10 @@ def takeMeasurement():
   def bigReset():
     global h
     eprint('resetting...',end='')
-    pi.i2c_close(h)
+    try:
+      pi.i2c_close(h)
+    except:
+      print('unkown handle')
     time.sleep(0.5)
     h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
     time.sleep(0.5)
