@@ -285,7 +285,6 @@ def takeMeasurement():
   if ret == -1:
     eprint('resetting...',end='')
     bigReset()
-    initialize()
 
   if ret == 0:
     time.sleep(0.1)
