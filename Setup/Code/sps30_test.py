@@ -6,9 +6,11 @@ import crcmod # aptitude install python-crcmod
 import os, signal
 from subprocess import call
 
-import pprint
 from datetime import datetime
-import csv
+
+def calcCRC(TwoBdataArray):
+    byteData = ''.join(chr(x) for x in TwoBdataArray)
+    return f_crc8(byteData)
 
 # Setting up communication
 PIGPIO_HOST = '127.0.0.1'
