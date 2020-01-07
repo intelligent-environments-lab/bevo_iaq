@@ -28,9 +28,10 @@ pi = pigpio.pi(PIGPIO_HOST)
 
 h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
 f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
+print(f_crc8)
 
 data = [0x00, 0x10, 0x03, 0x00, calcCRC([0x03,0x00])]
-
+data = [b"\x00\x10\x03"]
 try:
 	pi.i2c_write_device(h, data)
 except Exception as e:
