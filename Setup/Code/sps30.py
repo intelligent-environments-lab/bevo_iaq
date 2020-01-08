@@ -284,6 +284,8 @@ def takeMeasurement():
 
   startMeasurement()
 
+  time.sleep(1)
+
   ret = readDataReady()
   if ret == -1:
     eprint('resetting...',end='')
