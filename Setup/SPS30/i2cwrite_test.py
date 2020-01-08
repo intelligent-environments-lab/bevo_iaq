@@ -52,16 +52,23 @@ f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
 
 # Trying to start measurement
 pi.i2c_write_device(h, [0x00, 0x10, 0x03, 0x00, calcCRC([0x03,0x00])])
-while True:
-	# Seeing if data is ready
-	ret = pi.i2c_write_device(h,[0x02, 0x02])
-	print(ret)
-	# Reading data from sensor
-	ret = pi.i2c_write_device(h,[0x03,0x00])
-	print(ret)
-	(count, data) = pi.i2c_read_device(h,59)
-	# Outputting data
-	print("Number of bytes:",count)
-	printHuman(data)
-	print()
-	time.sleep(10)
+try:
+	while True:
+		# Seeing if data is ready
+		ret = pi.i2c_write_device(h,[0x02, 0x02])
+		print(ret)
+		# Reading data from sensor
+		ret = pi.i2c_write_device(h,[0x03,0x00])
+		print(ret)
+		(count, data) = pi.i2c_read_device(h,59)
+		# Outputting data
+		print("Number of bytes:",count)
+		printHuman(data)
+		print()
+		time.sleep(10)
+except:
+	print("Terminating")
+	pi.i2c_close(h)
+	pi.stop()
+
+
