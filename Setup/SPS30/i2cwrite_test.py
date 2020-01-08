@@ -56,9 +56,12 @@ while True:
 	# Seeing if data is ready
 	ret = pi.i2c_write_device(h,[0x02, 0x02])
 	print(ret)
+	# Reading data from sensor
 	ret = pi.i2c_write_device(h,[0x03,0x00])
 	print(ret)
 	(count, data) = pi.i2c_read_device(h,59)
-	print(count)
+	# Outputting data
+	print("Number of bytes:",count)
 	printHuman(data)
+	print()
 	time.sleep(10)
