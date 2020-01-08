@@ -52,7 +52,7 @@ f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
 
 # Trying to start measurement
 pi.i2c_write_device(h, [0x00, 0x10, 0x03, 0x00, calcCRC([0x03,0x00])])
-while true:
+while True:
 	# Seeing if data is ready
 	ret = pi.i2c_write_device(h,[0x02, 0x02])
 	print(ret)
