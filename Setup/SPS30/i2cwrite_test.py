@@ -9,8 +9,29 @@ from subprocess import call
 from datetime import datetime
 
 def calcCRC(TwoBdataArray):
-    byteData = ''.join(chr(x) for x in TwoBdataArray)
-    return f_crc8(byteData)
+	byteData = ''.join(chr(x) for x in TwoBdataArray)
+	return f_crc8(byteData)
+
+def calcFloat(sixBArray):
+	struct_float = struct.pack('>BBBB', sixBArray[0], sixBArray[1], sixBArray[3], sixBArray[4])
+	float_values = struct.unpack('>f', struct_float)
+	first = float_values[0]
+	return first
+
+def printHuman(data):
+	print("Concentration (ug/m3)")
+	print("---------------------------------------")
+	print("PM1: {0:.3f}\tPM2.5: {0:.3f}\tPM4: {0:.3f}\tPM10: {0:.3f}".format(calcFloat(data), calcFloat(data[6:12]), calcFloat(data[12:18]), calcFloat(data[18:24])))
+	print("Count (#/L)")
+	print("---------------------------------------")
+	print("PM0.5 count: {0:.3f}".format(calcFloat(data[24:30])))
+	print("PM1   count: {0:.3f}".format(calcFloat(data[30:36])))
+	print("PM2.5 count: {0:.3f}".format(calcFloat(data[36:42])))
+	print("PM4   count: {0:.3f}".format(calcFloat(data[42:48])))
+	print("PM10  count: {0:.3f}".format(calcFloat(data[48:54])))
+	print("---------------------------------------")
+	print("Typical Size: {0:.3f}".format(calcFloat(data[54:60])))
+	print("---------------------------------------")
 
 # Setting up communication
 PIGPIO_HOST = '127.0.0.1'
@@ -28,15 +49,20 @@ pi = pigpio.pi(PIGPIO_HOST)
 
 h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
 f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
-print(f_crc8)
-
-# Start Measurement
-#data = [0x00, 0x10, 0x03, 0x00, calcCRC([0x03,0x00])]
-
-# Reset
-data = [0xD3,0x04]
 
 try:
-	pi.i2c_write_device(h, data)
+	# Trying to start measurement
+	pi.i2c_write_device(h, [0x00, 0x10, 0x03, 0x00, calcCRC([0x03,0x00])])
+	while true:
+		# Seeing if data is ready
+		ret = pi.i2c_write_device(h,[0x02, 0x02])
+		print(ret)
+		ret = pi.i2c_write_device(h,[0x03,0x00])
+		print(ret)
+		(count, data) = pi.i2c_read_device(h,59)
+		print(count)
+		printHuman(data)
+		time.sleep(10)
+
 except Exception as e:
 	print("error in i2c_write:", e.__doc__ + ":",  e.value)
