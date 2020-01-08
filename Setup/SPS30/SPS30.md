@@ -15,7 +15,7 @@ The acronyms are described in the image above. This document and setup is for I2
 
 In our case, we need all five pins of the SPS30 with the fourth pin (SEL) connected to ground. The sensors require around 5V and we must use pull-up resistors on the SDA and SCL pins. The connection schematic is shown below:
 
-![SPS30_Layout](Layouts/SPS30_bb.png)
+![SPS30_Layout](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Layouts/SPS30_bb.png)
 
 ## Installing Necessary Packages and Drivers
 In order to use the SPS30 sensor, we have to get around some problems with the I2C communication protocol. First, make sure that I2C communication has been enabled on the RPi. From the command line on the RPi:
