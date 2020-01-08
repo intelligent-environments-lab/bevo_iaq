@@ -50,19 +50,15 @@ pi = pigpio.pi(PIGPIO_HOST)
 h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
 f_crc8 = crcmod.mkCrcFun(0x131, 0xFF, False, 0x00)
 
-try:
-	# Trying to start measurement
-	pi.i2c_write_device(h, [0x00, 0x10, 0x03, 0x00, calcCRC([0x03,0x00])])
-	while true:
-		# Seeing if data is ready
-		ret = pi.i2c_write_device(h,[0x02, 0x02])
-		print(ret)
-		ret = pi.i2c_write_device(h,[0x03,0x00])
-		print(ret)
-		(count, data) = pi.i2c_read_device(h,59)
-		print(count)
-		printHuman(data)
-		time.sleep(10)
-
-except Exception as e:
-	print("error in i2c_write:", e.__doc__ + ":",  e.value)
+# Trying to start measurement
+pi.i2c_write_device(h, [0x00, 0x10, 0x03, 0x00, calcCRC([0x03,0x00])])
+while true:
+	# Seeing if data is ready
+	ret = pi.i2c_write_device(h,[0x02, 0x02])
+	print(ret)
+	ret = pi.i2c_write_device(h,[0x03,0x00])
+	print(ret)
+	(count, data) = pi.i2c_read_device(h,59)
+	print(count)
+	printHuman(data)
+	time.sleep(10)
