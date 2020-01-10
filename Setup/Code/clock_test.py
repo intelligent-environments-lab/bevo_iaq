@@ -2,18 +2,33 @@ import busio
 import adafruit_pcf8523
 import time
 import board
+import urllib.request
+
+def connect(host='http://google.com'):
+    try:
+        urllib.request.urlopen(host) #Python 3.x
+        print('connected')
+        return True
+    except:
+        return False
  
 myI2C = busio.I2C(board.SCL, board.SDA)
 rtc = adafruit_pcf8523.PCF8523(myI2C)
  
 days = ("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
- 
-if False:   # change to True if you want to write the time!
+
+if connect():
     #                     year, mon, date, hour, min, sec, wday, yday, isdst
-    t = time.struct_time((2017,  10,   29,   15,  14,  15,    0,   -1,    -1))
-    # you must set year, mon, date, hour, min, sec and weekday
-    # yearday is not supported, isdst can be set but we don't do anything with it at this time
-    
+    y = datetime.now().year
+    m = datetime.now().month
+    d = datetime.now().day
+
+    H = datetime.now().hour
+    M = datetime.now().minute
+    S = datetime.now().second
+
+    t = time.struct_time((y, m, d, H,  M,  S,    0,   -1,    -1))
+
     print("Setting time to:", t)     # uncomment for debugging
     rtc.datetime = t
     print()
