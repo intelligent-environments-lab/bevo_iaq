@@ -150,6 +150,21 @@ def CO_scan():
     data = {'CO':co,'T_CO':t1,'RH_CO':rh1}
     return data
 
+def clock_update():
+    '''
+    Updates the RTC clock time when connected to internet
+    '''
+
+    return True
+
+def get_time():
+    '''
+    Gets the current time from Wifi if connected or from the RTC if no connection
+    detected
+    '''
+
+    return True
+
 def error_email(error_message):
     '''
     DOES NOT WORK WITH PYTHON2
