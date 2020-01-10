@@ -3,6 +3,7 @@ import adafruit_pcf8523
 import time
 import board
 import urllib.request
+from datetime import datetime
 
 def connect(host='http://google.com'):
     try:
