@@ -28,7 +28,8 @@ if connect():
     M = datetime.now().minute
     S = datetime.now().second
 
-    t = time.struct_time((y, m, d, H,  M,  S,    0,   -1,    -1))
+    t = datetime(y, m, d, H, M, S)
+    #t = time.struct_time((y, m, d, H,  M,  S,    0,   -1,    -1))
 
     print("Setting time to:", t)     # uncomment for debugging
     rtc.datetime = t

@@ -62,9 +62,8 @@ S3_CALL_TIMESTAMP = {
 FILEPATH = {
     'adafruit':'/home/pi/DATA/adafruit/'
 }
-#.strftime('%Y-%m-%d')
 filename_writer = {
-    'adafruit': lambda date: FILEPATH['adafruit'] + 'b' + beacon + '_' + date + '.csv'
+    'adafruit': lambda date: FILEPATH['adafruit'] + 'b' + beacon + '_' + date.strftime('%Y-%m-%d') + '.csv'
 }
 #*****************************************
 # import functions for each of the sensors
@@ -169,7 +168,8 @@ def clock_update():
         M = datetime.now().minute
         S = datetime.now().second
 
-        t = time.struct_time((y, m, d, H,  M,  S,    0,   -1,    -1))
+        t = datetime(y, m, d, H, M, S)
+        #t = time.struct_time((y, m, d, H,  M,  S,    0,   -1,    -1))
         rtc.datetime = t
     except:
         t = rtc.datetime
@@ -213,9 +213,8 @@ def data_mgmt():
         'T_CO',
         'RH_CO'
     ]
-    #.strftime('%Y-%m-%d %H:%M:%S')
     data = [{
-        'Timestamp': timestamp,
+        'Timestamp': timestamp.strftime('%Y-%m-%d %H:%M:%S'),
         'TVOC': TVOC,
         'eCO2': eCO2,
         'Lux': lux,
