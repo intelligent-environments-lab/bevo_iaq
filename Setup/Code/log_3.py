@@ -212,8 +212,9 @@ def data_mgmt():
         'T_CO',
         'RH_CO'
     ]
+    #.strftime('%Y-%m-%d %H:%M:%S')
     data = [{
-        'Timestamp': timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+        'Timestamp': timestamp,
         'TVOC': TVOC,
         'eCO2': eCO2,
         'Lux': lux,
