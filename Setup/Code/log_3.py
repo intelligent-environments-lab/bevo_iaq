@@ -13,12 +13,14 @@ import os
 import traceback
 import logging
 import smtplib, ssl
+import urllib.request
 
 # Import sensor-specific libraries
 import serial
 import dgs
 import adafruit_sgp30
 import adafruit_tsl2591
+import adafruit_pcf8523
 from board import SCL, SDA
 from busio import I2C
 
@@ -26,7 +28,7 @@ from busio import I2C
 import boto3
 from botocore.exceptions import ClientError
 
-beacon = '00'
+beacon = '20'
 
 # Verbose Global Variable
 verbose = True
@@ -152,41 +154,50 @@ def CO_scan():
 
 def clock_update():
     '''
-    Updates the RTC clock time when connected to internet
+    Updates the RTC clock time when connected to internet. Void function.
     '''
 
-    return True
+    try:
+        urllib.request.urlopen('http://google.com') #Python 3.x
+        print('connected')
+        y = datetime.now().year
+        m = datetime.now().month
+        d = datetime.now().day
 
-def get_time():
-    '''
-    Gets the current time from Wifi if connected or from the RTC if no connection
-    detected
-    '''
+        H = datetime.now().hour
+        M = datetime.now().minute
+        S = datetime.now().second
 
-    return True
+        t = time.struct_time((y, m, d, H,  M,  S,    0,   -1,    -1))
+        rtc.datetime = t
+    except:
+        t = rtc.datetime
 
 def error_email(error_message):
     '''
     DOES NOT WORK WITH PYTHON2
     '''
-    port = 465  # For SSL
-    smtp_server = "smtp.gmail.com"
-    sender_email = "IEL.Beacon.Manager@gmail.com"  # Enter your address
-    receiver_email = "IEL.Beacon.Manager@gmail.com"  # Enter receiver address
-    password = "ZoltanIEL2019"
-    message = """\
-    Subject: Sensor is down
+    try:
+        port = 465  # For SSL
+        smtp_server = "smtp.gmail.com"
+        sender_email = "IEL.Beacon.Manager@gmail.com"  # Enter your address
+        receiver_email = "IEL.Beacon.Manager@gmail.com"  # Enter receiver address
+        password = "ZoltanIEL2019"
+        message = """\
+        Subject: Sensor is down
 
-    {error_message}"""
+        {error_message}"""
 
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-        server.login(sender_email, password)
-        server.sendmail(sender_email, receiver_email, message.format(error_message=error_message))
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+            server.login(sender_email, password)
+            server.sendmail(sender_email, receiver_email, message.format(error_message=error_message))
+    except:
+        print("email error")
 
 def data_mgmt():
     # Store adafruit sensor data locally and remotely
-    timestamp = datetime.datetime.now()
+    timestamp = rtc.datetime
     data_header = [
         'Timestamp',
         'TVOC',
@@ -314,8 +325,11 @@ def main():
     Manages sensors and data storage on device.\n
     return: void
     '''
+    global t 
+    global rtc
     print('Running BevoBeacon2.0\n')
     i2c = createSensor()
+    rtc = adafruit_pcf8523.PCF8523(i2c)
     # Begin loop for sensor scans
     i = 1
     sgp_data_old = {'TVOC': 0, 'eCO2': 0}
@@ -324,6 +338,15 @@ def main():
     co_data_old = {'CO':0,'T_CO':0,'RH_CO':0}
     while True:
         print('*'*20 + ' LOOP %d '%i + '*'*20)
+
+        # Update the clock
+        ret = clock_update()
+        if ret == False:
+            t = rtc.datetime
+        else:
+            rtc.datetime = ret
+
+        # Get sensor values
         try:
             print('Running SGP30 scan...')
             sgp_data_new = sgp30_scan(i2c)
@@ -363,7 +386,7 @@ def main():
         data_mgmt()
 
         # Prepare for next loop
-        delay = 300 #seconds
+        delay = 10 #seconds
         print('Waiting', delay, 'seconds before rescanning...')
         #assert False
         time.sleep(delay)
