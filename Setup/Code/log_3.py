@@ -340,11 +340,7 @@ def main():
         print('*'*20 + ' LOOP %d '%i + '*'*20)
 
         # Update the clock
-        ret = clock_update()
-        if ret == False:
-            t = rtc.datetime
-        else:
-            rtc.datetime = ret
+        clock_update()
 
         # Get sensor values
         try:
