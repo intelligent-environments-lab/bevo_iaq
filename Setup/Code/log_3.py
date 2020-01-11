@@ -7,6 +7,7 @@
 # **********************************************************************
 
 import time
+from time import mktime
 import csv
 import datetime
 import os
@@ -168,8 +169,7 @@ def clock_update():
         M = datetime.now().minute
         S = datetime.now().second
 
-        t = datetime(y, m, d, H, M, S)
-        #t = time.struct_time((y, m, d, H,  M,  S,    0,   -1,    -1))
+        t = time.struct_time((y, m, d, H,  M,  S,    0,   -1,    -1))
         rtc.datetime = t
         print(t)
     except:
@@ -199,7 +199,7 @@ def error_email(error_message):
 
 def data_mgmt():
     # Store adafruit sensor data locally and remotely
-    timestamp = rtc.datetime
+    timestamp = datetime.datetime.fromtimestamp(mktime(rtc.datetime))
     data_header = [
         'Timestamp',
         'TVOC',
