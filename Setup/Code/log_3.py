@@ -343,7 +343,7 @@ def main():
 
         # Update the clock
         clock_update()
-
+        print(rtc.datetime)
         # Get sensor values
         try:
             print('Running SGP30 scan...')
