@@ -7,7 +7,6 @@
 # **********************************************************************
 
 import time
-from time import mktime
 import csv
 import datetime
 import os
@@ -29,7 +28,7 @@ from busio import I2C
 import boto3
 from botocore.exceptions import ClientError
 
-beacon = '20'
+beacon = '00'
 
 # Verbose Global Variable
 verbose = True
@@ -155,7 +154,7 @@ def CO_scan():
 
 def clock_update():
     '''
-    Updates the RTC clock time when connected to internet. Void function.
+    Updates the RTC clock time when connected to internet
     '''
 
     try:
@@ -170,8 +169,9 @@ def clock_update():
         S = datetime.now().second
 
         t = time.struct_time((y, m, d, H,  M,  S,    0,   -1,    -1))
+
+        print("Setting time to:", t)
         rtc.datetime = t
-        print(t)
     except:
         t = rtc.datetime
 
@@ -195,11 +195,11 @@ def error_email(error_message):
             server.login(sender_email, password)
             server.sendmail(sender_email, receiver_email, message.format(error_message=error_message))
     except:
-        print("email error")
+        pass
 
 def data_mgmt():
     # Store adafruit sensor data locally and remotely
-    timestamp = datetime.datetime.fromtimestamp(mktime(rtc.datetime))
+    timestamp = datetime.datetime.now()
     data_header = [
         'Timestamp',
         'TVOC',
@@ -327,11 +327,9 @@ def main():
     Manages sensors and data storage on device.\n
     return: void
     '''
-    global t 
-    global rtc
     print('Running BevoBeacon2.0\n')
     i2c = createSensor()
-    rtc = adafruit_pcf8523.PCF8523(i2c)
+    global t
     # Begin loop for sensor scans
     i = 1
     sgp_data_old = {'TVOC': 0, 'eCO2': 0}
@@ -340,11 +338,6 @@ def main():
     co_data_old = {'CO':0,'T_CO':0,'RH_CO':0}
     while True:
         print('*'*20 + ' LOOP %d '%i + '*'*20)
-
-        # Update the clock
-        clock_update()
-        print(rtc.datetime)
-        # Get sensor values
         try:
             print('Running SGP30 scan...')
             sgp_data_new = sgp30_scan(i2c)
@@ -384,7 +377,7 @@ def main():
         data_mgmt()
 
         # Prepare for next loop
-        delay = 10 #seconds
+        delay = 300 #seconds
         print('Waiting', delay, 'seconds before rescanning...')
         #assert False
         time.sleep(delay)
