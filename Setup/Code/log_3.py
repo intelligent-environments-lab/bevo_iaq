@@ -171,6 +171,7 @@ def clock_update():
         t = datetime(y, m, d, H, M, S)
         #t = time.struct_time((y, m, d, H,  M,  S,    0,   -1,    -1))
         rtc.datetime = t
+        print(t)
     except:
         t = rtc.datetime
 
