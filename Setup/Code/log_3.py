@@ -62,8 +62,9 @@ S3_CALL_TIMESTAMP = {
 FILEPATH = {
     'adafruit':'/home/pi/DATA/adafruit/'
 }
+#.strftime('%Y-%m-%d')
 filename_writer = {
-    'adafruit': lambda date: FILEPATH['adafruit'] + 'b' + beacon + '_' + date.strftime('%Y-%m-%d') + '.csv'
+    'adafruit': lambda date: FILEPATH['adafruit'] + 'b' + beacon + '_' + date + '.csv'
 }
 #*****************************************
 # import functions for each of the sensors
