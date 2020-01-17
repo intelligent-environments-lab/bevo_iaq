@@ -13,14 +13,12 @@ import os
 import traceback
 import logging
 import smtplib, ssl
-import urllib.request
 
 # Import sensor-specific libraries
 import serial
 import dgs
 import adafruit_sgp30
 import adafruit_tsl2591
-import adafruit_pcf8523
 from board import SCL, SDA
 from busio import I2C
 
@@ -151,29 +149,6 @@ def CO_scan():
     co, t1, rh1 = dgs.takeMeasurement('/dev/ttyUSB1')
     data = {'CO':co,'T_CO':t1,'RH_CO':rh1}
     return data
-
-def clock_update():
-    '''
-    Updates the RTC clock time when connected to internet
-    '''
-
-    try:
-        urllib.request.urlopen('http://google.com') #Python 3.x
-        print('connected')
-        y = datetime.now().year
-        m = datetime.now().month
-        d = datetime.now().day
-
-        H = datetime.now().hour
-        M = datetime.now().minute
-        S = datetime.now().second
-
-        t = time.struct_time((y, m, d, H,  M,  S,    0,   -1,    -1))
-
-        print("Setting time to:", t)
-        rtc.datetime = t
-    except:
-        t = rtc.datetime
 
 def error_email(error_message):
     '''
