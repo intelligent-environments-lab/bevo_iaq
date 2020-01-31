@@ -33,8 +33,8 @@ from subprocess import call
 # Sensor-specific libraries
 import crcmod
 import pigpio
-import sps30_new
-import scd30_new
+import sps30 as sps30_new
+import scd30 as scd30_new
 
 # AWS libraries
 import boto3
