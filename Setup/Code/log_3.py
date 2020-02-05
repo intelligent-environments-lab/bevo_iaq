@@ -19,6 +19,7 @@ import serial
 import dgs
 import adafruit_sgp30
 import adafruit_tsl2591
+import adafruit_tsl2561
 from board import SCL, SDA
 from busio import I2C
 
@@ -112,6 +113,43 @@ def tsl2591_scan(i2c):
         tsl.enabled = False
     except:
         print('Error reading from TSL2591')
+        lux = -100
+        visible = -100
+        infrared = -100
+    # Outputting
+    if verbose:
+        print("-------------------------")
+        print("Visible (?):\t"+str(visible))
+        print("Infrared (?):\t"+str(infrared))
+        print("Bright (lux):\t"+str(lux))
+        print("-------------------------")
+    # Return data
+    data = {'Visible': visible, 'Infrared': infrared, 'Lux': lux}
+    return data
+
+def tsl2561_scan(i2c):
+    # Declare all global variables for use outside the functions
+    global lux, visible, infrared
+    try:
+        # Instantiate tsl object
+        tsl = adafruit_tsl2561.TSL2561(i2c)
+        # enable sensor and wait a sec for it to get going
+        tsl.enabled = True
+        time.sleep(1)
+        # set gain and integration time; gain 0 = 1x & 1 = 16x. Integration time of 1 = 101ms
+        tsl.gain = 0
+        tsl.integration_time = 1  # 101 ms intergration time.
+        # Retrieve sensor scan data
+        lux = tsl.lux
+        visible = tsl.broadband
+        infrared = tsl.infrared
+        # Check for complete darkness
+        if lux == None:
+            lux = 0
+        # Disable the sensor and end process
+        tsl.enabled = False
+    except:
+        print('Error reading from TSL2561')
         lux = -100
         visible = -100
         infrared = -100
@@ -324,6 +362,14 @@ def main():
         try:
             print('Running TSL2591 scan...')
             tsl_data_new = tsl2591_scan(i2c)
+            if tsl_data_new['Lux'] == -100 and tsl_data_old['Lux'] != -100:
+                error_email('TSL2591 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
+            tsl_data_old = tsl_data_new
+        except OSError as e:
+                print('OSError for I/O on a sensor.')
+        try:
+            print('Running TSL2561 scan...')
+            tsl_data_new = tsl2561_scan(i2c)
             if tsl_data_new['Lux'] == -100 and tsl_data_old['Lux'] != -100:
                 error_email('TSL2591 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
             tsl_data_old = tsl_data_new
