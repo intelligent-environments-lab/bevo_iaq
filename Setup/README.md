@@ -172,7 +172,7 @@ The sensors in the schematic above are labeled, and from top to bottom are:
 2. SVM30 - Total Volatile Organic Compounds
 3. SPS30 - Particulate Matter
 4. TSL2591 - Light
-5. PCF8523 - Clock
+5. PCF8523/DS1307 - Real-Time Clock
 
 The remaining sensors are be connected with female-to-female wires after soldering male-to-male header pins to both the PCB and each individual sensor. The PCB in the schematic shows the top view where the connections are routed on the bottom of the board. There are five columns of connections on the PCB. From left to right, these columns represent specific pin connections:
 1. Extra GND connection - needed for SCD30 and SPS30 SEL pins
@@ -224,7 +224,17 @@ For the remaining sensors, wires are cut, crimped, and plugged in with the follo
  
  ![pcb-tsl](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/PCB%20-%20TSL.png)
  
- 5. **RPi**
+ 5. **RTC**
+ - Wires: black, red, yellow, green
+ - Femal to Female connections
+  - PCB Connection: 4x1 black, red, yellow, green
+  - Sensor Connection: 4x1 red, black, yellow, green
+ - i2c Address: 68 (changes to UU once connected)
+ - Layout:
+ 
+ 
+ 
+ 6. **RPi**
  - Wires: black, red, yellow, green
  - Female to Female connections
   - PCB Connection: 4x1 red, black, yellow, green
@@ -232,6 +242,9 @@ For the remaining sensors, wires are cut, crimped, and plugged in with the follo
  - Layout:
  
  ![rpi-pcb](https://github.com/intelligent-environments-lab/bevo_iaq/blob/master/Setup/Images/RPi%20-%20PCB%20and%20Fan.png)
+
+### Real-Time Clock Setup
+The link to setup three different real-time clocks is found [here](https://learn.adafruit.com/adding-a-real-time-clock-to-raspberry-pi/set-rtc-time). 
 
 ## Code Development
 (Under Construction)
