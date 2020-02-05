@@ -359,22 +359,22 @@ def main():
             sgp_data_old = sgp_data_new
         except OSError as e:
                 print('OSError for I/O on a sensor.')
-        try:
-            print('Running TSL2591 scan...')
-            tsl_data_new = tsl2591_scan(i2c)
-            if tsl_data_new['Lux'] == -100 and tsl_data_old['Lux'] != -100:
-                error_email('TSL2591 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
-            tsl_data_old = tsl_data_new
-        except OSError as e:
-                print('OSError for I/O on a sensor.')
-        try:
-            print('Running TSL2561 scan...')
-            tsl_data_new = tsl2561_scan(i2c)
-            if tsl_data_new['Lux'] == -100 and tsl_data_old['Lux'] != -100:
-                error_email('TSL2591 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
-            tsl_data_old = tsl_data_new
-        except OSError as e:
-                print('OSError for I/O on a sensor.')
+        #try:
+        #    print('Running TSL2591 scan...')
+        #    tsl_data_new = tsl2591_scan(i2c)
+        #    if tsl_data_new['Lux'] == -100 and tsl_data_old['Lux'] != -100:
+        #        error_email('TSL2591 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
+        #    tsl_data_old = tsl_data_new
+        #except OSError as e:
+        #        print('OSError for I/O on a sensor.')
+        #try:
+        #    print('Running TSL2561 scan...')
+        #    tsl_data_new = tsl2561_scan(i2c)
+        #    if tsl_data_new['Lux'] == -100 and tsl_data_old['Lux'] != -100:
+        #        error_email('TSL2591 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
+        #    tsl_data_old = tsl_data_new
+        #except OSError as e:
+        #        print('OSError for I/O on a sensor.')
         try:
             print('Running Nitrogen Dioxide scan...')
             no2_data_new = NO2_scan()
