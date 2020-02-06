@@ -42,7 +42,7 @@ sudo rm -rf /var/lib/logmein-hamachi/
 
 # Sensor Libraries
 sudo pip3 install adafruit-circuitpython-tsl2591
-sudo pip3 install adafruit-circuitpython-tsl2591
+sudo pip3 install adafruit-circuitpython-tsl2561
 sudo pip3 install adafruit-circuitpython-sgp30
 sudo pip3 install adafruit-circuitpython-pcf8523
 sudo apt-get install python-crcmod
