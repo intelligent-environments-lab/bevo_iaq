@@ -58,7 +58,7 @@ s3 = boto3.client(
 S3_FILEPATH = {
     'sensirion': 'WCWH/spring2020/sensirion/'
 }
-S3_CALL_FREQUENCY = datetime.timedelta(days=1)
+S3_CALL_FREQUENCY = datetime.timedelta(days=7)
 S3_CALL_TIMESTAMP = {
     'sensirion': datetime.datetime.now()
 }
