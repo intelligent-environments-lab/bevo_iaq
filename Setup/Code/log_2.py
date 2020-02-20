@@ -265,11 +265,11 @@ def main():
 	try:
 		while True:
 			print('*'*20 + ' LOOP %d '%i + '*'*20)
+			sps_data_old = {'pm_n_0p5':0,'pm_n_1':0,'pm_n_2p5':0,'pm_n_4':0,'pm_n_10':0,'pm_c_1':0,'pm_c_2p5':0,'pm_c_4':0,'pm_c_10':0}
+			sps_count = 0
+			scd_data_old = {'CO2':0,'TC':0,'RH':0}
+			scd_count = 0
 			for i in range(5):
-				sps_data_old = {'pm_n_0p5':0,'pm_n_1':0,'pm_n_2p5':0,'pm_n_4':0,'pm_n_10':0,'pm_c_1':0,'pm_c_2p5':0,'pm_c_4':0,'pm_c_10':0}
-				sps_count = 0
-				scd_data_old = {'CO2':0,'TC':0,'RH':0}
-				scd_count = 0
 				try:
 					# SPS30 scan
 					sps_data_new = sps30_scan()
