@@ -34,7 +34,7 @@ from subprocess import call
 import crcmod
 import pigpio
 import sps30
-import scd30 as scd30_new
+import scd30
 
 # AWS libraries
 import boto3
@@ -123,7 +123,15 @@ def scd30_scan():
 	# Declare all global variables to be returned
 	global co2, tc, rh
 
-	tc, rh, co2 = scd30_new.takeMeasurement()
+	tc, rh, co2 = scd30.takeMeasurement()
+
+	print("---------------------------------------")
+	print("Environmental Variables")
+	print("---------------------------------------")
+	print("CO2 (ppm): {0:.1f}".format(co2))
+	print("T (C): {0:.1f}".format(t))
+	print("RH (%): {0:.1f}".format(rh))
+	print("---------------------------------------")
 
 	return {'CO2':co2,'TC':tc,'RH':rh}
 
@@ -311,16 +319,29 @@ def main():
 			for x in scd_data_old:
 				scd_data_old[x] /= scd_count
 
-			print("Average Concentration (ug/m3)")
 			print("---------------------------------------")
-			print("PM1: {0:.3f}\nPM2.5: {0:.3f}\nPM4: {0:.3f}\nPM10: {0:.3f}".format(sps_data_old['pm_c_1'],sps_data_old['pm_c_2p5'],sps_data_old['pm_c_4'],sps_data_old['pm_c_10']))
-			print("Count (#/L)")
+			print("Average PM Concentration (ug/m3)")
+			print("---------------------------------------")
+			print("PM1: {0:.3f}".format(sps_data_old['pm_c_1']))
+			print("PM2.5: {0:.3f}".format(sps_data_old['pm_c_2p5']))
+			print("PM4: {0:.3f}".format(sps_data_old['pm_c_4']))
+			print("PM10: {0:.3f}".format(sps_data_old['pm_c_10']))
+			print("---------------------------------------")
+			print("Average PM Count (#/L)")
 			print("---------------------------------------")
 			print("PM0.5 count: {0:.3f}".format(sps_data_old['pm_n_0p5']))
 			print("PM1   count: {0:.3f}".format(sps_data_old['pm_n_1']))
 			print("PM2.5 count: {0:.3f}".format(sps_data_old['pm_n_2p5']))
 			print("PM4   count: {0:.3f}".format(sps_data_old['pm_n_4']))
 			print("PM10  count: {0:.3f}".format(sps_data_old['pm_n_10']))
+			print("---------------------------------------")
+
+			print("---------------------------------------")
+			print("Average Environmental Variables")
+			print("---------------------------------------")
+			print("CO2 (ppm): {0:.1f}".format(scd_data_old['CO2']))
+			print("T (C): {0:.1f}".format(scd_data_old['TC']))
+			print("RH (%): {0:.1f}".format(scd_data_old['RH']))
 			print("---------------------------------------")
 			
 			# Data management
