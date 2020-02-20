@@ -93,16 +93,16 @@ def sps30_scan():
 	pm_n, pm_c = sps30.takeMeasurement()
 
 	print("Concentration (ug/m3)")
-    print("---------------------------------------")
-    print("PM1: {0:.3f}\nPM2.5: {0:.3f}\nPM4: {0:.3f}\nPM10: {0:.3f}".format(pm_c[0], pm_c[1], pm_c[2], pm_c[3]))
-    print("Count (#/L)")
-    print("---------------------------------------")
-    print("PM0.5 count: {0:.3f}".format(pm_n[0]))
-    print("PM1   count: {0:.3f}".format(pm_n[1]))
-    print("PM2.5 count: {0:.3f}".format(pm_n[2]))
-    print("PM4   count: {0:.3f}".format(pm_n[3]))
-    print("PM10  count: {0:.3f}".format(pm_n[4]))
-    print("---------------------------------------")
+	print("---------------------------------------")
+	print("PM1: {0:.3f}\nPM2.5: {0:.3f}\nPM4: {0:.3f}\nPM10: {0:.3f}".format(pm_c[0], pm_c[1], pm_c[2], pm_c[3]))
+	print("Count (#/L)")
+	print("---------------------------------------")
+	print("PM0.5 count: {0:.3f}".format(pm_n[0]))
+	print("PM1   count: {0:.3f}".format(pm_n[1]))
+	print("PM2.5 count: {0:.3f}".format(pm_n[2]))
+	print("PM4   count: {0:.3f}".format(pm_n[3]))
+	print("PM10  count: {0:.3f}".format(pm_n[4]))
+	print("---------------------------------------")
 
 	return {'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],'pm_c_1':pm_c[0],'pm_c_2p5':pm_c[1],'pm_c_4':pm_c[2],'pm_c_10':pm_c[3]}
 
