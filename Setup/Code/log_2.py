@@ -33,7 +33,7 @@ from subprocess import call
 # Sensor-specific libraries
 import crcmod
 import pigpio
-import sps30 as sps30_new
+import sps30
 import scd30 as scd30_new
 
 # AWS libraries
@@ -90,7 +90,8 @@ def sps30_scan():
 	# Declare all global variables to be returned (n = count, c = concentration)
 	global pm_n, pm_c
 
-	pm_n, pm_c = sps30_new.takeMeasurement()
+	pm_n, pm_c = sps30.takeMeasurement()
+	print(pm_c)
 
 	return {'pm_n_0p5':pm_n[0],'pm_n_1':pm_n[1],'pm_n_2p5':pm_n[2],'pm_n_4':pm_n[3],'pm_n_10':pm_n[4],'pm_c_1':pm_c[0],'pm_c_2p5':pm_c[1],'pm_c_4':pm_c[2],'pm_c_10':pm_c[3]}
 
