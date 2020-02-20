@@ -158,6 +158,7 @@ def takeMeasurement():
 
 	#read measurement
 	i2cWrite([0x03, 0x00])
+	time.sleep(1)
 	data = read_n_bytes(18)
 
 	if data == False:
@@ -171,15 +172,6 @@ def takeMeasurement():
 
 		struct_rH = struct.pack('>BBBB', data[12], data[13], data[15], data[16])
 		rh = struct.unpack('>f', struct_rH)
-
-		print("Concentration (ppm)")
-		print("---------------------------------------")
-		print("CO2: {0:.1f}".format(co2[0]))
-		print("Environmental Variables")
-		print("---------------------------------------")
-		print("T (C): {0:.1f}".format(t[0]))
-		print("RH (%): {0:.1f}".format(rh[0]))
-		print("---------------------------------------")
 
 	pi.i2c_close(h)
 	pi.stop()
