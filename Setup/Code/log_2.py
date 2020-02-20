@@ -287,6 +287,24 @@ def main():
 
 				except OSError as e:
 					print('OSError for I/O on a sensor.')
+
+			for x in sps_data_old:
+				sps_data_old[x] /= sps_count
+
+			for x in scd_data_old:
+				scd_data_old[x] /= scd_count
+
+			print("Average Concentration (ug/m3)")
+			print("---------------------------------------")
+			print("PM1: {0:.3f}\nPM2.5: {0:.3f}\nPM4: {0:.3f}\nPM10: {0:.3f}".format(sps_data_old['pm_c_1'],sps_data_old['pm_c_2p5'],sps_data_old['pm_c_4'],sps_data_old['pm_c_10']))
+			print("Count (#/L)")
+			print("---------------------------------------")
+			print("PM0.5 count: {0:.3f}".format(sps_data_old['pm_n_0p5']))
+			print("PM1   count: {0:.3f}".format(sps_data_old['pm_n_1']))
+			print("PM2.5 count: {0:.3f}".format(sps_data_old['pm_n_2p5']))
+			print("PM4   count: {0:.3f}".format(sps_data_old['pm_n_4']))
+			print("PM10  count: {0:.3f}".format(sps_data_old['pm_n_10']))
+			print("---------------------------------------")
 			
 			# Data management
 			print("Running data management...")
