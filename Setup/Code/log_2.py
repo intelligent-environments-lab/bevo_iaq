@@ -135,25 +135,6 @@ def scd30_scan():
 
 	return {'CO2':co2,'TC':tc,'RH':rh}
 
-def error_email(error_message):
-	'''
-	DOES NOT WORK WITH PYTHON2
-	'''
-	port = 465  # For SSL
-	smtp_server = "smtp.gmail.com"
-	sender_email = "IEL.Beacon.Manager@gmail.com"  # Enter your address
-	receiver_email = "IEL.Beacon.Manager@gmail.com"  # Enter receiver address
-	password = "ZoltanIEL2019"
-	message = """\
-	Subject: Sensor is down
-
-	{error_message}"""
-
-	context = ssl.create_default_context()
-	with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-		server.login(sender_email, password)
-		server.sendmail(sender_email, receiver_email, message.format(error_message=error_message))
-
 def data_mgmt():
 	'''
 	Combines and stores sensors' data locally and remotely to AWS S3 bucket.\n
@@ -302,7 +283,11 @@ def main():
 						sps_count += 1
 						for x in sps_data_old:
 							sps_data_old[x] += sps_data_new[x]
-		
+							
+				except OSError as e:
+					print('OSError for I/O on a sensor.')
+
+				try:
 					# SCD30 scan
 					scd_data_new = scd30_scan()
 					if scd_data_new['CO2'] != -100:
