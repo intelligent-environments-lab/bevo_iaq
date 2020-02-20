@@ -187,7 +187,7 @@ def takeMeasurement():
     return first
 
   # Prints the data to the command line
-  def printHuman(data):
+  def printHuman(pm_c,pm_n,typ):
     '''
     Inputs:
       - data: string of digits holding the measured data
@@ -195,24 +195,22 @@ def takeMeasurement():
     '''
     print("Concentration (ug/m3)")
     print("---------------------------------------")
-    print("PM1: {0:.3f}\tPM2.5: {0:.3f}\tPM4: {0:.3f}\tPM10: {0:.3f}".format(calcFloat(data), calcFloat(data[6:12]), calcFloat(data[12:18]), calcFloat(data[18:24])))
+    print("PM1: {0:.3f}\tPM2.5: {0:.3f}\tPM4: {0:.3f}\tPM10: {0:.3f}".format(pm_c[0], pm_c[1], pm_c[2], pm_c[3]))
     print("Count (#/L)")
     print("---------------------------------------")
-    print("PM0.5 count: {0:.3f}".format(calcFloat(data[24:30])))
-    print("PM1   count: {0:.3f}".format(calcFloat(data[30:36])))
-    print("PM2.5 count: {0:.3f}".format(calcFloat(data[36:42])))
-    print("PM4   count: {0:.3f}".format(calcFloat(data[42:48])))
-    print("PM10  count: {0:.3f}".format(calcFloat(data[48:54])))
+    print("PM0.5 count: {0:.3f}".format(pm_n[0]))
+    print("PM1   count: {0:.3f}".format(pm_n[1]))
+    print("PM2.5 count: {0:.3f}".format(pm_n[2]))
+    print("PM4   count: {0:.3f}".format(pm_n[3]))
+    print("PM10  count: {0:.3f}".format(pm_n[4]))
     print("---------------------------------------")
-    print("Typical Size: {0:.3f}".format(calcFloat(data[54:60])))
+    print("Typical Size: {0:.3f}".format(typ))
     print("---------------------------------------")
 
   # Reads data from the device and outputs it to the command line
   def readPMValues():
     # READ MEASURED VALUES: 0x0300
     data = readFromAddr(0x03,0x00,59)
-    if data != False:
-      printHuman(data)
     return data
 
   # Big reset
@@ -311,6 +309,7 @@ def takeMeasurement():
       pm_c[2] = calcFloat(data[12:18])
       pm_c[3] = calcFloat(data[18:24])
 
+  printHuman(pm_c,pm_n,pm_typical)
   pi.i2c_close(h)
   pi.stop()
 
