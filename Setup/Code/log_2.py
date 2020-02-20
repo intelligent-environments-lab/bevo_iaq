@@ -262,37 +262,38 @@ def main():
 
     # Begin loop for sensor scans
     i = 1
-    sps_data_old = {'pm_n_0p5':0,'pm_n_1':0,'pm_n_2p5':0,'pm_n_4':0,'pm_n_10':0,'pm_c_1':0,'pm_c_2p5':0,'pm_c_4':0,'pm_c_10':0}
-    scd_data_old = {'CO2':0,'TC':0,'RH':0}
     try:
         while True:
             print('*'*20 + ' LOOP %d '%i + '*'*20)
-            try:
-                # SPS30 scan
-                print('Running SPS30 (pm) scan...')
-                sps_data_new = sps30_scan()
-                if sps_data_new['pm_n_10'] == -100 and sps_data_old['pm_n_10'] != -100:
-                    pass
-                    #error_email('SPS30 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
-                sps_data_old = sps_data_new
-    
-                # SCD30 scan
-                print('Running SCD30 (T,RH,CO2) scan...')
-                scd_data_new = scd30_scan()
-                if scd_data_new['CO2'] == -100 and scd_data_old['CO2'] != -100:
-                    pass
-                    #error_email('SCD30 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
-                scd_data_old = scd_data_new
+            for i in range(5):
+            	sps_data_old = {'pm_n_0p5':0,'pm_n_1':0,'pm_n_2p5':0,'pm_n_4':0,'pm_n_10':0,'pm_c_1':0,'pm_c_2p5':0,'pm_c_4':0,'pm_c_10':0}
+    			sps_count = 0
+    			scd_data_old = {'CO2':0,'TC':0,'RH':0}
+    			scd_count = 0
+	            try:
+	                # SPS30 scan
+	                sps_data_new = sps30_scan()
+	                if sps_data_new['pm_n_10'] != -100:
+	                	sps_count += 1
+	                	for x in sps_data_old:
+	                		sps_data_old[x] += sps_data_new[x]
+	    
+	                # SCD30 scan
+	                scd_data_new = scd30_scan()
+	                if scd_data_new['CO2'] != -100:
+	                    scd_count += 1
+	                    for x in scd_data_old:
+	                    	scd_data_old[x] += scd_data_new[x]
 
-            except OSError as e:
-                print('OSError for I/O on a sensor.')
+	            except OSError as e:
+	                print('OSError for I/O on a sensor.')
             
             # Data management
             print("Running data management...")
             data_mgmt()
     
             # Prepare for next loop
-            delay = 300 #seconds
+            delay = 56 #seconds
             print('Waiting', delay, 'seconds before rescanning...')
             #assert False
             time.sleep(delay)
