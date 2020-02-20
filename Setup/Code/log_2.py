@@ -92,9 +92,14 @@ def sps30_scan():
 
 	pm_n, pm_c = sps30.takeMeasurement()
 
+	print("---------------------------------------")
 	print("Concentration (ug/m3)")
 	print("---------------------------------------")
-	print("PM1: {0:.3f}\nPM2.5: {0:.3f}\nPM4: {0:.3f}\nPM10: {0:.3f}".format(pm_c[0], pm_c[1], pm_c[2], pm_c[3]))
+	print("PM1:",pm_c[0])
+	print("PM2.5:,"pm_c[1])
+	print("PM4:", pm_c[2])
+	print("PM10:", pm_c[3])
+	print("---------------------------------------")
 	print("Count (#/L)")
 	print("---------------------------------------")
 	print("PM0.5 count: {0:.3f}".format(pm_n[0]))
