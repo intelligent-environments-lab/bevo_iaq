@@ -309,7 +309,7 @@ def takeMeasurement():
       pm_c[2] = calcFloat(data[12:18])
       pm_c[3] = calcFloat(data[18:24])
 
-  printHuman(pm_c,pm_n,pm_typical)
+  #printHuman(pm_c,pm_n,pm_typical)
   pi.i2c_close(h)
   pi.stop()
 
