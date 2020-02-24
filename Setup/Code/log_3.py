@@ -169,10 +169,15 @@ def NO2_scan():
 	Using serial connection, reads in values for T, RH, and NO2 concentration
 	'''
 	global no2, t0, rh0
-	co = -100
-	t0 = -100
-	rh0 = -100
-	no2, t0, rh0 = dgs.takeMeasurement('/dev/ttyUSB0')
+
+	try:
+		no2, t0, rh0 = dgs.takeMeasurement('/dev/ttyUSB0')
+	except:
+		print('Error reading from NO2 sensor')
+		co = -100
+		t0 = -100
+		rh0 = -100
+
 	data = {'NO2':no2,'T_NO2':t0,'RH_NO2':rh0}
 	return data
 
@@ -181,10 +186,14 @@ def CO_scan():
 	Using serial connection, reads in values for T, RH, and CO concentration
 	'''
 	global co, t1, rh1
-	co = -100
-	t1 = -100
-	rh1 = -100
-	co, t1, rh1 = dgs.takeMeasurement('/dev/ttyUSB1')
+	try:
+		co, t1, rh1 = dgs.takeMeasurement('/dev/ttyUSB1')
+	except:
+		print('Error reading from CO sensor')
+		co = -100
+		t1 = -100
+		rh1 = -100
+
 	data = {'CO':co,'T_CO':t1,'RH_CO':rh1}
 	return data
 
@@ -229,17 +238,17 @@ def data_mgmt():
 	]
 	data = [{
 		'Timestamp': timestamp.strftime('%Y-%m-%d %H:%M:%S'),
-		'TVOC': TVOC,
-		'eCO2': eCO2,
-		'Lux': lux,
-		'Visible': visible,
-		'Infrared': infrared,
-		'NO2':no2,
-		'T_NO2':t0,
-		'RH_NO2':rh0,
-		'CO':co,
-		'T_CO':t1,
-		'RH_CO':rh1
+		'TVOC': sgp_data_old['TVOC'],
+		'eCO2': sgp_data_old['eCO2'],
+		'Lux': tsl_data_old['Lux'],
+		'Visible': tsl_data_old['Visible'],
+		'Infrared': tsl_data_old['infrared'],
+		'NO2': no2_data_old['NO2'],
+		'T_NO2': no2_data_old['T_NO2'],
+		'RH_NO2': no2_data_old['RH_NO2'],
+		'CO': co_data_old['CO'],
+		'T_CO': co_data_old['T_CO'],
+		'RH_CO': co_data_old['RH_CO']
 	}]
 	key = 'adafruit'
 	write_csv(
@@ -342,7 +351,7 @@ def main():
 	'''
 	print('Running BevoBeacon2.0\n')
 	i2c = createSensor()
-	global t
+	global sgp_data_old, tsl_data_old, no2_data_old, co_data_old
 	# Begin loop for sensor scans
 	i = 1
 	while True:
@@ -356,27 +365,20 @@ def main():
 		co_data_old = {'CO':0,'T_CO':0,'RH_CO':0}
 		co_count = 0
 		for i in range(5):
-			try:
-				#print('Running SGP30 scan...')
-				sgp_data_new = sgp30_scan(i2c)
-				if sgp_data_new['TVOC'] != -100:
-					sgp_count += 1
-					for x in sgp_data_old:
-						sgp_data_old[x] += sgp_data_new[x]
-
-			except OSError as e:
-					print('OSError for I/O on a sensor.')
+			#print('Running SGP30 scan...')
+			sgp_data_new = sgp30_scan(i2c)
+			if sgp_data_new['TVOC'] != -100:
+				sgp_count += 1
+				for x in sgp_data_old:
+					sgp_data_old[x] += sgp_data_new[x]
 			
-			try:
-				#print('Running TSL2591 scan...')
-				tsl_data_new = tsl2591_scan(i2c)
-				if tsl_data_new['Lux'] != -100:
-					tsl_count += 1
-					for x in tsl_data_old:
-						tsl_data_old[x] += tsl_data_new[x]
+			#print('Running TSL2591 scan...')
+			tsl_data_new = tsl2591_scan(i2c)
+			if tsl_data_new['Lux'] != -100:
+				tsl_count += 1
+				for x in tsl_data_old:
+					tsl_data_old[x] += tsl_data_new[x]
 
-			except OSError as e:
-					print('OSError for I/O on a sensor.')
 			#try:
 			#    print('Running TSL2561 scan...')
 			#    tsl_data_new = tsl2561_scan(i2c)
@@ -385,27 +387,20 @@ def main():
 			#    tsl_data_old = tsl_data_new
 			#except OSError as e:
 			#        print('OSError for I/O on a sensor.')
-			try:
-				#print('Running Nitrogen Dioxide scan...')
-				no2_data_new = NO2_scan()
-				if no2_data_new['NO2'] != -100:
-					no2_count += 1
-					for x in no2_data_old:
-						no2_data_old[x] += no2_data_new[x]
-			
-			except OSError as e:
-					print('OSError for I/O on a sensor.')
 
-			try:
-				#print('Running Carbon Monoxide scan...')
-				co_data_new = CO_scan()
-				if co_data_new['CO'] != -100:
-					co_count += 1
-					for x in co_data_old:
-						co_data_old[x] += co_data_new[x]
-			
-			except OSError as e:
-					print('OSError for I/O on a sensor.')
+			#print('Running Nitrogen Dioxide scan...')
+			no2_data_new = NO2_scan()
+			if no2_data_new['NO2'] != -100:
+				no2_count += 1
+				for x in no2_data_old:
+					no2_data_old[x] += no2_data_new[x]
+
+			#print('Running Carbon Monoxide scan...')
+			co_data_new = CO_scan()
+			if co_data_new['CO'] != -100:
+				co_count += 1
+				for x in co_data_old:
+					co_data_old[x] += co_data_new[x]
 
 		for x in sgp_data_old:
 			sgp_data_old[x] /= sgp_count
@@ -422,10 +417,10 @@ def main():
 		print("---------------------------------------")
 		print("Average Values")
 		print("---------------------------------------")
-		print("TVOC (ug/m3): {0:.3f}".format(sps_data_old['pm_c_1']))
-		print("Light (lux): {0:.3f}".format(sps_data_old['pm_c_2p5']))
-		print("NO2 (ppb): {0:.3f}".format(sps_data_old['pm_c_4']))
-		print("CO (ppb): {0:.3f}".format(sps_data_old['pm_c_10']))
+		print("TVOC (ug/m3): {0:.3f}".format(sgp_data_old['TVOC']))
+		print("Light (lux): {0:.3f}".format(tsl_data_old['LUX']))
+		print("NO2 (ppb): {0:.3f}".format(no2_data_old['NO2']))
+		print("CO (ppb): {0:.3f}".format(co_data_old['CO']))
 		print("---------------------------------------")
 
 		# Data management
