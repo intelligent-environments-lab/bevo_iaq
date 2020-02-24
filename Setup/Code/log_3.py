@@ -391,14 +391,14 @@ def main():
 
 			#print('Running Nitrogen Dioxide scan...')
 			no2_data_new = NO2_scan()
-			if int(no2_data_new['NO2']) != -100 and math.isnan(no2_data_new['NO2']) == False:
+			if int(no2_data_new['NO2']) != -100 and math.isnan(int(no2_data_new['NO2'])) == False:
 				no2_count += 1
 				for x in no2_data_old:
 					no2_data_old[x] += int(no2_data_new[x])
 
 			#print('Running Carbon Monoxide scan...')
 			co_data_new = CO_scan()
-			if int(co_data_new['CO']) != -100 and math.isnan(co_data_new['CO']) == False:
+			if int(co_data_new['CO']) != -100 and math.isnan(int(co_data_new['CO'])) == False:
 				co_count += 1
 				for x in co_data_old:
 					co_data_old[x] += int(co_data_new[x])
