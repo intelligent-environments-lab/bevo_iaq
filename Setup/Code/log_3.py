@@ -404,16 +404,28 @@ def main():
 					co_data_old[x] += int(co_data_new[x])
 
 		for x in sgp_data_old:
-			sgp_data_old[x] /= sgp_count
+			try:
+				sgp_data_old[x] /= sgp_count
+			except ZeroDivisionError:
+				sgp_data_old[x] = -100
 
 		for x in tsl_data_old:
-			tsl_data_old[x] /= tsl_count
+			try:
+				tsl_data_old[x] /= tsl_count
+			except ZeroDivisionError:
+				tsl_data_old[x] = -100
 
 		for x in no2_data_old:
-			no2_data_old[x] /= no2_count
+			try:
+				no2_data_old[x] /= no2_count
+			except ZeroDivisionError:
+				no2_data_old[x] = -100
 
 		for x in co_data_old:
-			co_data_old[x] /= co_count
+			try:
+				co_data_old[x] /= co_count
+			except ZeroDivisionError:
+				co_data_old[x] = -100
 
 		print("---------------------------------------")
 		print("Average Values")
