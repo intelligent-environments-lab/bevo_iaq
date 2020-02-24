@@ -243,7 +243,7 @@ def data_mgmt():
 		'eCO2': sgp_data_old['eCO2'],
 		'Lux': tsl_data_old['Lux'],
 		'Visible': tsl_data_old['Visible'],
-		'Infrared': tsl_data_old['infrared'],
+		'Infrared': tsl_data_old['Infrared'],
 		'NO2': no2_data_old['NO2'],
 		'T_NO2': no2_data_old['T_NO2'],
 		'RH_NO2': no2_data_old['RH_NO2'],
