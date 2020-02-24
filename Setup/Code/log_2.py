@@ -286,14 +286,14 @@ def main():
 			for i in range(5):
 				# SPS30 scan
 				sps_data_new = sps30_scan()
-				if sps_data_new['pm_n_10'] != -100 or math.isnan(sps_data_new['pm_n_10']) == False:
+				if sps_data_new['pm_n_10'] != -100 and math.isnan(sps_data_new['pm_n_10']) == False:
 					sps_count += 1
 					for x in sps_data_old:
 						sps_data_old[x] += sps_data_new[x]
 
 				# SCD30 scan
 				scd_data_new = scd30_scan()
-				if scd_data_new['CO2'] != -100 or math.isnan(scd_data_new['CO2']) == False:
+				if scd_data_new['CO2'] != -100 and math.isnan(scd_data_new['CO2']) == False:
 					scd_count += 1
 					for x in scd_data_old:
 						scd_data_old[x] += scd_data_new[x]
