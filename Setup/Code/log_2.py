@@ -163,15 +163,15 @@ def data_mgmt():
 		'Temperature [C]': tc,
 		'Relative Humidity': rh,
 		'CO2': co2,
-		'PM_N_0p5':pm_n[0],
-		'PM_N_1':pm_n[1],
-		'PM_N_2p5':pm_n[2],
-		'PM_N_4':pm_n[3],
-		'PM_N_10':pm_n[4],
-		'PM_C_1':pm_c[0],
-		'PM_C_2p5':pm_c[1],
-		'PM_C_4':pm_c[2],
-		'PM_C_10':pm_c[3],
+		'PM_N_0p5':sps_data_old['pm_n_0p5'],
+		'PM_N_1':sps_data_old['pm_n_1'],
+		'PM_N_2p5':sps_data_old['pm_n_2p5'],
+		'PM_N_4':sps_data_old['pm_n_4'],
+		'PM_N_10':sps_data_old['pm_n_10'],
+		'PM_C_1':sps_data_old['pm_c_1'],
+		'PM_C_2p5':sps_data_old['pm_c_2p5'],
+		'PM_C_4':sps_data_old['pm_c_4'],
+		'PM_C_10':sps_data_old['pm_c_10'],
 	}]
 	key = 'sensirion'
 	write_csv(
@@ -264,6 +264,8 @@ def main():
 	Manages sensors and data storage on device.\n
 	return: void
 	'''
+	global sps_data_old
+
 	print('Running IAQ Beacon\n')
 
 	# Begin loop for sensor scans
