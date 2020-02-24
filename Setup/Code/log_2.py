@@ -86,11 +86,12 @@ def sps30_scan():
 	Returns dictionary containing counts for 0.5, 1, 2.5 , 4, and 10 microns
 	in diameter and concentrations for 1, 2.5, 4, and 10 microns in diameter.
 	'''
-	
-	# Declare all global variables to be returned (n = count, c = concentration)
-	global pm_n, pm_c
-
-	pm_n, pm_c = sps30.takeMeasurement()
+	try:
+		pm_n, pm_c = sps30.takeMeasurement()
+	except:
+		print('Error reading from sps30')
+		pm_n = [-100.0,-100.-100,-100.0,-100.0,-100.0]
+  		pm_c = [-100.0,-100.0,-100.0,-100.0]
 
 	print("---------------------------------------")
 	print("Concentration (ug/m3)")
@@ -120,10 +121,13 @@ def scd30_scan():
 	percent.
 	'''
 
-	# Declare all global variables to be returned
-	global co2, tc, rh
-
-	tc, rh, co2 = scd30.takeMeasurement()
+	try:
+		tc, rh, co2 = scd30.takeMeasurement()
+	except:
+		print('Error reading from scd30')
+		co2 = -100.0
+		tc = -100.0
+		rh = -100.0
 
 	print("---------------------------------------")
 	print("Environmental Variables")
