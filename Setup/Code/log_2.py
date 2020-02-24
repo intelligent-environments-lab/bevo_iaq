@@ -283,27 +283,19 @@ def main():
 			scd_data_old = {'CO2':0,'TC':0,'RH':0}
 			scd_count = 0
 			for i in range(5):
-				try:
-					# SPS30 scan
-					sps_data_new = sps30_scan()
-					if sps_data_new['pm_n_10'] != -100:
-						sps_count += 1
-						for x in sps_data_old:
-							sps_data_old[x] += sps_data_new[x]
-							
-				except OSError as e:
-					print('OSError for I/O on a sensor.')
+				# SPS30 scan
+				sps_data_new = sps30_scan()
+				if sps_data_new['pm_n_10'] != -100:
+					sps_count += 1
+					for x in sps_data_old:
+						sps_data_old[x] += sps_data_new[x]
 
-				try:
-					# SCD30 scan
-					scd_data_new = scd30_scan()
-					if scd_data_new['CO2'] != -100:
-						scd_count += 1
-						for x in scd_data_old:
-							scd_data_old[x] += scd_data_new[x]
-
-				except OSError as e:
-					print('OSError for I/O on a sensor.')
+				# SCD30 scan
+				scd_data_new = scd30_scan()
+				if scd_data_new['CO2'] != -100:
+					scd_count += 1
+					for x in scd_data_old:
+						scd_data_old[x] += scd_data_new[x]
 
 			for x in sps_data_old:
 				sps_data_old[x] /= sps_count
