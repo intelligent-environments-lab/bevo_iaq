@@ -294,7 +294,7 @@ def main():
 				# SCD30 scan
 				scd_data_new = scd30_scan()
 				if scd_data_new['CO2'] != -100 and math.isnan(scd_data_new['CO2']) == False:
-					if scd_data_old['TC'] > -20:
+					if scd_data_new['TC'] > -20:
 						scd_count += 1
 						for x in scd_data_old:
 							scd_data_old[x] += scd_data_new[x]
