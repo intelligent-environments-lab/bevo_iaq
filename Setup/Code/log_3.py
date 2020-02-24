@@ -431,7 +431,7 @@ def main():
 		print("Average Values")
 		print("---------------------------------------")
 		print("TVOC (ug/m3): {0:.3f}".format(sgp_data_old['TVOC']))
-		print("Light (lux): {0:.3f}".format(tsl_data_old['LUX']))
+		print("Light (lux): {0:.3f}".format(tsl_data_old['Lux']))
 		print("NO2 (ppb): {0:.3f}".format(no2_data_old['NO2']))
 		print("CO (ppb): {0:.3f}".format(co_data_old['CO']))
 		print("---------------------------------------")
