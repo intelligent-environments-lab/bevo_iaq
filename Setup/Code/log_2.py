@@ -129,7 +129,7 @@ def scd30_scan():
 	print("Environmental Variables")
 	print("---------------------------------------")
 	print("CO2 (ppm): {0:.1f}".format(co2))
-	print("T (C): {0:.1f}".format(t))
+	print("T (C): {0:.1f}".format(tc))
 	print("RH (%): {0:.1f}".format(rh))
 	print("---------------------------------------")
 
