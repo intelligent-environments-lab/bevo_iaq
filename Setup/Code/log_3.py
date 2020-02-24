@@ -7,6 +7,7 @@
 # **********************************************************************
 
 import time
+import math
 import csv
 import datetime
 import os
@@ -367,14 +368,14 @@ def main():
 		for i in range(5):
 			#print('Running SGP30 scan...')
 			sgp_data_new = sgp30_scan(i2c)
-			if sgp_data_new['TVOC'] != -100:
+			if sgp_data_new['TVOC'] != -100 and math.isnan(sgp_data_new['TVOC']) == False:
 				sgp_count += 1
 				for x in sgp_data_old:
 					sgp_data_old[x] += sgp_data_new[x]
 			
 			#print('Running TSL2591 scan...')
 			tsl_data_new = tsl2591_scan(i2c)
-			if tsl_data_new['Lux'] != -100:
+			if tsl_data_new['Lux'] != -100 and math.isnan(tsl_data_new['Lux']) == False:
 				tsl_count += 1
 				for x in tsl_data_old:
 					tsl_data_old[x] += tsl_data_new[x]
@@ -390,17 +391,17 @@ def main():
 
 			#print('Running Nitrogen Dioxide scan...')
 			no2_data_new = NO2_scan()
-			if no2_data_new['NO2'] != -100:
+			if int(no2_data_new['NO2']) != -100 and math.isnan(no2_data_new['NO2']) == False:
 				no2_count += 1
 				for x in no2_data_old:
-					no2_data_old[x] += no2_data_new[x]
+					no2_data_old[x] += int(no2_data_new[x])
 
 			#print('Running Carbon Monoxide scan...')
 			co_data_new = CO_scan()
-			if co_data_new['CO'] != -100:
+			if int(co_data_new['CO']) != -100 and math.isnan(co_data_new['CO']) == False:
 				co_count += 1
 				for x in co_data_old:
-					co_data_old[x] += co_data_new[x]
+					co_data_old[x] += int(co_data_new[x])
 
 		for x in sgp_data_old:
 			sgp_data_old[x] /= sgp_count
