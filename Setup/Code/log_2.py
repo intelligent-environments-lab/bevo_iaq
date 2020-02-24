@@ -160,9 +160,9 @@ def data_mgmt():
 	]
 	data = [{
 		'Timestamp': timestamp.strftime('%Y-%m-%d %H:%M:%S'),
-		'Temperature [C]': tc,
-		'Relative Humidity': rh,
-		'CO2': co2,
+		'Temperature [C]': scd_data_old['TC'],
+		'Relative Humidity': scd_data_old['RH'],
+		'CO2': scd_data_old['CO2'],
 		'PM_N_0p5':sps_data_old['pm_n_0p5'],
 		'PM_N_1':sps_data_old['pm_n_1'],
 		'PM_N_2p5':sps_data_old['pm_n_2p5'],
@@ -173,6 +173,7 @@ def data_mgmt():
 		'PM_C_4':sps_data_old['pm_c_4'],
 		'PM_C_10':sps_data_old['pm_c_10'],
 	}]
+	print(data)
 	key = 'sensirion'
 	write_csv(
 		key=key,
@@ -264,7 +265,7 @@ def main():
 	Manages sensors and data storage on device.\n
 	return: void
 	'''
-	global sps_data_old
+	global sps_data_old, scd_data_old
 
 	print('Running IAQ Beacon\n')
 
