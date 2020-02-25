@@ -283,7 +283,7 @@ def main():
 			sps_count = 0
 			scd_data_old = {'CO2':0,'TC':0,'RH':0}
 			scd_count = 0
-			for i in range(5):
+			for j in range(5):
 				# SPS30 scan
 				sps_data_new = sps30_scan()
 				if sps_data_new['pm_n_10'] != -100 and math.isnan(sps_data_new['pm_n_10']) == False:
