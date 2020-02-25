@@ -341,7 +341,7 @@ def main():
 			data_mgmt()
 	
 			# Prepare for next loop
-			delay = 52 #seconds
+			delay = 50 #seconds
 			print('Waiting', delay, 'seconds before rescanning...')
 			#assert False
 			time.sleep(delay)
