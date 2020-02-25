@@ -300,10 +300,16 @@ def main():
 							scd_data_old[x] += scd_data_new[x]
 
 			for x in sps_data_old:
-				sps_data_old[x] /= sps_count
+				try:
+					sps_data_old[x] /= sps_count
+				except ZeroDivisionError:
+					sps_data_old[x] = 0
 
 			for x in scd_data_old:
-				scd_data_old[x] /= scd_count
+				try:
+					scd_data_old[x] /= scd_count
+				except ZeroDivisionError:
+					scd_data_old[x] = 0
 
 			print("---------------------------------------")
 			print("Average PM Concentration (ug/m3)")
