@@ -365,7 +365,7 @@ def main():
 		no2_count = 0
 		co_data_old = {'CO':0,'T_CO':0,'RH_CO':0}
 		co_count = 0
-		for i in range(5):
+		for j in range(5):
 			#print('Running SGP30 scan...')
 			sgp_data_new = sgp30_scan(i2c)
 			if sgp_data_new['TVOC'] != -100 and math.isnan(sgp_data_new['TVOC']) == False:
