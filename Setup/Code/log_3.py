@@ -358,7 +358,7 @@ def main():
 	for x in f1:
 		baselines.append(x)
 
-	sgp30.set_iaq_baseline(baselines[0],baselines[1])
+	sgp30.set_iaq_baseline(str(baselines[0]),str(baselines[1]))
 
 	# Instantiate tsl object
 	tsl = adafruit_tsl2591.TSL2591(i2c)
