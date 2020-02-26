@@ -380,14 +380,14 @@ def main():
 		co_count = 0
 		for j in range(5):
 			#print('Running SGP30 scan...')
-			sgp_data_new = sgp30_scan(i2c)
+			sgp_data_new = sgp30_scan(sgp30)
 			if sgp_data_new['TVOC'] != -100 and math.isnan(sgp_data_new['TVOC']) == False:
 				sgp_count += 1
 				for x in sgp_data_old:
 					sgp_data_old[x] += sgp_data_new[x]
 			
 			#print('Running TSL2591 scan...')
-			tsl_data_new = tsl2591_scan(i2c)
+			tsl_data_new = tsl2591_scan(tsl)
 			if tsl_data_new['Lux'] != -100 and math.isnan(tsl_data_new['Lux']) == False:
 				tsl_count += 1
 				for x in tsl_data_old:
@@ -454,11 +454,11 @@ def main():
 		data_mgmt()
 
 		# Setting new baselines for sgp30
-		baselines[0] = sgp30.baseline_eCO2
-		baselines[1] = sgp30.baseline_TVOC
+		#baselines[0] = sgp30.baseline_eCO2
+		#baselines[1] = sgp30.baseline_TVOC
 		#f.write(baselines[0])
 		#f.write(baselines[1])
-		sgp30.set_iaq_baseline(baselines[0],baselines[1])
+		sgp30.set_iaq_baseline(sgp30.baseline_eCO2,sgp30.baseline_TVOC)
 
 		# Prepare for next loop
 		delay = 52 #seconds
