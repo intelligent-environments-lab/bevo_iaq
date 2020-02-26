@@ -352,7 +352,7 @@ def main():
 	sgp30.iaq_init()
 
 	## Getting baselines
-	f=open('sgp30_baseline.txt','w+')
+	f=open('sgp30_baseline.txt','r+')
 	f1 = f.readlines()
 	baselines = []
 	for x in f1:
