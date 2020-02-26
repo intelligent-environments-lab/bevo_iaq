@@ -454,8 +454,8 @@ def main():
 		data_mgmt()
 
 		# Setting new baselines for sgp30
-		baselines[0] = sgp30.baseline_co2eq
-		baselines[1] = sgp30.baseline_tvoc
+		baselines[0] = sgp30.baseline_eCO2
+		baselines[1] = sgp30.baseline_TVOC
 		#f.write(baselines[0])
 		#f.write(baselines[1])
 		sgp30.set_iaq_baseline(baselines[0],baselines[1])
