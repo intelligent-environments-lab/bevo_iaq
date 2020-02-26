@@ -31,7 +31,7 @@ from botocore.exceptions import ClientError
 beacon = '00'
  
 # Verbose Global Variable
-verbose = False
+verbose = True
 
 # Create I2C Object for sensors
 # Also sets setup mode for GPIO to BCM
