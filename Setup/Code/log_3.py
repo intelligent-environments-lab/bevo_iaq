@@ -14,6 +14,7 @@ import os
 import traceback
 import logging
 import smtplib, ssl
+import binascii
 
 # Import sensor-specific libraries
 import serial
@@ -358,7 +359,7 @@ def main():
 	for x in f1:
 		baselines.append(x)
 
-	sgp30.set_iaq_baseline(str(baselines[0]),str(baselines[1]))
+	sgp30.set_iaq_baseline(unhexlify(baselines[0]),unhexlify(baselines[1]))
 
 	# Instantiate tsl object
 	tsl = adafruit_tsl2591.TSL2591(i2c)
