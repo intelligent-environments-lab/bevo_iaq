@@ -353,13 +353,14 @@ def main():
 	sgp30.iaq_init()
 
 	## Getting baselines
-	f=open('sgp30_baseline.txt','r+')
-	f1 = f.readlines()
-	baselines = []
-	for x in f1:
-		baselines.append(x)
+	#f=open('sgp30_baseline.txt','r+')
+	#f1 = f.readlines()
+	#baselines = []
+	#for x in f1:
+	#	baselines.append(x)
 
-	sgp30.set_iaq_baseline(binascii.unhexlify(baselines[0]),binascii.unhexlify(baselines[1]))
+	#sgp30.set_iaq_baseline(binascii.unhexlify(baselines[0]),binascii.unhexlify(baselines[1]))
+	sgp30.set_iaq_baseline(0x8973, 0x8aae)
 
 	# Instantiate tsl object
 	tsl = adafruit_tsl2591.TSL2591(i2c)
@@ -455,8 +456,8 @@ def main():
 		# Setting new baselines for sgp30
 		baselines[0] = sgp30.baseline_co2eq
 		baselines[1] = sgp30.baseline_tvoc
-		f.write(baselines[0])
-		f.write(baselines[1])
+		#f.write(baselines[0])
+		#f.write(baselines[1])
 		sgp30.set_iaq_baseline(baselines[0],baselines[1])
 
 		# Prepare for next loop
