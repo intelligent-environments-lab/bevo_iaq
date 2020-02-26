@@ -67,13 +67,10 @@ filename_writer = {
 }
 #*****************************************
 # import functions for each of the sensors
-def sgp30_scan(i2c):
+def sgp30_scan(sgp30):
 	# Declare all global variables for use outside the functions
 	global eCO2, TVOC
 	try:
-		# Instantiate sgp30 object
-		sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
-		
 		# Retrieve sensor scan data
 		eCO2, TVOC = sgp30.iaq_measure()
 	except:
@@ -91,12 +88,10 @@ def sgp30_scan(i2c):
 	data = {'TVOC': TVOC, 'eCO2': eCO2}
 	return data
 
-def tsl2591_scan(i2c):
+def tsl2591_scan(tsl):
 	# Declare all global variables for use outside the functions
 	global lux, visible, infrared
 	try:
-		# Instantiate tsl object
-		tsl = adafruit_tsl2591.TSL2591(i2c)
 		# enable sensor and wait a sec for it to get going
 		tsl.enabled = True
 		time.sleep(1)
@@ -352,6 +347,22 @@ def main():
 	'''
 	print('Running BevoBeacon2.0\n')
 	i2c = createSensor()
+	# Setting up sgp30
+	sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
+	sgp30.iaq_init()
+
+	## Getting baselines
+	f=open('sgp30_baseline','w+')
+	f1 = f.readlines()
+	baselines = []
+	for x in f1:
+		baselines.append(x)
+
+	sgp30.set_iaq_baseline(baselines[0],baselines[1])
+
+	# Instantiate tsl object
+	tsl = adafruit_tsl2591.TSL2591(i2c)
+
 	global sgp_data_old, tsl_data_old, no2_data_old, co_data_old
 	# Begin loop for sensor scans
 	i = 1
@@ -439,6 +450,13 @@ def main():
 		# Data management
 		print("Running data management...")
 		data_mgmt()
+
+		# Setting new baselines for sgp30
+		baselines[0] = sgp30.baseline_co2eq
+		baselines[1] = sgp30.baseline_tvoc
+		f.write(baselines[0])
+		f.write(baselines[1])
+		sgp30.set_iaq_baseline(baselines[0],baselines[1])
 
 		# Prepare for next loop
 		delay = 52 #seconds
