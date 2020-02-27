@@ -21,7 +21,7 @@ import serial
 import dgs
 import adafruit_sgp30
 import adafruit_tsl2591
-import adafruit_tsl2561
+#import adafruit_tsl2561
 from board import SCL, SDA
 from busio import I2C
 
