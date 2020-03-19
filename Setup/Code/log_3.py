@@ -21,7 +21,6 @@ import serial
 import dgs
 import adafruit_sgp30
 import adafruit_tsl2591
-#import adafruit_tsl2561
 from board import SCL, SDA
 from busio import I2C
 
@@ -124,43 +123,6 @@ def tsl2591_scan(tsl):
 	data = {'Visible': visible, 'Infrared': infrared, 'Lux': lux}
 	return data
 
-def tsl2561_scan(i2c):
-	# Declare all global variables for use outside the functions
-	global lux, visible, infrared
-	try:
-		# Instantiate tsl object
-		tsl = adafruit_tsl2561.TSL2561(i2c)
-		# enable sensor and wait a sec for it to get going
-		tsl.enabled = True
-		time.sleep(1)
-		# set gain and integration time; gain 0 = 1x & 1 = 16x. Integration time of 1 = 101ms
-		tsl.gain = 0
-		tsl.integration_time = 1  # 101 ms intergration time.
-		# Retrieve sensor scan data
-		lux = tsl.lux
-		visible = tsl.broadband
-		infrared = tsl.infrared
-		# Check for complete darkness
-		if lux == None:
-			lux = 0
-		# Disable the sensor and end process
-		tsl.enabled = False
-	except:
-		print('Error reading from TSL2561')
-		lux = -100
-		visible = -100
-		infrared = -100
-	# Outputting
-	if verbose:
-		print("-------------------------")
-		print("Visible (?):\t"+str(visible))
-		print("Infrared (?):\t"+str(infrared))
-		print("Bright (lux):\t"+str(lux))
-		print("-------------------------")
-	# Return data
-	data = {'Visible': visible, 'Infrared': infrared, 'Lux': lux}
-	return data
-
 def NO2_scan():
 	'''
 	Using serial connection, reads in values for T, RH, and NO2 concentration
@@ -193,28 +155,6 @@ def CO_scan():
 
 	data = {'CO':co,'T_CO':t1,'RH_CO':rh1}
 	return data
-
-def error_email(error_message):
-	'''
-	DOES NOT WORK WITH PYTHON2
-	'''
-	try:
-		port = 465  # For SSL
-		smtp_server = "smtp.gmail.com"
-		sender_email = "IEL.Beacon.Manager@gmail.com"  # Enter your address
-		receiver_email = "IEL.Beacon.Manager@gmail.com"  # Enter receiver address
-		password = "ZoltanIEL2019"
-		message = """\
-		Subject: Sensor is down
-
-		{error_message}"""
-
-		context = ssl.create_default_context()
-		with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-			server.login(sender_email, password)
-			server.sendmail(sender_email, receiver_email, message.format(error_message=error_message))
-	except:
-		pass
 
 def data_mgmt():
 	# Store adafruit sensor data locally and remotely
@@ -352,18 +292,11 @@ def main():
 	sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
 	sgp30.iaq_init()
 
-	## Getting baselines
-	#f=open('sgp30_baseline.txt','r+')
-	#f1 = f.readlines()
-	#baselines = []
-	#for x in f1:
-	#	baselines.append(x)
-
-	#sgp30.set_iaq_baseline(binascii.unhexlify(baselines[0]),binascii.unhexlify(baselines[1]))
-	sgp30.set_iaq_baseline(0x8973, 0x8aae)
-
 	# Instantiate tsl object
-	tsl = adafruit_tsl2591.TSL2591(i2c)
+	try:
+		tsl = adafruit_tsl2591.TSL2591(i2c)
+	except Exception as inst:
+		print(inst)
 
 	global sgp_data_old, tsl_data_old, no2_data_old, co_data_old
 	# Begin loop for sensor scans
@@ -387,20 +320,14 @@ def main():
 					sgp_data_old[x] += sgp_data_new[x]
 			
 			#print('Running TSL2591 scan...')
-			tsl_data_new = tsl2591_scan(tsl)
-			if tsl_data_new['Lux'] != -100 and math.isnan(tsl_data_new['Lux']) == False:
-				tsl_count += 1
-				for x in tsl_data_old:
-					tsl_data_old[x] += tsl_data_new[x]
-
-			#try:
-			#    print('Running TSL2561 scan...')
-			#    tsl_data_new = tsl2561_scan(i2c)
-			#    if tsl_data_new['Lux'] == -100 and tsl_data_old['Lux'] != -100:
-			#        error_email('TSL2591 sensor is down on beacon ' + beacon + ' at ' + str(datetime.datetime.now()))
-			#    tsl_data_old = tsl_data_new
-			#except OSError as e:
-			#        print('OSError for I/O on a sensor.')
+			try:
+				tsl_data_new = tsl2591_scan(tsl)
+				if tsl_data_new['Lux'] != -100 and math.isnan(tsl_data_new['Lux']) == False:
+					tsl_count += 1
+					for x in tsl_data_old:
+						tsl_data_old[x] += tsl_data_new[x]
+			except Exception as inst:
+				print(inst)
 
 			#print('Running Nitrogen Dioxide scan...')
 			no2_data_new = NO2_scan()
@@ -453,15 +380,8 @@ def main():
 		print("Running data management...")
 		data_mgmt()
 
-		# Setting new baselines for sgp30
-		#baselines[0] = sgp30.baseline_eCO2
-		#baselines[1] = sgp30.baseline_TVOC
-		#f.write(baselines[0])
-		#f.write(baselines[1])
-		sgp30.set_iaq_baseline(sgp30.baseline_eCO2,sgp30.baseline_TVOC)
-
 		# Prepare for next loop
-		delay = 52 #seconds
+		delay = 50 #seconds
 		print('Waiting', delay, 'seconds before rescanning...')
 		#assert False
 		time.sleep(delay)
