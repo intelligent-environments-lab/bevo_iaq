@@ -197,12 +197,13 @@ def data_mgmt():
 
 	# Control on S3 call frequency
 	if timestamp - S3_CALL_TIMESTAMP[key] >= S3_CALL_FREQUENCY:
-		aws_s3_upload_file(
-			filename=filename_writer[key](date=timestamp),
-			s3_bucket=BUCKET_NAME,
-			s3_filepath=S3_FILEPATH[key]
-		)
-		S3_CALL_TIMESTAMP[key] = timestamp
+	#	aws_s3_upload_file(
+	#		filename=filename_writer[key](date=timestamp),
+	#		s3_bucket=BUCKET_NAME,
+	#		s3_filepath=S3_FILEPATH[key]
+	#	)
+	#	S3_CALL_TIMESTAMP[key] = timestamp
+		pass
 	else:
 		if verbose:
 			print('Upload to S3 bucket delayed.')
@@ -223,19 +224,19 @@ def write_csv(key, date, data_header, data):
 	try:
 		if not os.path.isfile(filename):
 			# First update s3 bucket with latest version of last created file
-			history_limit = 10 # Days
-			for i in range(1,history_limit):
-				history_date = date - datetime.timedelta(days=i)
-				history_file = filename_writer[key](date=history_date)
-				if os.path.isfile(history_file):
-					aws_s3_upload_file(
-						filename=history_file,
-						s3_bucket=BUCKET_NAME,
-						s3_filepath=S3_FILEPATH[key]
-					)
-					break
-				else:
-					pass
+			#history_limit = 10 # Days
+			#for i in range(1,history_limit):
+			#	history_date = date - datetime.timedelta(days=i)
+			#	history_file = filename_writer[key](date=history_date)
+			#	if os.path.isfile(history_file):
+			#		aws_s3_upload_file(
+			#			filename=history_file,
+			#			s3_bucket=BUCKET_NAME,
+			#			s3_filepath=S3_FILEPATH[key]
+			#		)
+			#		break
+			#	else:
+			#		pass
 			# Now create new file locally
 			with open(filename, mode='w+') as data_file:
 				csv_dict_writer = csv.DictWriter(data_file, fieldnames=data_header)
