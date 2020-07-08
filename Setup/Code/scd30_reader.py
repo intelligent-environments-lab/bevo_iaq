@@ -91,6 +91,7 @@ def data_mgmt():
 		'Timestamp',
 		'Temperature [C]',
 		'Relative Humidity',
+		'CO2',
 	]
 	data = [{
 		'Timestamp': timestamp.strftime('%Y-%m-%d %H:%M:%S'),
