@@ -70,13 +70,12 @@ def scd30_scan():
 		tc = -100.0
 		rh = -100.0
 
+	t = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 	print("---------------------------------------")
-	print("Environmental Variables")
-	print("---------------------------------------")
-	print("CO2 (ppm): {0:.1f}".format(co2))
-	print("T (C): {0:.1f}".format(tc))
-	print("RH (%): {0:.1f}".format(rh))
-	print("---------------------------------------")
+	print("Time: "+str(t))
+	print("\tCO2 (ppm): {0:.1f}".format(co2))
+	print("\tT (C): {0:.1f}".format(tc))
+	print("\tRH (%): {0:.1f}".format(rh))
 
 	return {'CO2':co2,'TC':tc,'RH':rh}
 
@@ -169,11 +168,11 @@ def main():
 					scd_data_old[x] = 0
 
 			print("---------------------------------------")
-			print("Average Environmental Variables")
+			print("Average:")
 			print("---------------------------------------")
-			print("CO2 (ppm): {0:.1f}".format(scd_data_old['CO2']))
-			print("T (C): {0:.1f}".format(scd_data_old['TC']))
-			print("RH (%): {0:.1f}".format(scd_data_old['RH']))
+			print("\tCO2 (ppm): {0:.1f}".format(scd_data_old['CO2']))
+			print("\tT (C): {0:.1f}".format(scd_data_old['TC']))
+			print("\tRH (%): {0:.1f}".format(scd_data_old['RH']))
 			print("---------------------------------------")
 			
 			# Data management
@@ -181,7 +180,7 @@ def main():
 			data_mgmt()
 	
 			# Prepare for next loop
-			delay = 50 #seconds
+			delay = 20 #seconds
 			print('Waiting', delay, 'seconds before rescanning...')
 			#assert False
 			time.sleep(delay)
