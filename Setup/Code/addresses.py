@@ -49,10 +49,10 @@ def checkAdafruit(sensor_name="sgp30"):
 
 	if sensor_name == "sgp30":
 		sgp = sgp30.Adafruit_SGP30(i2c)
-		print("\nSVM30")
 		print("Connected to device at 0x70")
 		# Getting measurment
 		sgp.iaq_init()
+		time.sleep(1)
 		_, tvoc = sgp.iaq_measure()
 		read = readingOutput(tvoc,0)
 		if read:
@@ -77,7 +77,7 @@ def checkDGS(dev_no=0):
 	c, _, _ = dgs.takeMeasurement(f"/dev/ttyUSB{dev_no}")
 	read = readingOutput(float(c),-10)
 	if read:
-		print(f"SPEC{dev_no} READY")
+		print(f"\tSPEC{dev_no} READY")
 
 def checkSensirion(address=0x61, bus=1, n=3):
 	"""
@@ -122,7 +122,7 @@ def main():
 		time.sleep(0.5)
 		read = checkSensirion(address=address)
 		if read:
-			print(f"{sensor} READY")
+			print(f"\t{sensor} READY")
 
 if __name__ == '__main__':
     main()
