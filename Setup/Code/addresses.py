@@ -6,6 +6,9 @@ import pigpio
 import adafruit_sgp30 as sgp30
 import adafruit_tsl2591 as tsl2591
 
+import pandas as pd
+import numpy as np
+
 import time
 
 def getI2CAddresses():
