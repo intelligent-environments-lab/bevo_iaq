@@ -8,6 +8,27 @@ import adafruit_tsl2591 as tsl2591
 
 import time
 
+def checkAdafruit(sensor_name="sgp30"):
+	"""
+	Checks connection to Adafruit sensors
+	"""
+	if sensor_name == "sgp30":
+		sgp = sgp30.Adafruit_SGP30(i2c)
+		print("Connected to device at", sgp.serial[1])
+	elif sensor_name = "tsl2591":
+		tsl = tsl2591.TSL2591(i2c)
+		print("Connected to device at", tsl.serial[1])
+	else:
+		print(f"Sensor {sensor_name} does not exist.")
+
+def checkDGS(dev_no=0):
+	"""
+	Checks connection to DGS sensors
+	"""
+	c, _, _ = dgs.takeMeasurement(f"/dev/ttyUSB{dev}")
+		if c != -100:
+			print("\tDATA READ")
+
 def checkSensirion(address=0x61, bus=1, n=3):
 	"""
 	Checks connection to Sensirion sensors
@@ -26,28 +47,22 @@ def checkSensirion(address=0x61, bus=1, n=3):
 	print("Connected to device at", str(address))
 	count, data = pi.i2c_read_device(h, n)
 	print("Data read")
-	
-	return True
 
 def main():
 	# creating i2c bus
 	i2c = I2C(SCL, SDA)
 
 	# getting the adafruit sensors
-	sgp = sgp30.Adafruit_SGP30(i2c)
-	print("Connected to device at", i2c)
-	tsl = tsl2591.TSL2591(i2c)
-	print("Connected to device at", i2c)
+	for sensor in ["sgp30","tsl2591"]:
+		checkAdafruit(sensor)
 
 	# getting DGS sensors
 	for dev in [0,1]:
-		c, _, _ = dgs.takeMeasurement(f"/dev/ttyUSB{dev}")
-		if c != -100:
-			print("\tDATA READ")
+		checkDGS(dev)
 
 	# getting sensirion sensors
-	scd30 = checkSensirion()
-	sps30 = checkSensirion(address=0x69)
+	for address in [0x61,0x69]:
+		checkSensirion(address=address)
 
 if __name__ == '__main__':
     main()
