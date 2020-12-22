@@ -23,7 +23,7 @@ def getI2CAddresses():
 		print(f"\t{hex(addr)}")
 
 	# cross referencing with list of known addresses
-	known_addrs = pd.read_csv("known_address.csv")
+	known_addrs = pd.read_csv("known_addresses.csv")
 
 def readingOutput(measurment,threshold):
 	"""
