@@ -15,7 +15,7 @@ def checkAdafruit(sensor_name="sgp30"):
 	if sensor_name == "sgp30":
 		sgp = sgp30.Adafruit_SGP30(i2c)
 		print("Connected to device at", sgp.serial[1])
-	elif sensor_name = "tsl2591":
+	elif sensor_name == "tsl2591":
 		tsl = tsl2591.TSL2591(i2c)
 		print("Connected to device at", tsl.serial[1])
 	else:
