@@ -19,6 +19,9 @@ def getI2CAddresses():
 	for addr in all_addrs:
 		print(f"\t{hex(addr)}")
 
+	# cross referencing with list of known addresses
+	known_addrs = pd.read_csv("known_address.csv")
+
 def readingOutput(measurment,threshold):
 	"""
 	Outputs an error or success message
@@ -27,6 +30,9 @@ def readingOutput(measurment,threshold):
 		print("\tERROR READING FROM SENSOR")
 	else:
 		print("\tDATA READ")
+		return True
+
+	return False
 
 def checkAdafruit(sensor_name="sgp30"):
 	"""
@@ -37,30 +43,35 @@ def checkAdafruit(sensor_name="sgp30"):
 
 	if sensor_name == "sgp30":
 		sgp = sgp30.Adafruit_SGP30(i2c)
-		print("Connected to device at")
+		print("\nSVM30")
+		print("Connected to device at 0x70")
 		# Getting measurment
 		sgp.iaq_init()
 		_, tvoc = sgp.iaq_measure()
-		readingOutput(tvoc,0)
+		read = readingOutput(tvoc,0)
+		if read:
+			print("\tSVM30 READY")
 	elif sensor_name == "tsl2591":
 		tsl = tsl2591.TSL2591(i2c)
-		print("Connected to device at")
+		print("Connected to device at 0x29")
 		# Getting measurment
 		tsl.enabled = True
 		time.sleep(1)
 		lux = tsl.lux
-		readingOutput(lux,-1)
+		read = readingOutput(lux,-1)
+		if read:
+			print("\tTSL2591 READY")
 	else:
 		print(f"Sensor {sensor_name} does not exist.")
-
-	print(i2c.scan())
 
 def checkDGS(dev_no=0):
 	"""
 	Checks connection to DGS sensors
 	"""
 	c, _, _ = dgs.takeMeasurement(f"/dev/ttyUSB{dev_no}")
-	readingOutput(c,-10)
+	read = readingOutput(float(c),-10)
+	if read:
+		print(f"SPEC{dev_no} READY")
 
 def checkSensirion(address=0x61, bus=1, n=3):
 	"""
@@ -81,8 +92,11 @@ def checkSensirion(address=0x61, bus=1, n=3):
 	count, data = pi.i2c_read_device(h, n)
 	if data:
 		print("\tDATA READ")
+		return True
 	else:
 		print("\tERROR READING FROM SENSOR")
+
+	return False
 
 def main():
 	getI2CAddresses()
@@ -98,9 +112,11 @@ def main():
 		checkDGS(dev)
 
 	# getting sensirion sensors
-	for address in [0x61,0x69]:
+	for address, sensor in zip([0x61,0x69],["SCD30","SPS30"]):
 		time.sleep(0.5)
-		checkSensirion(address=address)
+		read = checkSensirion(address=address)
+		if read:
+			print(f"{sensor} READY")
 
 if __name__ == '__main__':
     main()
