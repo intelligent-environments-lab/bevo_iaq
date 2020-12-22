@@ -1,0 +1,3 @@
+﻿Sensor,Hex,Decimal
+TSL2591,0x29,41
+SCD30,0x61,97
