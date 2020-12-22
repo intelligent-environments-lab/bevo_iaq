@@ -26,8 +26,8 @@ def checkDGS(dev_no=0):
 	Checks connection to DGS sensors
 	"""
 	c, _, _ = dgs.takeMeasurement(f"/dev/ttyUSB{dev}")
-		if c != -100:
-			print("\tDATA READ")
+	if c != -100:
+		print("\tDATA READ")
 
 def checkSensirion(address=0x61, bus=1, n=3):
 	"""
@@ -44,7 +44,7 @@ def checkSensirion(address=0x61, bus=1, n=3):
 	pi = pigpio.pi(PIGPIO_HOST)
 
 	h = pi.i2c_open(bus, address)
-	print("Connected to device at", str(address))
+	print("Connected to device at", address)
 	count, data = pi.i2c_read_device(h, n)
 	print("Data read")
 
