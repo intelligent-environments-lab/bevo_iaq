@@ -54,7 +54,8 @@ def takeMeasurement(device, verbose=False):
         rh = data.rh
         
     except:
-        print('Timeout occurred during write')
+        if verbose:
+            print('Timeout occurred during write')
         c = -100
         tc = -100
         rh = -100

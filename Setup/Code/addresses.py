@@ -22,7 +22,7 @@ def checkSensirion(address=0x61, bus=1, n=3):
 	PIGPIO_HOST = '127.0.0.1'
 	pi = pigpio.pi(PIGPIO_HOST)
 
-	h = pi.i2c_open(I2C_BUS, I2C_SLAVE)
+	h = pi.i2c_open(bus, address)
 	print("Connected to device at", str(address))
 	count, data = pi.i2c_read_device(h, n)
 	print("Data read")
@@ -40,8 +40,10 @@ def main():
 	print("Connected to device at", i2c)
 
 	# getting DGS sensors
-	no2, _, _ = dgs.takeMeasurement("/dev/ttyUSB0")
-	co, _, _ = dgs.takeMeasurement("/dev/ttyUSB1")
+	for dev in [0,1]:
+		c, _, _ = dgs.takeMeasurement(f"/dev/ttyUSB{dev}")
+		if c != -100:
+			print("\tDATA READ")
 
 	# getting sensirion sensors
 	scd30 = checkSensirion()
