@@ -12,6 +12,9 @@ def checkAdafruit(sensor_name="sgp30"):
 	"""
 	Checks connection to Adafruit sensors
 	"""
+	# creating i2c bus
+	i2c = I2C(SCL, SDA)
+
 	if sensor_name == "sgp30":
 		sgp = sgp30.Adafruit_SGP30(i2c)
 		print("Connected to device at", sgp.serial[1])
@@ -49,19 +52,20 @@ def checkSensirion(address=0x61, bus=1, n=3):
 	print("Data read")
 
 def main():
-	# creating i2c bus
-	i2c = I2C(SCL, SDA)
 
 	# getting the adafruit sensors
 	for sensor in ["sgp30","tsl2591"]:
+		time.sleep(0.5)
 		checkAdafruit(sensor)
 
 	# getting DGS sensors
 	for dev in [0,1]:
+		time.sleep(0.5)
 		checkDGS(dev)
 
 	# getting sensirion sensors
 	for address in [0x61,0x69]:
+		time.sleep(0.5)
 		checkSensirion(address=address)
 
 if __name__ == '__main__':
