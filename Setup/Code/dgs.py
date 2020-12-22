@@ -20,7 +20,7 @@ class Data:
         ret = "Serial Number:\t" + self.sn + "\nPPB:\t\t" + self.ppb + "\nTemperature:\t" + self.temp + "\nRel. Humidity:\t" + self.rh
         return ret
 
-def takeMeasurement(device):
+def takeMeasurement(device, verbose=False):
     '''
     Uses the device string to read data from the serial DGS sensors
     Input:
@@ -43,10 +43,11 @@ def takeMeasurement(device):
         line = line[: -2]
         data = Data(line.split(", "))
 
-        # Outputting
-        print("----------------------------")
-        print(data)
-        print("----------------------------")
+        if verbose:
+            # Outputting
+            print("----------------------------")
+            print(data)
+            print("----------------------------")
 
         c = data.ppb
         tc = data.temp
