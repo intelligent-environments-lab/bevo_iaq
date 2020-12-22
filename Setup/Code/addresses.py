@@ -29,7 +29,7 @@ def checkSensirion(address=0x61, bus=1, n=3):
 	
 	return True
 
-def main()
+def main():
 	# creating i2c bus
 	i2c = I2C(SCL, SDA)
 
