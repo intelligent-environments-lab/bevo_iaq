@@ -39,7 +39,8 @@ def checkAdafruit(sensor_name="sgp30"):
 		sgp = sgp30.Adafruit_SGP30(i2c)
 		print("Connected to device at")
 		# Getting measurment
-		_, tvoc = sgp30.iaq_measure()
+		sgp.iaq_init()
+		_, tvoc = sgp.iaq_measure()
 		readingOutput(tvoc,0)
 	elif sensor_name == "tsl2591":
 		tsl = tsl2591.TSL2591(i2c)
