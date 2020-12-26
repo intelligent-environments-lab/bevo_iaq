@@ -19,15 +19,19 @@ def getI2CAddresses():
     all_addrs = list(addrs)
     new_addrs = i2c.scan()
     all_addrs.extend(x for x in new_addrs if x not in all_addrs)
-    print("Available Addresses:")
-    for addr in all_addrs:
-        print(f"\t{hex(addr)}")
-
     # cross referencing with list of known addresses
     try:
         known_addrs = pd.read_csv("./bevo_iaq/Setup/Code/known_addresses.csv")
     except FileNotFoundError:
         print("Cannot find file")
+
+    print("Available Addresses:")
+    for addr in all_addrs:
+        try:
+            name = known_addrs[known_addrs["Hex"] == addr]
+        except:
+            name = ""
+        print(f"\t{hex(addr)}\t{name}")
 
 def readingOutput(measurment,threshold):
     """
@@ -66,10 +70,14 @@ def checkAdafruit(sensor_name="sgp30"):
         # Getting measurment
         tsl.enabled = True
         time.sleep(1)
-        lux = tsl.lux
-        read = readingOutput(lux,-1)
-        if read:
-            print("\tTSL2591 READY")
+        try:
+            lux = tsl.lux
+            read = readingOutput(lux,-1)
+            if read:
+                print("\tTSL2591 READY")
+        except RuntimeError:
+            print("\tERROR READING FROM SENSOR - Overflow")
+
     else:
         print(f"Sensor {sensor_name} does not exist.")
 
