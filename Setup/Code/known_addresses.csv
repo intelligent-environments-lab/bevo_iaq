@@ -1,3 +1,5 @@
 ﻿Sensor,Hex,Decimal
 TSL2591,0x29,41
 SCD30,0x61,97
+SPS30,0x69,105
+SVM30,0x70,112
