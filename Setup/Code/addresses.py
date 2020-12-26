@@ -151,6 +151,7 @@ def checkSensirion(address=0x61, bus=1, n=3):
     return "Ready"
 
 def main():
+    
     getStatus()
 
 def old():
