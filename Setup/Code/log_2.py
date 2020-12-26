@@ -41,7 +41,7 @@ import scd30
 import boto3
 from botocore.exceptions import ClientError
 
-beacon = '07'
+beacon = '00'
 
 # AWS Setup
 # ------------------------------------------------------------------------- #

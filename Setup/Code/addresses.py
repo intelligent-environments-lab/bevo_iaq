@@ -61,7 +61,7 @@ def checkAdafruit(sensor_name="SGP30"):
         try:
             sgp = sgp30.Adafruit_SGP30(i2c)
         except:
-            return "No Sensor Detected"
+            return "Cannot Connect to Sensor"
 
         time.sleep(1)
         #print("Connected to device at 0x70")
@@ -76,11 +76,11 @@ def checkAdafruit(sensor_name="SGP30"):
                 pass
         except:
             return "Cannot Read Data"
-    elif sensor_name == "tsl2591":
+    elif sensor_name == "TSL2591":
         try:
             tsl = tsl2591.TSL2591(i2c)
         except:
-            return "No Sensor Detected"
+            return "Cannot Connect to Sensor"
 
         time.sleep(1)
         #print("Connected to device at 0x29")
@@ -108,7 +108,7 @@ def checkDGS(dev_no=0):
     try:
         c, _, _ = dgs.takeMeasurement(f"/dev/ttyUSB{dev_no}")
     except:
-        return "No Sensor Detected"
+        return "Cannot Connect to Sensor"
 
     try:
         read = readingOutput(float(c),-10)
@@ -136,7 +136,7 @@ def checkSensirion(address=0x61, bus=1, n=3):
         h = pi.i2c_open(bus, address)
     except Exception as inst:
         #print("Connected to device at", address)
-        return "No Sensor Detected"
+        return "Cannot Connect to Sensor"
 
     count, data = pi.i2c_read_device(h, n)
     if data:

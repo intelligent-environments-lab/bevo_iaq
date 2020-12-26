@@ -28,7 +28,7 @@ from busio import I2C
 import boto3
 from botocore.exceptions import ClientError
 
-beacon = '07'
+beacon = '00'
  
 # Verbose Global Variable
 verbose = True
