@@ -28,7 +28,7 @@ def getI2CAddresses():
     print("Available Addresses:")
     for addr in all_addrs:
         try:
-            name = known_addrs[known_addrs["Hex"] == addr]
+            name = known_addrs[known_addrs["Hex"] == str(addr)]
         except:
             name = ""
         print(f"\t{hex(addr)}\t{name}")
