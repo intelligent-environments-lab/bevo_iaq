@@ -24,11 +24,10 @@ def getI2CAddresses():
         print(f"\t{hex(addr)}")
 
     # cross referencing with list of known addresses
-    os.system("ls")
     try:
-        known_addrs = pd.read_csv("./known_addresses.csv")
-    except ImportError:
-        pass
+        known_addrs = pd.read_csv("./bevo_iaq/Setup/Code/known_addresses.csv")
+    except FileNotFoundError:
+        print("Cannot find file")
 
 def readingOutput(measurment,threshold):
     """
