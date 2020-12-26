@@ -9,6 +9,7 @@ import adafruit_tsl2591 as tsl2591
 import pandas as pd
 import numpy as np
 
+import os
 import time
 
 def getI2CAddresses():
