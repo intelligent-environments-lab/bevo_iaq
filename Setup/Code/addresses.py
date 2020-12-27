@@ -31,7 +31,7 @@ def getStatus():
         name = known_addrs[known_addrs["Hex"] == str(hex(addr))]["Sensor"].values[0]
         variable = known_addrs[known_addrs["Hex"] == str(hex(addr))]["Variable"].values[0]
         if name in ["SCD30","SPS30"]:
-            status = checkSensirion(hex(addr))
+            status = checkSensirion(addr)
         elif name in ["SGP30","TSL2591"]:
             status = checkAdafruit(name)
         data = checkData(variable)
