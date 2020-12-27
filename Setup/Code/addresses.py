@@ -50,9 +50,9 @@ def checkData(variable):
         Gets the latest data file
         """
         d = datetime.now().strftime("%Y-%m-%d")
-        for file in os.listdir(f"/home/pi/DATA/{log_file}/"):
+        for file in os.listdir(f"./DATA/{log_file}/"):
             if file[4:-4] == d: 
-                return pd.read_csv(f"/home/pi/DATA/{log_file}/{file}",index_col=0,parse_dates=True,infer_datetime_format=True)
+                return pd.read_csv(f"./DATA/{log_file}/{file}",index_col=0,parse_dates=True,infer_datetime_format=True)
 
         return None
 
