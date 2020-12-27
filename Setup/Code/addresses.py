@@ -51,8 +51,6 @@ def checkData(variable):
         """
         d = datetime.now().strftime("%Y-%m-%d")
         for file in os.listdir(f"./DATA/{log_file}/"):
-            print(d)
-            print(file[4:-4])
             if file[4:-4] == d: 
                 return pd.read_csv(f"./DATA/{log_file}/{file}",index_col=0)
 
@@ -62,7 +60,7 @@ def checkData(variable):
         df = get_latest_data_file("adafruit")
         # checking to see if last timestep was in the last 15 minutes
         ts = df.index[-1]
-        if datetime.now() - timdelta(minutes=15) < ts:
+        if datetime.now() - timedelta(minutes=15) < ts:
             if df[variable][-1] < 0:
                 return "No Recent Data"
             else:
@@ -72,7 +70,7 @@ def checkData(variable):
         df = get_latest_data_file()
         # checking to see if last timestep was in the last 15 minutes
         ts = df.index[-1]
-        if datetime.now() - timdelta(minutes=15) < ts:
+        if datetime.now() - timedelta(minutes=15) < ts:
             if df[variable][-1] <= 0:
                 return "No Recent Data"
             else:
