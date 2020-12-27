@@ -190,8 +190,8 @@ def checkSensirion(address=0x61, bus=1, n=3):
         #print("\tERROR READING FROM SENSOR")
         return "Cannot Read Data"
 
-    h.i2c_close()
-    pi.stop()
+    #h.i2c_close()
+    #pi.stop()
     return "Ready"
 
 def main():
