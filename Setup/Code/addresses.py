@@ -66,7 +66,7 @@ def checkData(variable):
             else:
                 return "Recent Data Logged"
 
-    elif variable in ["Temperature [C]","Relative Humidity","CO2 PM_N_0p5","PM_N_1","PM_N_2p5","PM_N_4","PM_N_10","PM_C_1","PM_C_2p5","PM_C_4","PM_C_10"]:
+    elif variable in ["Temperature [C]","Relative Humidity","CO2","PM_N_0p5","PM_N_1","PM_N_2p5","PM_N_4","PM_N_10","PM_C_1","PM_C_2p5","PM_C_4","PM_C_10"]:
         df = get_latest_data_file()
         # checking to see if last timestep was in the last 15 minutes
         ts = df.index[-1]
@@ -175,10 +175,9 @@ def checkSensirion(address=0x61, bus=1, n=3):
     """
     # Connect to sensor
     try:
-        print(address)
         PIGPIO_HOST = '127.0.0.1'
         pi = pigpio.pi(PIGPIO_HOST)
-        h = pi.i2c_open(int(bus), address)
+        h = pi.i2c_open(1, address)
     except Exception as inst:
         print("Connected to device at", address, "-",inst)
         return "Can't Connect"
