@@ -49,7 +49,7 @@ def checkData(variable):
         """
         Gets the latest data file
         """
-        d = datetime.now()strftime("%Y-%m-%d")
+        d = datetime.now().strftime("%Y-%m-%d")
         for file in os.listdir(f"~/DATA/{log_file}/"):
             print(d)
             print(file[4:-4])
