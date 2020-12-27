@@ -62,7 +62,7 @@ def checkData(variable):
         ts = df.index[-1]
         if datetime.now() - timedelta(minutes=15) < ts:
             if df[variable][-1] < 0:
-                return "No Recent Data"
+                return "No Recent Data Found"
             else:
                 return "Recent Data Logged"
 
@@ -72,7 +72,7 @@ def checkData(variable):
         ts = df.index[-1]
         if datetime.now() - timedelta(minutes=15) < ts:
             if df[variable][-1] <= 0:
-                return "No Recent Data"
+                return "No Recent Data Found"
             else:
                 return "Recent Data Logged"
 
