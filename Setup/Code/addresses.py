@@ -11,6 +11,7 @@ import numpy as np
 
 import os
 import time
+from datetime import datetime, timedelta
 
 def getStatus():
     i2c = I2C(SCL, SDA)
@@ -28,15 +29,57 @@ def getStatus():
     for addr in all_addrs:
         try:
             name = known_addrs[known_addrs["Hex"] == str(hex(addr))]["Sensor"].values[0]
+            variable = known_addrs[known_addrs["Hex"] == str(hex(addr))]["Variable"].values[0]
             if name in ["SCD30","SPS30"]:
                 status = checkSensirion(hex(addr))
             elif name in ["SGP30","TSL2591"]:
                 status = checkAdafruit(name)
+            data = checkData(variable)
         except:
             name = ""
             status = ""
 
-        print(f"\t{hex(addr)}\t{name}\t{status}")
+        print(f"\t{hex(addr)}\t{name}\t{data}\t{status}")
+
+def checkData(variable):
+    """
+    Checks the most recent data point for the specified variable
+    """
+    def get_latest_data_file(log_file="sensirion"):
+        """
+        Gets the latest data file
+        """
+        d = datetime.now()strftime("%Y-%m-%d")
+        for file in os.listdir(f"~/DATA/{log_file}/"):
+            print(d)
+            print(file[4:-4])
+            if file[4:-4] == d: 
+                return pd.read_csv(f"~/DATA/{log_file}/{file}",index_col=0)
+
+        return None
+
+    if variable in ["TVOC","eCO2","Lux","Visible","Infrared","NO2","T_NO2","RH_NO2","CO","T_CO","RH_CO"]:
+        df = get_latest_data_file("adafruit")
+        # checking to see if last timestep was in the last 15 minutes
+        ts = df.index[-1]
+        if datetime.now() - timdelta(minutes=15) < ts:
+            if df[variable][-1] < 0:
+                return "No Recent Data"
+            else:
+                return "Recent Data Logged"
+
+    elif variable in ["Temperature [C]","Relative Humidity","CO2 PM_N_0p5","PM_N_1","PM_N_2p5","PM_N_4","PM_N_10","PM_C_1","PM_C_2p5","PM_C_4","PM_C_10"]:
+        df = get_latest_data_file()
+        # checking to see if last timestep was in the last 15 minutes
+        ts = df.index[-1]
+        if datetime.now() - timdelta(minutes=15) < ts:
+            if df[variable][-1] <= 0:
+                return "No Recent Data"
+            else:
+                return "Recent Data Logged"
+
+    else:
+        return f"{variable} Not in Data"
 
 def readingOutput(measurment,threshold):
     """
@@ -60,7 +103,8 @@ def checkAdafruit(sensor_name="SGP30"):
     if sensor_name == "SGP30":
         try:
             sgp = sgp30.Adafruit_SGP30(i2c)
-        except:
+        except Exception as inst:
+            print("Connected to device at", sensor_name, "-",inst)
             return "Cannot Connect to Sensor"
 
         time.sleep(1)
@@ -79,7 +123,8 @@ def checkAdafruit(sensor_name="SGP30"):
     elif sensor_name == "TSL2591":
         try:
             tsl = tsl2591.TSL2591(i2c)
-        except:
+        except Exception as inst:
+            print("Connected to device at", sensor_name, "-",inst)
             return "Cannot Connect to Sensor"
 
         time.sleep(1)
@@ -107,7 +152,8 @@ def checkDGS(dev_no=0):
     """
     try:
         c, _, _ = dgs.takeMeasurement(f"/dev/ttyUSB{dev_no}")
-    except:
+    except Exception as inst:
+        print("Connected to device at", dev_no, "-",inst)
         return "Cannot Connect to Sensor"
 
     try:
@@ -135,7 +181,7 @@ def checkSensirion(address=0x61, bus=1, n=3):
         pi = pigpio.pi(PIGPIO_HOST)
         h = pi.i2c_open(bus, address)
     except Exception as inst:
-        #print("Connected to device at", address)
+        print("Connected to device at", address, "-",inst)
         return "Cannot Connect to Sensor"
 
     count, data = pi.i2c_read_device(h, n)
@@ -153,24 +199,6 @@ def checkSensirion(address=0x61, bus=1, n=3):
 def main():
     
     getStatus()
-
-def old():
-    # getting the adafruit sensors
-    for sensor in ["sgp30","tsl2591"]:
-        time.sleep(1)
-        checkAdafruit(sensor)
-
-    # getting DGS sensors
-    for dev in [0,1]:
-        time.sleep(0.5)
-        checkDGS(dev)
-
-    # getting sensirion sensors
-    for address, sensor in zip([0x61,0x69],["SCD30","SPS30"]):
-        time.sleep(0.5)
-        read = checkSensirion(address=address)
-        if read:
-            print(f"\t{sensor} READY")
 
 if __name__ == '__main__':
     main()
