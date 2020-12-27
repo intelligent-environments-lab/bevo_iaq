@@ -22,7 +22,7 @@ def getStatus():
     all_addrs.extend(x for x in new_addrs if x not in all_addrs)
     # cross referencing with list of known addresses
     try:
-        known_addrs = pd.read_csv("./bevo_iaq/Setup/Code/known_addresses.csv")
+        known_addrs = pd.read_csv("~/bevo_iaq/Setup/Code/known_addresses.csv")
     except FileNotFoundError:
         print("Cannot find file")
 
