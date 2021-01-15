@@ -16,8 +16,8 @@ def main():
     disp = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
 
     disp.fill(0)
-    disp.text('IAQ', 0, 0)
-    disp.text('Beacon', 0, 10)
+    disp.text('IAQ', 0, 0, 1)
+    disp.text('Beacon', 0, 10, 1)
     disp.show()
 
 if __name__ == '__main__':
