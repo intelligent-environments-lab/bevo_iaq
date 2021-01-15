@@ -16,7 +16,7 @@ def get_measurements(sensor_type,variables,units,path_to_data="/home/pi/DATA"):
     """
     # getting newest file
     file_list = glob.glob(f"{path_to_data}/{sensor_type}/*.csv")
-    newest_file = max(ile_list, key=os.path.getctime)
+    newest_file = max(file_list, key=os.path.getctime)
     # reading in file
     df = pd.read_csv(f"{path_to_data}/{sensor_type}/{newest_file}",index_col=0)
     # getting important var measurements
@@ -41,7 +41,7 @@ def main():
     while True:
         # Getting Newest Measurements
         # ---------------------------
-        m2 = get_measurements(sensor_type="sensirion",variables=["CO2","PM_C_2p5"],units=["ppm","mg/L"])
+        m2 = get_measurements(sensor_type="sensirion",variables=["CO2","PM_C_2p5"],units=["ppm","ug/m3"])
         m3 = get_measurements(sensor_type="adafruit",variables=["Lux","TVOC","NO2","CO","T_NO2"],units=["lux","ppb","ppb","ppm","C"])
         m = m2+m3 # combining measurements
 
