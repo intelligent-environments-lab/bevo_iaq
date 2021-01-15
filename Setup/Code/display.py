@@ -15,10 +15,10 @@ def main():
     # creating sensor object (height, width, i2c object, address (optional))
     disp = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
 
-    oled.fill(0)
-    oled.text('IAQ', 0, 0)
-    oled.text('Beacon', 0, 10)
-    oled.show()
+    disp.fill(0)
+    disp.text('IAQ', 0, 0)
+    disp.text('Beacon', 0, 10)
+    disp.show()
 
 if __name__ == '__main__':
     main()
