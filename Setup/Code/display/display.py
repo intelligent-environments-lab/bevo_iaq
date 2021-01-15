@@ -35,7 +35,7 @@ def main():
     oled = OledText(i2c, 128, 64)
     # layout 
     oled.layout = {
-        1: SmallLine(2, 4, font="FreeSans.ttf", size=12), # title
+        1: SmallLine(2, 6, font="FreeSans.ttf", size=12), # title
         2: SmallLine(2, 50, font="FreeSans.ttf", size=12), # name
         3: BigLine(5, 20, font="FreeSans.ttf", size=24), # value
         4: BigLine(80, 24, font="FreeSans.ttf", size=18), # unit
@@ -45,35 +45,40 @@ def main():
     oled.text("WCWH BEVO Beacon",1)
 
     while True:
-        # Getting Newest Measurements
-        # ---------------------------
-        m2 = get_measurements(sensor_type="sensirion",variables=["CO2","PM_C_2p5"],
-            units=["ppm","ug/m"],names=["Carbon Dioxide", "Particulate Matter"])
-        m3 = get_measurements(sensor_type="adafruit",variables=["Lux","TVOC","NO2","CO","T_NO2"],
-            units=["lux","ppb","ppb","ppm","C"],names=["Light Level", "Nitrogen Dioxide","TVOCs","Carbon Monoxide","Temperature"])
-        m = m2+m3 # combining measurements
+        try:
+            # Getting Newest Measurements
+            # ---------------------------
+            m2 = get_measurements(sensor_type="sensirion",variables=["CO2","PM_C_2p5"],
+                units=["ppm","ug/m"],names=["Carbon Dioxide", "Particulate Matter"])
+            m3 = get_measurements(sensor_type="adafruit",variables=["Lux","TVOC","NO2","CO","T_NO2"],
+                units=["lux","ppb","ppb","ppm","C"],names=["Light Level", "Nitrogen Dioxide","TVOCs","Carbon Monoxide","Temperature"])
+            m = m2+m3 # combining measurements
 
-        # Displaying Measurements
-        # -----------------------
-        for value, unit, name in m:
-            if name == "Carbon Monoxide":
-                value /= 1000
-                value = round(value,1)
+            # Displaying Measurements
+            # -----------------------
+            for value, unit, name in m:
+                if name == "Carbon Monoxide":
+                    value /= 1000
+                    value = round(value,1)
 
-            oled.text(f"{name}",2)
-            oled.text(f"{value}",3)
-            oled.text(f"{unit}",4)
-            if unit == "C":
-                oled.text(f"\uf22d",5)
-                oled.text(f"",6)
-            elif unit == "ug/m":
-                oled.text(f"",5)
-                oled.text(f"3",6)
-            else:
-                oled.text(f"",5)
-                oled.text(f"",6)
+                oled.text(f"{name}",2)
+                oled.text(f"{value}",3)
+                oled.text(f"{unit}",4)
+                if unit == "C":
+                    oled.text(f"\uf22d",5)
+                    oled.text(f"",6)
+                elif unit == "ug/m":
+                    oled.text(f"",5)
+                    oled.text(f"3",6)
+                else:
+                    oled.text(f"",5)
+                    oled.text(f"",6)
 
-            oled.show()
+                oled.show()
+                time.sleep(2)
+        except OSError:
+            oled.clear()
+            oled.text(f"ERROR",3)
             time.sleep(2)
 
 if __name__ == '__main__':
