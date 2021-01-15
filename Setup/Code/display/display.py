@@ -18,7 +18,7 @@ def get_measurements(sensor_type,variables,units,path_to_data="/home/pi/DATA"):
     file_list = glob.glob(f"{path_to_data}/{sensor_type}/*.csv")
     newest_file = max(file_list, key=os.path.getctime)
     # reading in file
-    df = pd.read_csv(f"{path_to_data}/{sensor_type}/{newest_file}",index_col=0)
+    df = pd.read_csv(f"{newest_file}",index_col=0)
     # getting important var measurements
     measurements = []
     for v, u in zip(variables,units):
