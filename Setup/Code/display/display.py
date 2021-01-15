@@ -36,7 +36,7 @@ def main():
     # layout 
     oled.layout = {
         1: SmallLine(0, 0, font="FreeSans.ttf", size=12), # title
-        2: SmallLine(0, 50, font="FreeSans.ttf", size=12) # name
+        2: SmallLine(0, 50, font="FreeSans.ttf", size=12), # name
         3: BigLine(5, 20, font="FreeSans.ttf", size=24), # value
         4: BigLine(80, 24, font="FreeSans.ttf", size=18), # unit
         5: BigLine(74, 20, font="FontAwesomeSolid.ttf",size=10), # degree
