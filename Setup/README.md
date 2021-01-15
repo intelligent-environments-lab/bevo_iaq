@@ -116,6 +116,11 @@ $ sudo pip3 install adafruit-circuitpython-tsl2591
 $ sudo pip3 install adafruit-circuitpython-sgp30
 ```
 
+**OLED Screen** ([SSD1306](https://learn.adafruit.com/micropython-hardware-ssd1306-oled-display/circuitpython))
+```
+# sudo pip3 install adafruit-circuitpython-ssd1306
+```
+
 #### Sensirion
 To use the Sensirion sensors, one needs to install the following packages:
 
@@ -173,6 +178,7 @@ The sensors in the schematic above are labeled, and from top to bottom are:
 3. SPS30 - Particulate Matter
 4. TSL2591 - Light
 5. PCF8523/DS1307 - Real-Time Clock
+6. SSD1306 - OLED Screen
 
 The remaining sensors are be connected with female-to-female wires after soldering male-to-male header pins to both the PCB and each individual sensor. The PCB in the schematic shows the top view where the connections are routed on the bottom of the board. There are five columns of connections on the PCB. From left to right, these columns represent specific pin connections:
 1. Extra GND connection - needed for SCD30 and SPS30 SEL pins
@@ -226,10 +232,20 @@ For the remaining sensors, wires are cut, crimped, and plugged in with the follo
  
  5. **RTC**
  - Wires: black, red, yellow, green
- - Femal to Female connections
+ - Female to Female connections
   - PCB Connection: 4x1 black, red, yellow, green
   - Sensor Connection: 4x1 red, black, yellow, green
  - i2c Address: 68 (changes to UU once connected)
+ - Layout:
+ 
+ 
+ 
+ 6. **OLED**
+ - Wired: black, red, yellow, green
+ - Female to Female connections
+  - PCB Connection: 4x1 black, red, yellow, green
+  - Sensor Connection: 4x1 red, black, yellow, green
+ - i2c Address: 3c
  - Layout:
  
  
