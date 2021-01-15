@@ -9,6 +9,7 @@ import numpy as np
 import time
 
 import adafruit_ssd1306
+from oled_text import OledText, Layout64, BigLine, SmallLine
 
 def get_measurements(sensor_type,variables,units,path_to_data="/home/pi/DATA"):
     """
@@ -31,12 +32,14 @@ def main():
     i2c = io.I2C(board.SCL, board.SDA)
 
     # creating sensor object (height, width, i2c object, address (optional))
-    disp = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
-
-    #disp.fill(0) # black fill
-    #disp.text('IAQ', 0, 0, 1)
-    #disp.text('Beacon', 0, 10, 1)
-    #disp.show()
+    oled = OledText(i2c, 128, 64)
+    # layout 
+    oled.layout = {
+        1: SmallLine(0, 0),
+        2: BigLine(5, 15, font="FreeSans.ttf", size=24),
+        3: BigLine(5, 40, font="FreeSans.ttf", size=18)
+    }
+    oled.text("WCWH Environment Beacon",1)
 
     while True:
         # Getting Newest Measurements
@@ -48,9 +51,10 @@ def main():
         # Displaying Measurements
         # -----------------------
         for value, unit in m:
-            disp.text(f"{value} {unit}",0,0,1)
-            disp.show()
-            time.sleep(1000)
+            oled.text(f"{value}",2)
+            oled.text(f"{unit}",3)
+            oled.show()
+            time.sleep(1)
 
 if __name__ == '__main__':
     main()
