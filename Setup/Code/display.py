@@ -33,10 +33,10 @@ def main():
     # creating sensor object (height, width, i2c object, address (optional))
     disp = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
 
-    disp.fill(0) # black fill
-    disp.text('IAQ', 0, 0, 1)
-    disp.text('Beacon', 0, 10, 1)
-    disp.show()
+    #disp.fill(0) # black fill
+    #disp.text('IAQ', 0, 0, 1)
+    #disp.text('Beacon', 0, 10, 1)
+    #disp.show()
 
     while True:
         # Getting Newest Measurements
@@ -48,7 +48,7 @@ def main():
         # Displaying Measurements
         # -----------------------
         for value, unit in m:
-            disp.text(f"{value} {unit}")
+            disp.text(f"{value} {unit}",0,0,1)
             disp.show()
             time.sleep(1000)
 
