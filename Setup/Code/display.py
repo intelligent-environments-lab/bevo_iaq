@@ -15,7 +15,6 @@ def main():
     # creating sensor object (height, width, i2c object, address (optional))
     disp = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
 
-    disp.clear()
     disp.fill(1)
     disp.show()
 
