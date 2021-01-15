@@ -22,7 +22,7 @@ def get_measurements(sensor_type,variables,units,path_to_data="/home/pi/DATA"):
     # getting important var measurements
     measurements = []
     for v, u in zip(variables,units):
-        measurements.append([df.loc[:,variable].values[-1],u])
+        measurements.append([df.loc[:,v].values[-1],u])
      
     return measurements
 
