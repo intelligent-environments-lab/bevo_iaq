@@ -23,7 +23,7 @@ def get_measurements(sensor_type,variables,units,path_to_data="/home/pi/DATA"):
     # getting important var measurements
     measurements = []
     for v, u in zip(variables,units):
-        measurements.append([df.loc[:,v].values[-1],u])
+        measurements.append([round(df.loc[:,v].values[-1],1),u])
      
     return measurements
 
@@ -35,7 +35,7 @@ def main():
     oled = OledText(i2c, 128, 64)
     # layout 
     oled.layout = {
-        1: SmallLine(0, 0),
+        1: SmallLine(0, 0, font="FreeSans.ttf", size=10),
         2: BigLine(5, 15, font="FreeSans.ttf", size=24),
         3: BigLine(5, 40, font="FreeSans.ttf", size=18)
     }
