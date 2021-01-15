@@ -13,7 +13,16 @@ from oled_text import OledText, Layout64, BigLine, SmallLine
 
 def get_measurements(sensor_type,variables,units,names,path_to_data="/home/pi/DATA"):
     """
+    Gets the latest measurements from the data file
 
+    Inputs:
+    - sensor_type: string in ["adafruit","sensirion"]
+    - variables: list of strings of raw variable name(s) in the data dataframe columns
+    - units: list of strings of units for variable(s)
+    - names: list of strings of display name(s) for the variables
+    - path_to_data: string for the path to the sensirion/adafruit directories
+
+    Returns a list of lists where the inner list corresponds to the variable, unit, and display name
     """
     # getting newest file
     file_list = glob.glob(f"{path_to_data}/{sensor_type}/*.csv")
@@ -36,11 +45,11 @@ def main():
     # layout 
     oled.layout = {
         1: SmallLine(2, 4, font="FreeSans.ttf", size=12), # title
-        2: SmallLine(2, 50, font="FreeSans.ttf", size=12), # name
-        3: BigLine(5, 20, font="FreeSans.ttf", size=24), # value
-        4: BigLine(80, 24, font="FreeSans.ttf", size=18), # unit
-        5: BigLine(74, 20, font="FontAwesomeSolid.ttf",size=10), # degree
-        6: SmallLine(120, 20, font="FreeSans.ttf", size=8), # exponent
+        2: BigLine(5, 20, font="FreeSans.ttf", size=24), # value
+        3: BigLine(80, 24, font="FreeSans.ttf", size=18), # unit
+        4: BigLine(74, 20, font="FontAwesomeSolid.ttf",size=10), # degree
+        5: SmallLine(120, 20, font="FreeSans.ttf", size=8), # exponent
+        6: SmallLine(2, 50, font="FreeSans.ttf", size=12), # name
     }
     oled.text("WCWH BEVO Beacon",1)
 
@@ -57,25 +66,26 @@ def main():
             # Displaying Measurements
             # -----------------------
             for value, unit, name in m:
-                if name == "Carbon Monoxide":
+                if name == "Carbon Monoxide": # convertin raw CO measurements
                     value /= 1000
                     value = round(value,1)
 
-                oled.text(f"{name}",2)
-                oled.text(f"{value}",3)
-                oled.text(f"{unit}",4)
-                if unit == "C":
-                    oled.text(f"\uf22d",5)
-                    oled.text(f"",6)
-                elif unit == "ug/m":
+                oled.text(f"{value}",2) # output of measured value
+                oled.text(f"{unit}",3) # output of the variable
+                if unit in ["C","F"]: # adding degree symbol for temperature
+                    oled.text(f"\uf22d",4)
                     oled.text(f"",5)
-                    oled.text(f"3",6)
-                else:
+                elif unit == "ug/m": # adding exponent for pm
+                    oled.text(f"",4)
+                    oled.text(f"3",5)
+                else: # no output on these "lines"
+                    oled.text(f"",4)
                     oled.text(f"",5)
-                    oled.text(f"",6)
+
+                oled.text(f"{name}",6) # output of the display name
 
                 oled.show()
-                time.sleep(2)
+                time.sleep(2) # holding display for 2 seconds
         except OSError:
             oled.clear()
             oled.text(f"ERROR",3)
