@@ -39,15 +39,16 @@ def main():
         2: BigLine(5, 20, font="FreeSans.ttf", size=24),
         3: BigLine(80, 24, font="FreeSans.ttf", size=18),
         4: BigLine(70, 20, font="FontAwesomeSolid.ttf",size=10),
-        5: SmallLine(0, 0, font="FreeSans.ttf", size=12),
+        5: SmallLine(100, 20, font="FreeSans.ttf", size=8),
+        6: SmallLine(0, 50, font="FreeSans.ttf", size=12),
     }
     oled.text("WCWH",1)
-    oled.text("Environment Beacon",5)
+    oled.text("Environment Beacon",6)
 
     while True:
         # Getting Newest Measurements
         # ---------------------------
-        m2 = get_measurements(sensor_type="sensirion",variables=["CO2","PM_C_2p5"],units=["ppm","ug/m3"])
+        m2 = get_measurements(sensor_type="sensirion",variables=["CO2","PM_C_2p5"],units=["ppm","ug/m"])
         m3 = get_measurements(sensor_type="adafruit",variables=["Lux","TVOC","NO2","CO","T_NO2"],units=["lux","ppb","ppb","ppm","C"])
         m = m2+m3 # combining measurements
 
@@ -57,9 +58,15 @@ def main():
             oled.text(f"{value}",2)
             oled.text(f"{unit}",3)
             if unit == "C":
-                oled.text(f"\uf111",4)
+                oled.text(f"\uf22d",4)
+                oled.text(f"",5)
+            elif unit == "ug/m":
+                oled.text(f"",4)
+                oled.text(f"3",5)
             else:
                 oled.text(f"",4)
+                oled.text(f"",5)
+                
             oled.show()
             time.sleep(2)
 
