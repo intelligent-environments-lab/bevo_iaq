@@ -35,9 +35,9 @@ def main():
     oled = OledText(i2c, 128, 64)
     # layout 
     oled.layout = {
-        1: SmallLine(0, 0, font="FreeSans.ttf", size=10),
-        2: BigLine(5, 15, font="FreeSans.ttf", size=24),
-        3: BigLine(5, 40, font="FreeSans.ttf", size=18)
+        1: SmallLine(0, 0, font="FreeSans.ttf", size=8),
+        2: BigLine(5, 20, font="FreeSans.ttf", size=30),
+        3: BigLine(100, 20, font="FreeSans.ttf", size=18)
     }
     oled.text("WCWH Environment Beacon",1)
 
@@ -52,9 +52,12 @@ def main():
         # -----------------------
         for value, unit in m:
             oled.text(f"{value}",2)
-            oled.text(f"{unit}",3)
+            if unit == "C":
+                oled.text(f"\uf111{unit}",3)
+            else:
+                oled.text(f"{unit}",3)
             oled.show()
-            time.sleep(1)
+            time.sleep(2)
 
 if __name__ == '__main__':
     main()
