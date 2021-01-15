@@ -58,6 +58,7 @@ def main():
         for value, unit, name in m:
             if name == "Carbon Monoxide":
                 value /= 1000
+                value = round(value,1)
 
             oled.text(f"{name}",2)
             oled.text(f"{value}",3)
