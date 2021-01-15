@@ -35,7 +35,7 @@ def main():
     oled = OledText(i2c, 128, 64)
     # layout 
     oled.layout = {
-        1: SmallLine(2, 6, font="FreeSans.ttf", size=12), # title
+        1: SmallLine(2, 4, font="FreeSans.ttf", size=12), # title
         2: SmallLine(2, 50, font="FreeSans.ttf", size=12), # name
         3: BigLine(5, 20, font="FreeSans.ttf", size=24), # value
         4: BigLine(80, 24, font="FreeSans.ttf", size=18), # unit
