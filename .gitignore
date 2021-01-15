@@ -1,7 +1,11 @@
+# Annoying file types
 *DS_Store*
 *.pyc
 
-*.mp4
+# Annoying directories
+*pycache*
 
+# BIG files
+*.mp4
 *.pptx
 *.ppt
