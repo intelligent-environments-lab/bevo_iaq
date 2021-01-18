@@ -5,11 +5,9 @@ import board
 import busio as io
 
 import pandas as pd
-import numpy as np
 import time
 
-import adafruit_ssd1306
-from oled_text import OledText, Layout64, BigLine, SmallLine
+from oled_text import OledText, BigLine, SmallLine
 
 def get_measurements(sensor_type,variables,units,names,path_to_data="/home/pi/DATA"):
     """
@@ -40,7 +38,7 @@ def main():
     # creating i2c instance
     i2c = io.I2C(board.SCL, board.SDA)
 
-    # creating sensor object (height, width, i2c object, address (optional))
+    # creating sensor object (i2c object, height, width)
     oled = OledText(i2c, 128, 64)
     # layout 
     oled.layout = {
@@ -66,7 +64,7 @@ def main():
             # Displaying Measurements
             # -----------------------
             for value, unit, name in m:
-                if name == "Carbon Monoxide": # convertin raw CO measurements
+                if name == "Carbon Monoxide": # converting raw CO measurements to ppm
                     value /= 1000
                     value = round(value,1)
 
@@ -89,10 +87,13 @@ def main():
         except OSError:
             oled.clear()
             oled.text(f"ERROR",3)
-            time.sleep(2)
+            time.sleep(3)
 
 # Execution Start
 # ------------------------------------------------------------------------- #
-main()
+try:
+    main()
+except:
+    print("ERROR")
 
 # ------------------------------------------------------------------------- #
