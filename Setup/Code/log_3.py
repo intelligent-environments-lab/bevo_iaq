@@ -290,8 +290,11 @@ def main():
 	print('Running BevoBeacon2.0\n')
 	i2c = createSensor()
 	# Setting up sgp30
-	sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
-	sgp30.iaq_init()
+	try:
+		sgp30 = adafruit_sgp30.Adafruit_SGP30(i2c)
+		sgp30.iaq_init()
+	except ValueError:
+		print("No device")
 
 	# Instantiate tsl object
 	try:
@@ -314,11 +317,14 @@ def main():
 		co_count = 0
 		for j in range(5):
 			#print('Running SGP30 scan...')
-			sgp_data_new = sgp30_scan(sgp30)
-			if sgp_data_new['TVOC'] != -100 and math.isnan(sgp_data_new['TVOC']) == False:
-				sgp_count += 1
-				for x in sgp_data_old:
-					sgp_data_old[x] += sgp_data_new[x]
+			try:
+				sgp_data_new = sgp30_scan(sgp30)
+				if sgp_data_new['TVOC'] != -100 and math.isnan(sgp_data_new['TVOC']) == False:
+					sgp_count += 1
+					for x in sgp_data_old:
+						sgp_data_old[x] += sgp_data_new[x]
+			except Exception as inst:
+				print(inst)
 			
 			#print('Running TSL2591 scan...')
 			try:
