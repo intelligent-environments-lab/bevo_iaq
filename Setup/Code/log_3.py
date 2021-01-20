@@ -354,25 +354,25 @@ def main():
 			try:
 				sgp_data_old[x] /= sgp_count
 			except ZeroDivisionError:
-				sgp_data_old[x] = -100
+				sgp_data_old[x] = np.nan
 
 		for x in tsl_data_old:
 			try:
 				tsl_data_old[x] /= tsl_count
 			except ZeroDivisionError:
-				tsl_data_old[x] = -100
+				tsl_data_old[x] = np.nan
 
 		for x in no2_data_old:
 			try:
 				no2_data_old[x] /= no2_count
 			except ZeroDivisionError:
-				no2_data_old[x] = -100
+				no2_data_old[x] = np.nan
 
 		for x in co_data_old:
 			try:
 				co_data_old[x] /= co_count
 			except ZeroDivisionError:
-				co_data_old[x] = -100
+				co_data_old[x] = np.nan
 
 		print("---------------------------------------")
 		print("Average Values")

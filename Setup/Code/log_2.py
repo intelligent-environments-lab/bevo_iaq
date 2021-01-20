@@ -304,13 +304,13 @@ def main():
 				try:
 					sps_data_old[x] /= sps_count
 				except ZeroDivisionError:
-					sps_data_old[x] = 0
+					sps_data_old[x] = np.nan
 
 			for x in scd_data_old:
 				try:
 					scd_data_old[x] /= scd_count
 				except ZeroDivisionError:
-					scd_data_old[x] = 0
+					scd_data_old[x] = np.nan
 
 			print("---------------------------------------")
 			print("Average PM Concentration (ug/m3)")
