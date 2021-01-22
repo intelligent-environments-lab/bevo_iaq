@@ -25,12 +25,15 @@ def get_measurements(sensor_type,variables,units,names,path_to_data="/home/pi/DA
     # getting newest file
     file_list = glob.glob(f"{path_to_data}/{sensor_type}/*.csv")
     newest_file = max(file_list, key=os.path.getctime)
+    beacon = int(newest_file.split("/")[-1][1:3])
+    print(beacon)
     # reading in file
     df = pd.read_csv(f"{newest_file}",index_col=0)
     # getting important var measurements
     measurements = []
     for v, u, n in zip(variables,units,names):
         value = round(df.loc[:,v].values[-1],1)
+        # correcting the value 
         for file in os.listdir(f"/home/pi/bevo_iaq/Setup/Code/correction/"):
             file_info = file.split("-")
             if file_info[0] == v.lower():
@@ -40,7 +43,8 @@ def get_measurements(sensor_type,variables,units,names,path_to_data="/home/pi/DA
         
         value = value * correction.loc[beacon,"coefficient"] + correction.loc[beacon,"constant"]
         measurements.append([value,u,n])
-     
+    
+    print(measurements)
     return measurements
 
 def main():
