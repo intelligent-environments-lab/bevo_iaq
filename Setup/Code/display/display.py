@@ -77,32 +77,32 @@ def main():
 
         # Displaying Measurements
         # -----------------------
-        try:
-            for value, unit, name in m:
-                if name == "Carbon Monoxide": # converting raw CO measurements to ppm
-                    value /= 1000
-                    value = round(value,1)
+        #try:
+        for value, unit, name in m:
+            if name == "Carbon Monoxide": # converting raw CO measurements to ppm
+                value /= 1000
+                value = round(value,1)
 
-                oled.text(f"{value}",2) # output of measured value
-                oled.text(f"{unit}",3) # output of the variable
-                if unit in ["C","F"]: # adding degree symbol for temperature
-                    oled.text(f"\uf22d",4)
-                    oled.text(f"",5)
-                elif unit == "ug/m": # adding exponent for pm
-                    oled.text(f"",4)
-                    oled.text(f"3",5)
-                else: # no output on these "lines"
-                    oled.text(f"",4)
-                    oled.text(f"",5)
+            oled.text(f"{value}",2) # output of measured value
+            oled.text(f"{unit}",3) # output of the variable
+            if unit in ["C","F"]: # adding degree symbol for temperature
+                oled.text(f"\uf22d",4)
+                oled.text(f"",5)
+            elif unit == "ug/m": # adding exponent for pm
+                oled.text(f"",4)
+                oled.text(f"3",5)
+            else: # no output on these "lines"
+                oled.text(f"",4)
+                oled.text(f"",5)
 
-                oled.text(f"{name}",6) # output of the display name
+            oled.text(f"{name}",6) # output of the display name
 
-                oled.show()
-                time.sleep(2) # holding display for 2 seconds
-        except OSError:
-            oled.clear()
-            oled.text(f"ERROR",3)
-            time.sleep(3)
+            oled.show()
+            time.sleep(2) # holding display for 2 seconds
+        #except OSError:
+        #    oled.clear()
+        #    oled.text(f"ERROR",3)
+        #    time.sleep(3)
 
 # Execution Start
 # ------------------------------------------------------------------------- #
