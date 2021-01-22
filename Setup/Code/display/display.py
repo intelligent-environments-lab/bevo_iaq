@@ -65,17 +65,17 @@ def main():
     oled.text("WCWH BEVO Beacon",1)
 
     while True:
-        try:
-            # Getting Newest Measurements
-            # ---------------------------
-            m2 = get_measurements(sensor_type="sensirion",variables=["CO2","PM_C_2p5"],
-                units=["ppm","ug/m"],names=["Carbon Dioxide", "Particulate Matter"])
-            m3 = get_measurements(sensor_type="adafruit",variables=["Lux","TVOC","NO2","CO","T_NO2"],
-                units=["lux","ppb","ppb","ppm","C"],names=["Light Level", "Nitrogen Dioxide","TVOCs","Carbon Monoxide","Temperature"])
-            m = m2+m3 # combining measurements
+        # Getting Newest Measurements
+        # ---------------------------
+        m2 = get_measurements(sensor_type="sensirion",variables=["CO2","PM_C_2p5"],
+            units=["ppm","ug/m"],names=["Carbon Dioxide", "Particulate Matter"])
+        m3 = get_measurements(sensor_type="adafruit",variables=["Lux","TVOC","NO2","CO","T_NO2"],
+            units=["lux","ppb","ppb","ppm","C"],names=["Light Level", "Nitrogen Dioxide","TVOCs","Carbon Monoxide","Temperature"])
+        m = m2+m3 # combining measurements
 
-            # Displaying Measurements
-            # -----------------------
+        # Displaying Measurements
+        # -----------------------
+        try:
             for value, unit, name in m:
                 if name == "Carbon Monoxide": # converting raw CO measurements to ppm
                     value /= 1000
