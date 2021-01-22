@@ -42,6 +42,7 @@ def get_measurements(sensor_type,variables,units,names,path_to_data="/home/pi/DA
                 correction = pd.DataFrame(data={"beacon":np.arange(1,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
         
         value = value * correction.loc[beacon,"coefficient"] + correction.loc[beacon,"constant"]
+        print(value)
         measurements.append([value,u,n])
     
     print(measurements)
