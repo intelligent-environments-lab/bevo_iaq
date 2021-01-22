@@ -42,7 +42,6 @@ def get_measurements(sensor_type,variables,units,names,path_to_data="/home/pi/DA
                 correction = pd.DataFrame(data={"beacon":np.arange(1,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
         
         value = value * correction.loc[beacon,"coefficient"] + correction.loc[beacon,"constant"]
-        print(value)
         measurements.append([value,u,n])
     
     print(measurements)
@@ -70,8 +69,10 @@ def main():
         # ---------------------------
         m2 = get_measurements(sensor_type="sensirion",variables=["CO2","PM_C_2p5"],
             units=["ppm","ug/m"],names=["Carbon Dioxide", "Particulate Matter"])
+        print(m2)
         m3 = get_measurements(sensor_type="adafruit",variables=["Lux","TVOC","NO2","CO","T_NO2"],
             units=["lux","ppb","ppb","ppm","C"],names=["Light Level", "Nitrogen Dioxide","TVOCs","Carbon Monoxide","Temperature"])
+        print(m3)
         m = m2+m3 # combining measurements
 
         # Displaying Measurements
