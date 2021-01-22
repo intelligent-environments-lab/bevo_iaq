@@ -5,6 +5,7 @@ import board
 import busio as io
 
 import pandas as pd
+import numpy as np
 import time
 
 from oled_text import OledText, BigLine, SmallLine
