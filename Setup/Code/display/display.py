@@ -44,8 +44,7 @@ def get_measurements(sensor_type,variables,units,names,path_to_data="/home/pi/DA
         
         value = value * correction.loc[beacon,"coefficient"] + correction.loc[beacon,"constant"]
         measurements.append([value,u,n])
-    
-    print(measurements)
+
     return measurements
 
 def main():
@@ -70,40 +69,38 @@ def main():
         # ---------------------------
         m2 = get_measurements(sensor_type="sensirion",variables=["CO2","PM_C_2p5"],
             units=["ppm","ug/m"],names=["Carbon Dioxide", "Particulate Matter"])
-        print(m2)
         m3 = get_measurements(sensor_type="adafruit",variables=["Lux","TVOC","NO2","CO","T_NO2"],
             units=["lux","ppb","ppb","ppm","C"],names=["Light Level", "Nitrogen Dioxide","TVOCs","Carbon Monoxide","Temperature"])
-        print(m3)
         m = m2+m3 # combining measurements
 
         # Displaying Measurements
         # -----------------------
-        #try:
-        for value, unit, name in m:
-            if name == "Carbon Monoxide": # converting raw CO measurements to ppm
-                value /= 1000
-                value = round(value,1)
+        try:
+            for value, unit, name in m:
+                if name == "Carbon Monoxide": # converting raw CO measurements to ppm
+                    value /= 1000
+                    value = round(value,1)
 
-            oled.text(f"{value}",2) # output of measured value
-            oled.text(f"{unit}",3) # output of the variable
-            if unit in ["C","F"]: # adding degree symbol for temperature
-                oled.text(f"\uf22d",4)
-                oled.text(f"",5)
-            elif unit == "ug/m": # adding exponent for pm
-                oled.text(f"",4)
-                oled.text(f"3",5)
-            else: # no output on these "lines"
-                oled.text(f"",4)
-                oled.text(f"",5)
+                oled.text(f"{value}",2) # output of measured value
+                oled.text(f"{unit}",3) # output of the variable
+                if unit in ["C","F"]: # adding degree symbol for temperature
+                    oled.text(f"\uf22d",4)
+                    oled.text(f"",5)
+                elif unit == "ug/m": # adding exponent for pm
+                    oled.text(f"",4)
+                    oled.text(f"3",5)
+                else: # no output on these "lines"
+                    oled.text(f"",4)
+                    oled.text(f"",5)
 
-            oled.text(f"{name}",6) # output of the display name
+                oled.text(f"{name}",6) # output of the display name
 
-            oled.show()
+                oled.show()
             time.sleep(2) # holding display for 2 seconds
-        #except OSError:
-        #    oled.clear()
-        #    oled.text(f"ERROR",3)
-        #    time.sleep(3)
+        except OSError:
+            oled.clear()
+            oled.text(f"ERROR",3)
+            time.sleep(3)
 
 # Execution Start
 # ------------------------------------------------------------------------- #
