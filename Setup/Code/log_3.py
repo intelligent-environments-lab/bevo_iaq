@@ -25,8 +25,8 @@ from board import SCL, SDA
 from busio import I2C
 
 # AWS libraries
-import boto3
-from botocore.exceptions import ClientError
+#import boto3
+#from botocore.exceptions import ClientError
 
 beacon = '00'
  
@@ -39,17 +39,17 @@ def createSensor():
 	i2c = I2C(SCL, SDA)
 	return i2c
 
-#*****************************************
+# ---------------------------------------------------------
 # AWS setup for file upload to S3 bucket.
-AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
-AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-BUCKET_NAME = os.environ['BUCKET_NAME']
+#AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+#AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+#BUCKET_NAME = os.environ['BUCKET_NAME']
 
-s3 = boto3.client(
-	's3',
-	aws_access_key_id = AWS_ACCESS_KEY_ID,
-	aws_secret_access_key = AWS_SECRET_ACCESS_KEY
-)
+#s3 = boto3.client(
+#	's3',
+#	aws_access_key_id = AWS_ACCESS_KEY_ID,
+#	aws_secret_access_key = AWS_SECRET_ACCESS_KEY
+#)
 S3_FILEPATH = {
 	'adafruit':'WCWH/spring2020/adafruit/'
 }
@@ -57,7 +57,7 @@ S3_CALL_FREQUENCY = datetime.timedelta(days=7)
 S3_CALL_TIMESTAMP = {
 	'adafruit': datetime.datetime.now()
 }
-#*****************************************
+# ---------------------------------------------------------
 # File handling
 FILEPATH = {
 	'adafruit':'/home/pi/DATA/adafruit/'

@@ -38,23 +38,23 @@ import sps30
 import scd30
 
 # AWS libraries
-import boto3
-from botocore.exceptions import ClientError
+#import boto3
+#from botocore.exceptions import ClientError
 
 beacon = '00'
 
 # AWS Setup
 # ------------------------------------------------------------------------- #
 # AWS setup for file upload to S3 bucket.
-AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
-AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-BUCKET_NAME = os.environ['BUCKET_NAME']
+#AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+#AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+#BUCKET_NAME = os.environ['BUCKET_NAME']
 
-s3 = boto3.client(
-	's3',
-	aws_access_key_id = AWS_ACCESS_KEY_ID,
-	aws_secret_access_key = AWS_SECRET_ACCESS_KEY
-)
+#s3 = boto3.client(
+#	's3',
+#	aws_access_key_id = AWS_ACCESS_KEY_ID,
+#	aws_secret_access_key = AWS_SECRET_ACCESS_KEY
+#)
 
 S3_FILEPATH = {
 	'sensirion': 'WCWH/spring2020/sensirion/'
