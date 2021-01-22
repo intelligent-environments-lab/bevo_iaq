@@ -40,7 +40,7 @@ def get_measurements(sensor_type,variables,units,names,path_to_data="/home/pi/DA
             if file_info[0] == v.lower():
                 correction = pd.read_csv(f"/home/pi/bevo_iaq/Setup/Code/correction/{file}",index_col=0)
             else:
-                correction = pd.DataFrame(data={"beacon":np.arange(1,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
+                correction = pd.DataFrame(data={"beacon":np.arange(0,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
         
         value = value * correction.loc[beacon,"coefficient"] + correction.loc[beacon,"constant"]
         measurements.append([value,u,n])
