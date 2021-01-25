@@ -27,7 +27,6 @@ def get_measurements(sensor_type,variables,units,names,path_to_data="/home/pi/DA
     file_list = glob.glob(f"{path_to_data}/{sensor_type}/*.csv")
     newest_file = max(file_list, key=os.path.getctime)
     beacon = int(newest_file.split("/")[-1][1:3])
-    print(beacon)
     # reading in file
     df = pd.read_csv(f"{newest_file}",index_col=0)
     # getting important var measurements
