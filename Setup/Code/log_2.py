@@ -30,6 +30,7 @@ import sys
 import struct
 import smtplib, ssl
 from subprocess import call
+import numpy as np
 
 # Sensor-specific libraries
 import crcmod
@@ -91,8 +92,8 @@ def sps30_scan():
 		pm_n, pm_c = sps30.takeMeasurement()
 	except:
 		print('Error reading from sps30')
-		pm_n = [-100.0,-100,-100.0,-100.0,-100.0]
-  		pm_c = [-100.0,-100.0,-100.0,-100.0]
+		pm_n = [np.nan,np.nan,np.nan,np.nan,np.nan]
+  		pm_c = [np.nan,np.nan,np.nan,np.nan]
 
 	print("---------------------------------------")
 	print("Concentration (ug/m3)")
@@ -126,9 +127,9 @@ def scd30_scan():
 		tc, rh, co2 = scd30.takeMeasurement()
 	except:
 		print('Error reading from scd30')
-		co2 = -100.0
-		tc = -100.0
-		rh = -100.0
+		co2 = np.nan
+		tc = np.nan
+		rh = np.nan
 
 	print("---------------------------------------")
 	print("Environmental Variables")
