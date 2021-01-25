@@ -33,7 +33,7 @@ def get_measurements(sensor_type,variables,units,names,path_to_data="/home/pi/DA
     # getting important var measurements
     measurements = []
     for v, u, n in zip(variables,units,names):
-        value = round(df.loc[:,v].values[-1],1)
+        value = df.loc[:,v].values[-1]
         # correcting the value 
         for file in os.listdir(f"/home/pi/bevo_iaq/Setup/Code/correction/"):
             file_info = file.split("-")
@@ -43,7 +43,7 @@ def get_measurements(sensor_type,variables,units,names,path_to_data="/home/pi/DA
                 correction = pd.DataFrame(data={"beacon":np.arange(0,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
         
         value = value * correction.loc[beacon,"coefficient"] + correction.loc[beacon,"constant"]
-        measurements.append([value,u,n])
+        measurements.append([round(value,1),u,n])
 
     return measurements
 
