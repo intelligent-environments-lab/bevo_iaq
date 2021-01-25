@@ -96,7 +96,7 @@ def main():
                 oled.text(f"{name}",6) # output of the display name
 
                 oled.show()
-            time.sleep(2) # holding display for 2 seconds
+                time.sleep(2) # holding display for 2 seconds
         except OSError:
             oled.clear()
             oled.text(f"ERROR",3)
