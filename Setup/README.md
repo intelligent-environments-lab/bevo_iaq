@@ -55,9 +55,20 @@
  
 ### Attaching to Virtual Private Network (VPN)
 
-#### Resources
+#### Logmein Hamachi
+The older generations of the BEVO Beacons were connected to users through the Logmein Hamachi VPN. 
+
+##### Resources
 1. [General Process](https://medium.com/@KyleARector/logmein-hamachi-on-raspberry-pi-ad2ba3619f3a)
 2. [Exception when using RPi Zero](https://community.logmein.com/t5/LogMeIn-Hamachi-Discussions/Raspberry-Pi-quot-illegal-instruction-quot/td-p/201479)
+
+#### Tailscale
+Tailscale is a similar version to Logmein Hamachi, but a free, more simplified version. 
+
+##### Resources
+1. [Installing](https://tailscale.com/kb/Install)
+1. [Installing on RPi](https://tailscale.com/kb/1043/install-raspbian-buster)
+2. [Using Auth Keys](https://tailscale.com/kb/1085/auth-keys)
 
  ### Update RPi OS and Python
  Run the two lines below:
