@@ -13,9 +13,8 @@ sudo apt-get install -y i2c-tools
 # Virtual Environment Setup
 rm -rf ~/bevo_iaq/.venv
 mkdir ~/bevo_iaq/.venv
-cd ~/bevo_iaq/
-python3 -m venv .venv
-source .venv/bin/activate
+python3 -m venv ~/bevo_iaq/.venv
+source ~/bevo_iaq/.venv/bin/activate
 
 # Install addtional packages
 pip install -r Setup/requirements.txt
