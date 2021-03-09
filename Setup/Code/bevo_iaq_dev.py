@@ -1,3 +1,3 @@
-import log_3
+import log_3_dev
 
-log_3.main()
+log_3_dev.main()
