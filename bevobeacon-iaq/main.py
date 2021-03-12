@@ -1,3 +1,4 @@
+import time
 from adafruit import SGP30, TSL2591
 from sensirion import SPS30, SCD30
 from spec_dgs import DGS_NO2, DGS_CO
@@ -16,6 +17,8 @@ for name, sens in zip(names,classes):
 print(f'Successfully created: {sensors}')
 print('Attempting scans')
 
-for name in sensors:
-    print('Scanning '+name)
-    print(sensors[name].scan())
+while True:
+    for name in sensors:
+        print('Scanning '+name)
+        print(sensors[name].scan())
+    time.sleep(1)
