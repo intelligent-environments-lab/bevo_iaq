@@ -45,7 +45,7 @@ class TSL2591:
         tsl.integration_time = 1  # 101 ms intergration time.
         self.tsl=tsl
 
-    def tsl2591_scan(self):
+    def scan(self):
         try:
             tsl = self.tsl
             # enable sensor and wait a sec for it to get going
