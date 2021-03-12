@@ -7,7 +7,7 @@ class SPS30:
     def __init__(self) -> None:
         pass
 
-    def scan():
+    def scan(self):
         '''
         Measures different particulate matter counts and concentrations in the
         room. Data are stored locally and to AWS S3 bucket.
@@ -27,7 +27,7 @@ class SCD30:
     def __init__(self) -> None:
         pass
     
-    def scan():
+    def scan(self):
         '''
         Measures the carbon dioxide concentration, temperature, and relative
         humidity in the room. Data are stored locally and to AWS S3 bucket.
