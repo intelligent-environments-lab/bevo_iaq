@@ -31,7 +31,7 @@ class DGS_CO:
         try:
             co, t1, rh1 = self.dgs.take_measurement('/dev/ttyUSB1')
         except:
-            print('Error reading from CO sensor')
+            # print('Error reading from CO sensor')
             co = -100
             t1 = -100
             rh1 = -100
@@ -80,19 +80,19 @@ class DGS:
             line = line[: -2]
             data = DGS.split(line.split(", "))
 
-            if verbose:
-                # Outputting
-                print("----------------------------")
-                print(data)
-                print("----------------------------")
+            # if verbose:
+            #     # Outputting
+            #     print("----------------------------")
+            #     print(data)
+            #     print("----------------------------")
 
             c = data['ppb']
             tc = data['temp']
             rh = data['rh']
             
         except:
-            if verbose:
-                print('Timeout occurred during write')
+            # if verbose:
+            #     print('Timeout occurred during write')
             c = -100
             tc = -100
             rh = -100
