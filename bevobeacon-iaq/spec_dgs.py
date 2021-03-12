@@ -2,7 +2,7 @@ import serial
 
 class DGS_NO2:
     def __init__(self) -> None:
-        self.dgs = DGS
+        self.dgs = _DGS
         pass
     
     def scan(self):
@@ -21,7 +21,7 @@ class DGS_NO2:
 
 class DGS_CO:
     def __init__(self) -> None:
-        self.dgs = DGS
+        self.dgs = _DGS
         pass
 
     def scan(self):
@@ -39,7 +39,7 @@ class DGS_CO:
         data = {'CO':co,'T_CO':t1,'RH_CO':rh1}
         return data
 
-class DGS:
+class _DGS:
     @staticmethod
     def split(data):
         output = {
