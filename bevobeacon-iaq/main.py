@@ -18,4 +18,4 @@ print('Attempting scans')
 
 for name in sensors:
     print('Scanning '+name)
-    print(sensors[name].scan)
+    print(sensors[name].scan())

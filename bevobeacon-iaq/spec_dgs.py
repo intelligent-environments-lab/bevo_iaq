@@ -1,4 +1,4 @@
-import dgs
+import _dgs as dgs
 
 class DGS_NO2:
     def __init__(self) -> None:
