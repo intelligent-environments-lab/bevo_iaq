@@ -22,7 +22,7 @@ class DGS_NO2:
 
 class DGS_CO:
     def __init__(self) -> None:
-        self.dgs = _DGS
+        self.dgs = dgs
         pass
 
     def scan(self):
@@ -30,7 +30,7 @@ class DGS_CO:
         Using serial connection, reads in values for T, RH, and CO concentration
         '''
         try:
-            co, t1, rh1 = self.dgs.take_measurement('/dev/ttyUSB1')
+            co, t1, rh1 = self.dgs.takeMeasurement('/dev/ttyUSB1',verbose=True)
         except:
             # print('Error reading from CO sensor')
             co = -100
