@@ -11,7 +11,7 @@ class DGS_NO2:
         Using serial connection, reads in values for T, RH, and NO2 concentration
         '''
         try:
-            no2, t0, rh0 = self.dgs.takeMeasurement('/dev/ttyUSB0',verbose=True)
+            no2, t0, rh0 = self.dgs.takeMeasurement('/dev/ttyUSB0')
         except:
             no2 = -100
             t0 = -100
@@ -30,7 +30,7 @@ class DGS_CO:
         Using serial connection, reads in values for T, RH, and CO concentration
         '''
         try:
-            co, t1, rh1 = self.dgs.takeMeasurement('/dev/ttyUSB1',verbose=True)
+            co, t1, rh1 = self.dgs.takeMeasurement('/dev/ttyUSB1')
         except:
             # print('Error reading from CO sensor')
             co = -100
