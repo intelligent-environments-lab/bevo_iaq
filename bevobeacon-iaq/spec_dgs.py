@@ -1,8 +1,9 @@
+import dgs
 import serial
 
 class DGS_NO2:
     def __init__(self) -> None:
-        self.dgs = _DGS
+        self.dgs = dgs
         pass
     
     def scan(self):
@@ -10,7 +11,7 @@ class DGS_NO2:
         Using serial connection, reads in values for T, RH, and NO2 concentration
         '''
         try:
-            no2, t0, rh0 = self.dgs.take_measurement('/dev/ttyUSB0')
+            no2, t0, rh0 = self.dgs.takeMeasurement('/dev/ttyUSB0',verbose=True)
         except:
             no2 = -100
             t0 = -100
