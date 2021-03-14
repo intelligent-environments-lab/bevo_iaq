@@ -124,9 +124,9 @@ def takeMeasurement():
     # if not every 2s, set it
         eprint("setting interval to 2")
         ret = i2cWrite([0x46, 0x00, 0x00, 0x02, 0xE3])
-          if ret == -1:
-                pass
-          read_meas_interval()
+        if ret == -1:
+            pass
+        read_meas_interval()
 
     # TODO read out current pressure value
     pressure_mbar = 972
