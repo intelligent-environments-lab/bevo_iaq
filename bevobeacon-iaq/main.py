@@ -19,6 +19,11 @@ print('Attempting scans')
 
 while True:
     for name in sensors:
-        print('Scanning '+name)
+        print('\nScanning '+name)
         print(sensors[name].scan())
-    time.sleep(1)
+        print(sensors[name].scan())
+        print(sensors[name].scan())
+        print(sensors[name].scan())
+        print(sensors[name].scan())
+    time.sleep(10)
+    print('\n\n')
