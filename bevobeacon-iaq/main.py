@@ -18,6 +18,7 @@ print(f'Successfully created: {sensors}')
 print('Attempting scans')
 
 while True:
+    start_time = time.time()
     for name in sensors:
         print('\nScanning '+name)
         print(sensors[name].scan())
@@ -25,5 +26,7 @@ while True:
         print(sensors[name].scan())
         print(sensors[name].scan())
         print(sensors[name].scan())
-    time.sleep(10)
+    elapsed_time = time.time() - start_time
+    print(elapsed_time)
+    time.sleep(5)
     print('\n\n')
