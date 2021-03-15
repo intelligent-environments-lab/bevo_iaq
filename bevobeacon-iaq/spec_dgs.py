@@ -1,9 +1,8 @@
-import dgs
 import serial
 
 class DGS_NO2:
     def __init__(self) -> None:
-        self.dgs = dgs
+        self.dgs = DGS
         pass
     
     def scan(self):
@@ -11,7 +10,7 @@ class DGS_NO2:
         Using serial connection, reads in values for T, RH, and NO2 concentration
         '''
         try:
-            no2, t0, rh0 = self.dgs.takeMeasurement('/dev/ttyUSB0')
+            no2, t0, rh0 = self.dgs.take_measurement('/dev/ttyUSB0')
         except:
             no2 = -100
             t0 = -100
@@ -22,7 +21,7 @@ class DGS_NO2:
 
 class DGS_CO:
     def __init__(self) -> None:
-        self.dgs = dgs
+        self.dgs = DGS
         pass
 
     def scan(self):
@@ -30,7 +29,7 @@ class DGS_CO:
         Using serial connection, reads in values for T, RH, and CO concentration
         '''
         try:
-            co, t1, rh1 = self.dgs.takeMeasurement('/dev/ttyUSB1')
+            co, t1, rh1 = self.dgs.take_measurement('/dev/ttyUSB1')
         except:
             # print('Error reading from CO sensor')
             co = -100
@@ -40,7 +39,7 @@ class DGS_CO:
         data = {'CO':co,'T_CO':t1,'RH_CO':rh1}
         return data
 
-class _DGS:
+class DGS:
     @staticmethod
     def split(data):
         output = {
