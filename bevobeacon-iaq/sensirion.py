@@ -22,9 +22,10 @@ class SPS30:
         in diameter and concentrations for 1, 2.5, 4, and 10 microns in diameter.
         """
         sps = self.sps
-        while not sps.read_data_ready_flag():
-            time.sleep(0.1)
+        
         try:
+            while not sps.read_data_ready_flag():
+                time.sleep(0.1)
             sps.read_measured_values()
             pm = sps.dict_values
         except:
@@ -73,10 +74,11 @@ class SCD30:
         percent.
         """
         scd30 = self.scd30
-        while not scd30.get_data_ready():
-            time.sleep(0.1)
+        
 
         try:
+            while not scd30.get_data_ready():
+                time.sleep(0.1)
             co2, tc, rh = scd30.read_measurement()
         except:
             co2 = np.nan
