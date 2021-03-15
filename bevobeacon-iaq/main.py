@@ -1,4 +1,5 @@
 import time
+import pandas as pd
 from adafruit import SGP30, TSL2591
 from sensirion import SPS30, SCD30
 from spec_dgs import DGS_NO2, DGS_CO
@@ -21,11 +22,12 @@ while True:
     start_time = time.time()
     for name in sensors:
         print('\nScanning '+name)
-        print(sensors[name].scan())
-        print(sensors[name].scan())
-        print(sensors[name].scan())
-        print(sensors[name].scan())
-        print(sensors[name].scan())
+        df = pd.DataFrame([
+            sensors[name].scan()
+        ]*5)
+        print(df)
+        answer = dict(df.mean())
+        print(answer)
     elapsed_time = time.time() - start_time
     print(elapsed_time)
     time.sleep(5)
