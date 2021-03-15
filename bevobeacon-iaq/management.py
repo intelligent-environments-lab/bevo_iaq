@@ -122,7 +122,7 @@ def write_csv3(key, date, data_header, data):
         'adafruit': lambda date: FILEPATH['adafruit'] + 'b' + beacon + '_' + date.strftime('%Y-%m-%d') + '.csv'
     }
     filename = filename_writer[key](date=date)
-    verbose = False
+    verbose = True
     try:
         if not os.path.isfile(filename):
 
