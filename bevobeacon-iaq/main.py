@@ -1,4 +1,3 @@
-from Setup.Code.log_2 import data_mgmt
 import time
 import pandas as pd
 from adafruit import SGP30, TSL2591
