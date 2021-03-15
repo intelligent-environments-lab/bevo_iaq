@@ -23,7 +23,7 @@ class SPS30:
         """
         sps = self.sps
         while not sps.read_data_ready_flag():
-            time.sleep(0.2)
+            time.sleep(0.1)
         try:
             sps.read_measured_values()
             pm = sps.dict_values
@@ -74,7 +74,7 @@ class SCD30:
         """
         scd30 = self.scd30
         while not scd30.get_data_ready():
-            time.sleep(0.2)
+            time.sleep(0.1)
 
         try:
             co2, tc, rh = scd30.read_measurement()
