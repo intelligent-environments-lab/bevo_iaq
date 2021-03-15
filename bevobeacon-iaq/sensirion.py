@@ -49,11 +49,12 @@ class SCD30:
         the temperature in degress Celsius, and the relative humidity as a 
         percent.
         '''
-        while not scd.get_data_ready():
+        scd30 = self.scd
+        while not scd30.get_data_ready():
             time.sleep(0.2)
             
         try:
-            co2, tc, rh = self.scd30.read_measurement()
+            co2, tc, rh = scd30.read_measurement()
         except:
             co2 = np.nan
             tc = np.nan
