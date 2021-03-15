@@ -49,7 +49,7 @@ class SCD30:
         the temperature in degress Celsius, and the relative humidity as a 
         percent.
         '''
-        scd30 = self.scd
+        scd30 = self.scd30
         while not scd30.get_data_ready():
             time.sleep(0.2)
             
