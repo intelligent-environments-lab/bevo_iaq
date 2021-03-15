@@ -4,11 +4,19 @@ from adafruit import SGP30, TSL2591
 from sensirion import SPS30, SCD30
 from spec_dgs import DGS_NO2, DGS_CO
 
-sensors = {}
-names = ["sgp", "tsl", "sps", "scd", "dgs_co", "dgs_no2"]
-classes = [SGP30, TSL2591, SPS30, SCD30, DGS_CO, DGS_NO2]
 
-for name, sens in zip(names, classes):
+sensor_classes = {
+    "sgp": SGP30,
+    "tsl": TSL2591,
+    "sps": SPS30,
+    "scd": SCD30,
+    "dgs_co": DGS_CO,
+    "dgs_no2": DGS_NO2,
+}
+
+sensors = {}
+
+for name, sens in sensor_classes.items():
     try:
         sensor = sens()
         sensors.update({name: sensor})
@@ -18,8 +26,10 @@ for name, sens in zip(names, classes):
 print(f"Successfully created: {sensors}")
 print("Attempting scans")
 
+
 while True:
     start_time = time.time()
+    data = {}
     for name in sensors:
         print("\nScanning " + name)
         df = pd.DataFrame(
@@ -32,8 +42,9 @@ while True:
             ]
         )
         print(df)
-        answer = dict(df.mean())
-        print(answer)
+        data[name] = dict(df.mean())
+        print(data[name])
+
     elapsed_time = time.time() - start_time
     print(elapsed_time)
     time.sleep(5)
