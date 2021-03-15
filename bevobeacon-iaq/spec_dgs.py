@@ -99,4 +99,4 @@ class DGS:
 
         # Closing connection and returning relevant data
         ser.close()
-        return c, tc, rh
+        return float(c), float(tc), float(rh)
