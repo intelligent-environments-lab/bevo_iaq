@@ -3,17 +3,16 @@ numpy
 
 # Python Sensor Libraries
 adafruit-circuitpython-tsl2591
-adafruit-circuitpython-tsl2561
 adafruit-circuitpython-sgp30
-adafruit-circuitpython-pcf8523
-sps30
-crcmod
+
 pyserial
+
+# Sensirion libraries
+sps30
+scd30-i2c
 
 # AWS Libraries
 # boto3
 
 #I2C tools
 smbus2
-smbus
-scd30
