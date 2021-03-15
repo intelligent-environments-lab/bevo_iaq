@@ -23,8 +23,12 @@ while True:
     for name in sensors:
         print('\nScanning '+name)
         df = pd.DataFrame([
-            sensors[name].scan()
-        ]*5)
+            sensors[name].scan(),
+            sensors[name].scan(),
+            sensors[name].scan(),
+            sensors[name].scan(),
+            sensors[name].scan(),
+        ])
         print(df)
         answer = dict(df.mean())
         print(answer)
