@@ -1,9 +1,10 @@
+from Setup.Code.log_2 import data_mgmt
 import time
 import pandas as pd
 from adafruit import SGP30, TSL2591
 from sensirion import SPS30, SCD30
 from spec_dgs import DGS_NO2, DGS_CO
-
+import management as mgmt
 
 sensor_classes = {
     "sgp": SGP30,
@@ -44,8 +45,9 @@ while True:
         print(df)
         data[name] = dict(df.mean())
         print(data[name])
-
+    mgmt.data_mgmt(data)
     elapsed_time = time.time() - start_time
     print(elapsed_time)
     time.sleep(5)
     print("\n\n")
+
