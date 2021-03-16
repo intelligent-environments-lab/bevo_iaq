@@ -58,6 +58,6 @@ async def main():
         print(elapsed_time)
         time.sleep(5)
         print("\n\n")
-        loop = False
+        # loop = False
 
 asyncio.run(main())
