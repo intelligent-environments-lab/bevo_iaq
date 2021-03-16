@@ -31,6 +31,7 @@ async def main():
     print(f"Successfully created: {sensors}")
     print("Attempting scans")
 
+    starttime = time.time()
     loop = True
     while loop:
         start_time = time.time()
@@ -56,7 +57,7 @@ async def main():
         mgmt.data_mgmt(data)
         elapsed_time = time.time() - start_time
         print(elapsed_time)
-        time.sleep(5)
+        time.sleep(60.0 - ((time.time() - starttime) % 60.0))
         print("\n\n")
         # loop = False
 
