@@ -1,3 +1,4 @@
+import asyncio
 import time
 import numpy as np
 
@@ -22,7 +23,8 @@ class SGP30:
             raise Exception("SGP30 sensor not found")
         self.sgp30 = sgp30
 
-    def scan(self):
+    async def scan(self):
+        # print('spg scan start')
         try:
             # Retrieve sensor scan data
             eCO2, TVOC = self.sgp30.iaq_measure()
@@ -30,7 +32,7 @@ class SGP30:
             print("Error reading from SGP30")
             eCO2 = np.nan
             TVOC = np.nan
-
+        # print('spg scan end')
         # Return data
         data = {"TVOC": TVOC, "eCO2": eCO2}
         return data
@@ -48,12 +50,13 @@ class TSL2591:
         tsl.integration_time = 1  # 101 ms intergration time.
         self.tsl = tsl
 
-    def scan(self):
+    async def scan(self):
+        # print('tsl scan start')
         try:
             tsl = self.tsl
             # enable sensor and wait a sec for it to get going
             tsl.enabled = True
-            time.sleep(1)
+            await asyncio.sleep(1)
 
             # Retrieve sensor scan data
             lux = tsl.lux
@@ -69,5 +72,6 @@ class TSL2591:
             visible = np.nan
             infrared = np.nan
         # Return data
+        # print('tsl scan end')
         data = {"Visible": visible, "Infrared": infrared, "Lux": lux}
         return data

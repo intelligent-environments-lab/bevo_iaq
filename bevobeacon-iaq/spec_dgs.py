@@ -7,17 +7,18 @@ class DGS_NO2:
         self.dgs = DGS
         pass
 
-    def scan(self):
+    async def scan(self):
         """
         Using serial connection, reads in values for T, RH, and NO2 concentration
         """
+        # print('no2 scan start')
         try:
             no2, t0, rh0 = self.dgs.take_measurement("/dev/ttyUSB0")
         except:
             no2 = np.nan
             t0 = np.nan
             rh0 = np.nan
-
+        # print('no2 scan end')
         data = {"NO2": no2, "T_NO2": t0, "RH_NO2": rh0}
         return data
 
@@ -27,10 +28,11 @@ class DGS_CO:
         self.dgs = DGS
         pass
 
-    def scan(self):
+    async def scan(self):
         """
         Using serial connection, reads in values for T, RH, and CO concentration
         """
+        # print('co scan start')
         try:
             co, t1, rh1 = self.dgs.take_measurement("/dev/ttyUSB1")
         except:
@@ -38,7 +40,7 @@ class DGS_CO:
             co = np.nan
             t1 = np.nan
             rh1 = np.nan
-
+        # print('co scan end')
         data = {"CO": co, "T_CO": t1, "RH_CO": rh1}
         return data
 

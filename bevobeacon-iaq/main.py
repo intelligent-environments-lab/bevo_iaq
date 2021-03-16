@@ -1,4 +1,6 @@
 import time
+import asyncio
+
 import pandas as pd
 from adafruit import SGP30, TSL2591
 from sensirion import SPS30, SCD30
@@ -7,7 +9,7 @@ import management as mgmt
 
 
 
-def main():
+async def main():
     sensor_classes = {
         "sgp": SGP30,
         "tsl": TSL2591,
@@ -29,27 +31,33 @@ def main():
     print(f"Successfully created: {sensors}")
     print("Attempting scans")
 
-
-    while True:
+    loop = True
+    while loop:
         start_time = time.time()
         data = {}
-        for name in sensors:
-            print("\nScanning " + name)
+        #for name in sensors:
+        async def scan(name):
+            
             df = pd.DataFrame(
                 [
-                    sensors[name].scan(),
-                    sensors[name].scan(),
-                    sensors[name].scan(),
-                    sensors[name].scan(),
-                    sensors[name].scan(),
+                    await sensors[name].scan(),
+                    await sensors[name].scan(),
+                    await sensors[name].scan(),
+                    await sensors[name].scan(),
+                    await sensors[name].scan(),
                 ]
             )
+            print("\nScan results for " + name)
             print(df)
-            data[name] = dict(df.mean())
+            data[name] = dict(df.median())
             print(data[name])
+        await asyncio.gather(*[scan(name) for name in sensors])
+        
         mgmt.data_mgmt(data)
         elapsed_time = time.time() - start_time
         print(elapsed_time)
         time.sleep(5)
         print("\n\n")
+        loop = False
 
+asyncio.run(main())

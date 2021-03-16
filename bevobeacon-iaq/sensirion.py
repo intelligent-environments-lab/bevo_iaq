@@ -4,8 +4,7 @@ from scd30_i2c import SCD30 as Sensirion_SCD30
 
 from sps30 import SPS30 as Sensirion_SPS30
 import time
-from time import sleep
-
+import asyncio
 
 class SPS30:
     # https://pypi.org/project/sps30/
@@ -14,7 +13,7 @@ class SPS30:
         sps.start_measurement()
         self.sps = sps
 
-    def scan(self):
+    async def scan(self):
         """
         Measures different particulate matter counts and concentrations in the
         room. Data are stored locally and to AWS S3 bucket.
@@ -22,10 +21,10 @@ class SPS30:
         in diameter and concentrations for 1, 2.5, 4, and 10 microns in diameter.
         """
         sps = self.sps
-        
+        # print('sps scan start')
         try:
             while not sps.read_data_ready_flag():
-                time.sleep(0.1)
+                await asyncio.sleep(0.1)
             sps.read_measured_values()
             pm = sps.dict_values
         except:
@@ -40,7 +39,7 @@ class SPS30:
                 "pm4p0": np.nan,
                 "pm10p0": np.nan,
             }
-
+        # print('sps scan end')
         return {
             "pm_n_0p5": pm["nc0p5"],
             "pm_n_1": pm["nc1p0"],
@@ -65,7 +64,7 @@ class SCD30:
         scd30.start_periodic_measurement()
         self.scd30 = scd30
 
-    def scan(self):
+    async def scan(self):
         """
         Measures the carbon dioxide concentration, temperature, and relative
         humidity in the room. Data are stored locally and to AWS S3 bucket.
@@ -75,14 +74,14 @@ class SCD30:
         """
         scd30 = self.scd30
         
-
+        # print('scd scan start')
         try:
             while not scd30.get_data_ready():
-                time.sleep(0.1)
+                await asyncio.sleep(0.1)
             co2, tc, rh = scd30.read_measurement()
         except:
             co2 = np.nan
             tc = np.nan
             rh = np.nan
-
+        # print('scd scan end')
         return {"CO2": co2, "TC": tc, "RH": rh}
