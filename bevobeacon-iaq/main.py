@@ -27,7 +27,8 @@ async def main():
             sensors.update({name: sensor})
         except:
             pass
-
+    
+    manual_enable_sensors = list(set(sensors) & set(['sps','scd']))
     print(f"Successfully created: {sensors}")
     print("Attempting scans")
     time.sleep(1)
@@ -38,7 +39,9 @@ async def main():
         data = {}
         #for name in sensors:
         async def scan(name):
-            
+            for manual_sensor in manual_enable_sensors:
+                manual_sensor.enable()
+            time.sleep(0.01)
             df = pd.DataFrame(
                 [
                     await sensors[name].scan(),
@@ -48,6 +51,9 @@ async def main():
                     await sensors[name].scan(),
                 ]
             )
+            for manual_sensor in manual_enable_sensors:
+                manual_sensor.disable()
+            time.sleep(0.01)
             print("\nScan results for " + name)
             print(df)
             data[name] = dict(df.median())
