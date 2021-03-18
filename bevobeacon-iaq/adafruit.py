@@ -67,6 +67,7 @@ class TSL2591:
                 lux = 0
             # Disable the sensor and end process
             tsl.enabled = False
+            await asyncio.sleep(0.1)
         except:
             lux = np.nan
             visible = np.nan

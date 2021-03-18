@@ -10,7 +10,7 @@ class SPS30:
     # https://pypi.org/project/sps30/
     def __init__(self) -> None:
         sps = Sensirion_SPS30(1)
-        sps.start_measurement()
+        #sps.start_measurement()
         self.sps = sps
 
     async def scan(self):
@@ -21,6 +21,8 @@ class SPS30:
         in diameter and concentrations for 1, 2.5, 4, and 10 microns in diameter.
         """
         sps = self.sps
+        sps.start_measurement()
+        await asyncio.sleep(0.1)
         # print('sps scan start')
         try:
             while not sps.read_data_ready_flag():
@@ -40,6 +42,8 @@ class SPS30:
                 "pm10p0": np.nan,
             }
         # print('sps scan end')
+        sps.stop_measurement()
+        await asyncio.sleep(0.1)
         return {
             "pm_n_0p5": pm["nc0p5"],
             "pm_n_1": pm["nc1p0"],
@@ -60,8 +64,7 @@ class SCD30:
 
         scd30 = Sensirion_SCD30()
 
-        scd30.set_measurement_interval(2)
-        scd30.start_periodic_measurement()
+        #scd30.start_periodic_measurement()
         self.scd30 = scd30
 
     async def scan(self):
@@ -73,7 +76,8 @@ class SCD30:
         percent.
         """
         scd30 = self.scd30
-        
+        scd30.start_periodic_measurement()
+        await asyncio.sleep(0.1)
         # print('scd scan start')
         try:
             while not scd30.get_data_ready():
@@ -84,4 +88,6 @@ class SCD30:
             tc = np.nan
             rh = np.nan
         # print('scd scan end')
+        self.scd30.stop_periodic_measurement()
+        await asyncio.sleep(0.1)
         return {"CO2": co2, "TC": tc, "RH": rh}
