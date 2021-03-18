@@ -4,28 +4,32 @@ import serial
 
 class DGS_NO2:
     def __init__(self) -> None:
-        self.dgs = DGS
+        self.ser = serial.Serial("/dev/ttyUSB0", timeout=5, write_timeout=5)
+        self.ser.close()
         pass
 
     async def scan(self):
         """
         Using serial connection, reads in values for T, RH, and NO2 concentration
         """
+
         # print('no2 scan start')
         try:
-            no2, t0, rh0 = self.dgs.take_measurement("/dev/ttyUSB0")
+            no2, t0, rh0 = DGS.take_measurement(self.ser)
         except:
             no2 = np.nan
             t0 = np.nan
             rh0 = np.nan
         # print('no2 scan end')
+         
         data = {"NO2": no2, "T_NO2": t0, "RH_NO2": rh0}
         return data
 
 
 class DGS_CO:
     def __init__(self) -> None:
-        self.dgs = DGS
+        self.ser = serial.Serial("/dev/ttyUSB1", timeout=5, write_timeout=5)
+        self.ser.close()
         pass
 
     async def scan(self):
@@ -33,8 +37,9 @@ class DGS_CO:
         Using serial connection, reads in values for T, RH, and CO concentration
         """
         # print('co scan start')
+
         try:
-            co, t1, rh1 = self.dgs.take_measurement("/dev/ttyUSB1")
+            co, t1, rh1 = DGS.take_measurement(self.ser)
         except:
             # print('Error reading from CO sensor')
             co = np.nan
@@ -43,7 +48,6 @@ class DGS_CO:
         # print('co scan end')
         data = {"CO": co, "T_CO": t1, "RH_CO": rh1}
         return data
-
 
 class DGS:
     @staticmethod
@@ -64,7 +68,7 @@ class DGS:
         return output
 
     @staticmethod
-    def take_measurement(device, verbose=False):
+    def take_measurement(ser, verbose=False):
         """
         Uses the device string to read data from the serial DGS sensors
         Input:
@@ -76,12 +80,12 @@ class DGS:
         """
 
         # Connecting to device
-        ser = serial.Serial(device, timeout=5, write_timeout=5)
+        ser.open()
 
         # Getting data from device
         try:
             ser.write(b"\r")
-            ser.write(b"\n\r")
+            ser.write(b"\r")
             line = str(ser.readline(), "utf-8")
             line = line[:-2]
             data = DGS.split(line.split(", "))
