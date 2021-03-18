@@ -75,7 +75,8 @@ async def main():
         mgmt.data_mgmt(data)
         elapsed_time = time.time() - start_time
         print(elapsed_time)
-        time.sleep(60.0 - ((time.time() - starttime) % 60.0))
+        time.sleep(1)
+        #time.sleep(60.0 - ((time.time() - starttime) % 60.0))
         print("\n\n")
         # loop = False
 
