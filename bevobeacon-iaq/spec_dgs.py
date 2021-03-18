@@ -1,55 +1,15 @@
 import numpy as np
 import serial
-
-
-class DGS_NO2:
-    def __init__(self) -> None:
-        self.ser = serial.Serial("/dev/ttyUSB0", timeout=5, write_timeout=5)
-        self.ser.close()
-        pass
-
-    async def scan(self):
-        """
-        Using serial connection, reads in values for T, RH, and NO2 concentration
-        """
-
-        # print('no2 scan start')
-        try:
-            no2, t0, rh0 = DGS.take_measurement(self.ser)
-        except:
-            no2 = np.nan
-            t0 = np.nan
-            rh0 = np.nan
-        # print('no2 scan end')
-         
-        data = {"NO2": no2, "T_NO2": t0, "RH_NO2": rh0}
-        return data
-
-
-class DGS_CO:
-    def __init__(self) -> None:
-        self.ser = serial.Serial("/dev/ttyUSB1", timeout=5, write_timeout=5)
-        self.ser.close()
-        pass
-
-    async def scan(self):
-        """
-        Using serial connection, reads in values for T, RH, and CO concentration
-        """
-        # print('co scan start')
-
-        try:
-            co, t1, rh1 = DGS.take_measurement(self.ser)
-        except:
-            # print('Error reading from CO sensor')
-            co = np.nan
-            t1 = np.nan
-            rh1 = np.nan
-        # print('co scan end')
-        data = {"CO": co, "T_CO": t1, "RH_CO": rh1}
-        return data
+import asyncio
 
 class DGS:
+    def __init__(self, port) -> None:
+        ser = serial.Serial()
+        ser.port = port
+        ser.timeout = 1
+        ser.write_timeout = 1
+        self.ser = ser
+
     @staticmethod
     def split(data):
         output = {
@@ -67,8 +27,7 @@ class DGS:
         }
         return output
 
-    @staticmethod
-    def take_measurement(ser, verbose=False):
+    async def take_measurement(self, verbose=False):
         """
         Uses the device string to read data from the serial DGS sensors
         Input:
@@ -79,6 +38,7 @@ class DGS:
             - rh: relative humidity
         """
 
+        ser = self.ser
         # Connecting to device
         ser.open()
 
@@ -86,6 +46,7 @@ class DGS:
         try:
             ser.write(b"\r")
             ser.write(b"\r")
+            await asyncio.sleep(0.1)
             line = str(ser.readline(), "utf-8")
             line = line[:-2]
             data = DGS.split(line.split(", "))
@@ -110,3 +71,48 @@ class DGS:
         # Closing connection and returning relevant data
         ser.close()
         return float(c), float(tc), float(rh)
+
+
+class DGS_NO2(DGS):
+    def __init__(self) -> None:
+        super().__init__("/dev/ttyUSB0")
+
+    async def scan(self):
+        """
+        Using serial connection, reads in values for T, RH, and NO2 concentration
+        """
+
+        # print('no2 scan start')
+        try:
+            no2, t0, rh0 = await self.take_measurement()
+        except:
+            no2 = np.nan
+            t0 = np.nan
+            rh0 = np.nan
+        # print('no2 scan end')
+         
+        data = {"NO2": no2, "T_NO2": t0, "RH_NO2": rh0}
+        return data
+
+
+class DGS_CO(DGS):
+    def __init__(self) -> None:
+        super().__init__("/dev/ttyUSB1")
+
+    async def scan(self):
+        """
+        Using serial connection, reads in values for T, RH, and CO concentration
+        """
+        # print('co scan start')
+
+        try:
+            co, t1, rh1 = await self.take_measurement()
+        except:
+            # print('Error reading from CO sensor')
+            co = np.nan
+            t1 = np.nan
+            rh1 = np.nan
+        # print('co scan end')
+        data = {"CO": co, "T_CO": t1, "RH_CO": rh1}
+        return data
+

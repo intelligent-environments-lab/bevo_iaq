@@ -30,7 +30,7 @@ async def main():
 
     print(f"Successfully created: {sensors}")
     print("Attempting scans")
-
+    time.sleep(1)
     starttime = time.time()
     loop = True
     while loop:
