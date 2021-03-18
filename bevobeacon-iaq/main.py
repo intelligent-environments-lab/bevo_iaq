@@ -57,7 +57,6 @@ async def main():
         for manual_sensor in manually_enabled_sensors:
             try:
                 sensors[manual_sensor].enable()
-                sensors[manual_sensor].enable()
             except:
                 pass
 
@@ -67,7 +66,6 @@ async def main():
 
         for manual_sensor in manually_enabled_sensors:
             try:
-                sensors[manual_sensor].disable()
                 sensors[manual_sensor].disable()
             except:
                 pass
