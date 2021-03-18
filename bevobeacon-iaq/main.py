@@ -28,11 +28,11 @@ async def main():
         except:
             pass
     
-    manually_enabled_sensors = list(set(sensors) & set(['sps','scd','tsl']))
-
+    manually_enabled_sensors = list(set(sensors) & set(['tsl','sps','scd']))
+    time.sleep(1)
     print(f"Successfully created: {sensors}")
     print("Attempting scans")
-    time.sleep(1)
+    
     starttime = time.time()
     loop = True
     while loop:
@@ -56,7 +56,8 @@ async def main():
 
         for manual_sensor in manually_enabled_sensors:
             sensors[manual_sensor].enable()
-        time.sleep(1)
+
+        time.sleep(0.1)
 
         await asyncio.gather(*[scan(name) for name in sensors])
 
@@ -70,4 +71,5 @@ async def main():
         print("\n\n")
         # loop = False
 
-asyncio.run(main())
+if __name__ == '__main__':
+    asyncio.run(main())
