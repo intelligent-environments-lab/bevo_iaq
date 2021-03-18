@@ -39,9 +39,6 @@ async def main():
         data = {}
         #for name in sensors:
         async def scan(name):
-            for manual_sensor in manual_enable_sensors:
-                manual_sensor.enable()
-            time.sleep(0.01)
             df = pd.DataFrame(
                 [
                     await sensors[name].scan(),
@@ -51,15 +48,20 @@ async def main():
                     await sensors[name].scan(),
                 ]
             )
-            for manual_sensor in manual_enable_sensors:
-                manual_sensor.disable()
-            time.sleep(0.01)
             print("\nScan results for " + name)
             print(df)
             data[name] = dict(df.median())
             print(data[name])
+
+        for manual_sensor in manual_enable_sensors:
+            sensors[manual_sensor].enable()
+        time.sleep(0.01)
+
         await asyncio.gather(*[scan(name) for name in sensors])
-        
+
+        for manual_sensor in manual_enable_sensors:
+            sensors[manual_sensor].disable()
+            
         mgmt.data_mgmt(data)
         elapsed_time = time.time() - start_time
         print(elapsed_time)
