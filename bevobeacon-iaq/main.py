@@ -55,14 +55,22 @@ async def main():
             print(data[name])
 
         for manual_sensor in manually_enabled_sensors:
-            sensors[manual_sensor].enable()
+            try:
+                sensors[manual_sensor].enable()
+                sensors[manual_sensor].enable()
+            except:
+                pass
 
         time.sleep(0.1)
 
         await asyncio.gather(*[scan(name) for name in sensors])
 
         for manual_sensor in manually_enabled_sensors:
-            sensors[manual_sensor].disable()
+            try:
+                sensors[manual_sensor].disable()
+                sensors[manual_sensor].disable()
+            except:
+                pass
 
         mgmt.data_mgmt(data)
         elapsed_time = time.time() - start_time
