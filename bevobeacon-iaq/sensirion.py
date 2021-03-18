@@ -29,8 +29,10 @@ class SPS30:
         sps = self.sps
         # print('sps scan start')
         try:
-            while not sps.read_data_ready_flag():
+            attempts = 0
+            while (not sps.read_data_ready_flag()) and attempts <=5:
                 await asyncio.sleep(0.1)
+                attempts += 1
             sps.read_measured_values()
             pm = sps.dict_values
         except:
@@ -85,8 +87,10 @@ class SCD30:
         scd30 = self.scd30
         # print('scd scan start')
         try:
-            while not scd30.get_data_ready():
+            attempts = 0
+            while (not scd30.get_data_ready()) and (attempts <= 5):
                 await asyncio.sleep(0.1)
+                attempts += 1
             co2, tc, rh = scd30.read_measurement()
         except:
             co2 = np.nan
