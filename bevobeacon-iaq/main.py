@@ -28,7 +28,8 @@ async def main():
         except:
             pass
     
-    manual_enable_sensors = list(set(sensors) & set(['sps','scd']))
+    manually_enabled_sensors = list(set(sensors) & set(['sps','scd','tsl']))
+
     print(f"Successfully created: {sensors}")
     print("Attempting scans")
     time.sleep(1)
@@ -53,15 +54,15 @@ async def main():
             data[name] = dict(df.median())
             print(data[name])
 
-        for manual_sensor in manual_enable_sensors:
+        for manual_sensor in manually_enabled_sensors:
             sensors[manual_sensor].enable()
-        time.sleep(0.01)
+        time.sleep(1)
 
         await asyncio.gather(*[scan(name) for name in sensors])
 
-        for manual_sensor in manual_enable_sensors:
+        for manual_sensor in manually_enabled_sensors:
             sensors[manual_sensor].disable()
-            
+
         mgmt.data_mgmt(data)
         elapsed_time = time.time() - start_time
         print(elapsed_time)

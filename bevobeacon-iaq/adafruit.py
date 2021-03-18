@@ -50,13 +50,16 @@ class TSL2591:
         tsl.integration_time = 1  # 101 ms intergration time.
         self.tsl = tsl
 
+    def enable(self):
+        self.tsl.enabled = True
+
+    def disable(self):
+        self.tsl.enabled = False
+
     async def scan(self):
         # print('tsl scan start')
         try:
             tsl = self.tsl
-            # enable sensor and wait a sec for it to get going
-            tsl.enabled = True
-            await asyncio.sleep(1)
 
             # Retrieve sensor scan data
             lux = tsl.lux
@@ -65,9 +68,6 @@ class TSL2591:
             # Check for complete darkness
             if lux == None:
                 lux = 0
-            # Disable the sensor and end process
-            tsl.enabled = False
-            await asyncio.sleep(0.1)
         except:
             lux = np.nan
             visible = np.nan
