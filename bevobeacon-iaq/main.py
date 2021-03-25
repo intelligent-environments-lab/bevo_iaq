@@ -1,15 +1,26 @@
+"""BevoBeacon-IAQ Main Script
+
+This script serves as the entry point for the BevoBeacon sensor data measurement
+program. It can be launched from the terminal and runs in a loop until terminated
+by the user.
+
+Intelligent Environments Laboratory (IEL), The University of Texas at Austin
+Author: Calvin J Lin
+Project: Indoor Environmental Quality and Sleep Quality
+    - Contact: Hagen Fritz (hagenfritz@utexas.edu)
+"""
+import os
+import sys
+import logging
 import time
 import datetime
 import asyncio
-import os
-import logging
-import sys
 
 import pandas as pd
+
 from adafruit import SGP30, TSL2591
 from sensirion import SPS30, SCD30
 from spec_dgs import DGS_NO2, DGS_CO
-import management as mgmt
 
 
 async def main(beacon="00"):
@@ -24,6 +35,7 @@ async def main(beacon="00"):
 
     sensors = {}
 
+    # Only use sensors that are available
     for name, sens in sensor_classes.items():
         try:
             sensor = sens()
@@ -31,15 +43,17 @@ async def main(beacon="00"):
         except:
             pass
 
+    # These sensors are turn on and off after each scan cycle to save power
     manually_enabled_sensors = list(set(sensors) & set(["tsl", "sps", "scd"]))
-    time.sleep(1)
+
+    time.sleep(1)  # Wait for all sensors to be initialized
+
     log.info(f"Successfully created: {sensors}")
     log.info("Attempting scans")
 
     starttime = time.time()  # Used for preventing time drift
-    loop = True
-    while loop:
-        start_time = time.time()  # Used for measuring measurement cycle time
+    while True:
+        start_time = time.time()  # Used for evaluating scan cycle time performance
 
         # Turn on all sensors before starting scans
         for manual_sensor in manually_enabled_sensors:
@@ -54,6 +68,7 @@ async def main(beacon="00"):
         data = {}
 
         async def scan(name):
+            """Scans each sensor five times and returns the median"""
             df = pd.DataFrame(
                 [
                     await sensors[name].scan(),
@@ -78,7 +93,7 @@ async def main(beacon="00"):
             except:
                 pass
 
-        # Write data to csv file
+        # Combine all data from this cycle into one DataFrame
         date = datetime.datetime.now()
         timestamp = pd.Series({"Timestamp": date.strftime("%Y-%m-%d %H:%M:%S")})
         df = pd.concat([timestamp, *data.values()]).to_frame().T.set_index("Timestamp")
@@ -97,9 +112,10 @@ async def main(beacon="00"):
                 "pm_c_10": "PM_C_10",
             }
         )
-        filename = f'/home/pi/DATA/b{beacon}_{date.strftime("%Y-%m-%d")}.csv'
-
         log.info(df)
+
+        # Write data to csv file
+        filename = f'/home/pi/DATA/b{beacon}_{date.strftime("%Y-%m-%d")}.csv'
         try:
             if os.path.isfile(filename):
                 df.to_csv(filename, mode="a", header=False)
@@ -110,20 +126,20 @@ async def main(beacon="00"):
         except:
             pass
 
-        # mgmt.data_mgmt(data)
+        # Report cycle time for performance evaluation by user
         elapsed_time = time.time() - start_time
         log.info(f"{elapsed_time} \n\n")
-        time.sleep(5)
-        # time.sleep(60.0 - ((time.time() - starttime) % 60.0))
-        # loop = False
+
+        # Make sure that interval between scans is exactly 60 seconds
+        time.sleep(60.0 - ((time.time() - starttime) % 60.0))
 
 
 def setup_logger(level=logging.WARNING):
-    
+
     log = logging.getLogger(__name__)
     log.setLevel(logging.INFO)
     log.propagate = False
-    if (log.hasHandlers()):
+    if log.hasHandlers():
         log.handlers.clear()
     sh = logging.StreamHandler(stream=sys.stdout)
     sh.setLevel(logging.DEBUG)

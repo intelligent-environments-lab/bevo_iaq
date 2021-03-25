@@ -1,16 +1,19 @@
-import numpy as np
+"""Sensirion Sensors
 
-from scd30_i2c import SCD30 as Sensirion_SCD30
-
-from sps30 import SPS30 as Sensirion_SPS30
+This script handles data measurements from the Sensirion SCD30 and SPS30 sensors.
+"""
 import time
 import asyncio
+import numpy as np
+
+# pip packages
+from scd30_i2c import SCD30 as Sensirion_SCD30
+from sps30 import SPS30 as Sensirion_SPS30
+
 
 class SPS30:
-    # https://pypi.org/project/sps30/
     def __init__(self) -> None:
         sps = Sensirion_SPS30(1)
-        #sps.start_measurement()
         self.sps = sps
 
     def enable(self):
@@ -27,12 +30,14 @@ class SPS30:
         in diameter and concentrations for 1, 2.5, 4, and 10 microns in diameter.
         """
         sps = self.sps
-        # print('sps scan start')
         try:
+            # Wait until data ready flag is shown but limit retries so it doesn't block forever
             attempts = 0
-            while (not sps.read_data_ready_flag()) and attempts <=3:
+            while (not sps.read_data_ready_flag()) and attempts <= 3:
                 await asyncio.sleep(0.1)
                 attempts += 1
+
+            # Read data
             sps.read_measured_values()
             pm = sps.dict_values
         except:
@@ -47,7 +52,7 @@ class SPS30:
                 "pm4p0": np.nan,
                 "pm10p0": np.nan,
             }
-        # print('sps scan end')
+
         return {
             "pm_n_0p5": pm["nc0p5"],
             "pm_n_1": pm["nc1p0"],
@@ -62,14 +67,10 @@ class SPS30:
 
 
 class SCD30:
-    # https://pypi.org/project/scd30-i2c/
     def __init__(self) -> None:
-
         scd30 = Sensirion_SCD30()
-
-        #scd30.start_periodic_measurement()
         self.scd30 = scd30
-    
+
     def enable(self):
         self.scd30.start_periodic_measurement()
 
@@ -79,22 +80,24 @@ class SCD30:
     async def scan(self):
         """
         Measures the carbon dioxide concentration, temperature, and relative
-        humidity in the room. Data are stored locally and to AWS S3 bucket.
-        Returns a dictionary containing the carbon dioxide concentration in ppm,
+        humidity in the room. Returns a dictionary containing the carbon dioxide concentration in ppm,
         the temperature in degress Celsius, and the relative humidity as a
         percent.
         """
         scd30 = self.scd30
-        # print('scd scan start')
         try:
+
+            # Wait until data ready flag is shown but limit retries so it doesn't block forever
             attempts = 0
             while (not scd30.get_data_ready()) and (attempts <= 3):
                 await asyncio.sleep(0.1)
                 attempts += 1
+
+            # Read data
             co2, tc, rh = scd30.read_measurement()
         except:
             co2 = np.nan
             tc = np.nan
             rh = np.nan
-        # print('scd scan end')
+
         return {"CO2": co2, "TC": tc, "RH": rh}
