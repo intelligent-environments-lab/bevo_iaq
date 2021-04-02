@@ -1,0 +1,18 @@
+pandas
+numpy 
+
+# Python Sensor Libraries
+adafruit-circuitpython-tsl2591
+adafruit-circuitpython-sgp30
+
+pyserial
+
+# Sensirion libraries
+sps30
+scd30-i2c
+
+# AWS Libraries
+# boto3
+
+#I2C tools
+smbus2

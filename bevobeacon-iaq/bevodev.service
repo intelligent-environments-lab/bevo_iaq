@@ -1,0 +1,12 @@
+[Unit]
+Description=Script for testing
+After=bluetooth.target
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStart = /home/pi/bevo_iaq/.venv/bin/python3 -E /home/pi/bevo_iaq/Setup/Code/bevo_iaq_dev.py
+Restart=always
+RestartSec=60s
+
+[Install]
+WantedBy=bluetooth.target
