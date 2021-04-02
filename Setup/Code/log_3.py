@@ -15,6 +15,7 @@ import traceback
 import logging
 import smtplib, ssl
 import binascii
+import numpy as np
 
 # Import sensor-specific libraries
 import serial
