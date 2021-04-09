@@ -12,10 +12,10 @@ sudo apt-get install -y i2c-tools
 sudo apt-get install -y libatlas-base-dev #for numpy
 
 # Virtual Environment Setup
-rm -rf ~/bevobeacon-iaq/.venv
-mkdir ~/bevobeacon-iaq/.venv
-python3 -m venv ~/bevobeacon-iaq/.venv
-source ~/bevobeacon-iaq/.venv/bin/activate
+rm -rf ~/bevo_iaq/.venv
+mkdir ~/bevo_iaq/.venv
+python3 -m venv ~/bevo_iaq/.venv
+source ~/bevo_iaq/.venv/bin/activate
 
 # Install addtional packages
 pip install -r requirements.txt
