@@ -2,7 +2,7 @@
 
 # Update package list
 sudo apt-get update
-sudo apt-get upgrade
+sudo apt-get -y upgrade
 
 # Additional apt packages
 sudo apt-get install python3 -y
