@@ -9,7 +9,7 @@ sudo apt-get install python3 -y
 sudo apt-get install python3-pip -y
 sudo apt-get install python3-venv -y
 sudo apt-get install -y i2c-tools
-sudo apt-get install libatlas-base-dev #for numpy
+sudo apt-get install -y libatlas-base-dev #for numpy
 
 # Virtual Environment Setup
 rm -rf ~/bevo_iaq/.venv
