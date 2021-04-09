@@ -17,7 +17,7 @@ mkdir ~/bevo_iaq/.venv
 python3 -m venv ~/bevo_iaq/.venv
 source ~/bevo_iaq/.venv/bin/activate
 
-# Install addtional packages
+# Install additional packages
 pip install -r ~/bevo_iaq/bevobeacon-iaq/requirements.txt
 
 # Github Credentials
