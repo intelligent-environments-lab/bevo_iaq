@@ -1,0 +1,11 @@
+[Unit]
+Description=Starts IEQ sensors
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStart = /home/pi/bevo_iaq/.venv/bin/python3 -E /home/pi/bevo_iaq/bevobeacon-iaq/main.py
+Restart=always
+RestartSec=60s
+
+[Install]
+WantedBy=bevobeacon.service
