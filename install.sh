@@ -26,3 +26,12 @@ git config --global user.name "hagenfritz"
 
 # Set up locale, timezone, language
 sudo timedatectl set-timezone US/Central
+
+for s in display pigpio sensors; do
+	install -o root -g root -m 0644 startup/${s}.service /lib/systemd/system/${s}.service
+ 	systemctl enable ${s}
+done
+
+install -o root -g root -m 0644 startup/bevobeacon.service /lib/systemd/system/bevobeacon.service
+systemctl enable bevobeacon
+systemctl start bevobeacon
