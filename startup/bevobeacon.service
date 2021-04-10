@@ -1,0 +1,10 @@
+[Unit]
+Description=BevoBeacon Target
+
+[Service]
+Type=oneshot
+User=nobody
+ExecStart=/bin/echo Started BevoBeacon
+
+[Install]
+WantedBy=multi-user.target

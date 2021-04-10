@@ -1,18 +1,20 @@
+# Data Science
 pandas
 numpy 
 
 # Python Sensor Libraries
 adafruit-circuitpython-tsl2591
 adafruit-circuitpython-sgp30
-
+#board
 pyserial
+
+# Display
+oled_text
+pillow
 
 # Sensirion libraries
 sps30
 scd30-i2c
-
-# AWS Libraries
-# boto3
 
 #I2C tools
 smbus2
