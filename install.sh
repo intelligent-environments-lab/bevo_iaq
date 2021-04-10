@@ -34,7 +34,7 @@ git config --global user.name "hagenfritz"
 # Set up locale, timezone, language
 sudo timedatectl set-timezone US/Central
 
-for s in display pigpio sensors; do
+for s in display sensors; do
 	sudo cp startup/${s}.service /lib/systemd/system/${s}.service
  	systemctl enable ${s}
 done
