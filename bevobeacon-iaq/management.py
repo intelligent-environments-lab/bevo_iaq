@@ -114,7 +114,7 @@ def write_csv3(key, date, data_header, data):
     data: list\\
     return: void
     '''
-    beacon='test'
+    beacon= '00'
     FILEPATH = {
         'adafruit':'/home/pi/DATA/adafruit/'
     }
