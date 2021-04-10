@@ -2,7 +2,7 @@
 Description=Starts IEQ sensors
 
 [Service]
-ExecStart = /usr/bin/python3 -E /home/pi/bevo_iaq/bevobeacon-iaq/main.py
+ExecStart = /home/pi/bevo_iaq/.venv/bin/python3 -E /home/pi/bevo_iaq/bevobeacon-iaq/main.py
 Restart=always
 RestartSec=60s
 

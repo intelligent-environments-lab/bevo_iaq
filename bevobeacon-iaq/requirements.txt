@@ -5,7 +5,7 @@ numpy
 # Python Sensor Libraries
 adafruit-circuitpython-tsl2591
 adafruit-circuitpython-sgp30
-board
+#board
 pyserial
 
 # Display

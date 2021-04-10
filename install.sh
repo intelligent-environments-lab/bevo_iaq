@@ -20,9 +20,9 @@ sudo apt-get install tailscale
 
 # Virtual Environment Setup
 rm -rf ~/bevo_iaq/.venv
-#mkdir ~/bevo_iaq/.venv
-#python3 -m venv ~/bevo_iaq/.venv
-#source ~/bevo_iaq/.venv/bin/activate
+mkdir ~/bevo_iaq/.venv
+python3 -m venv ~/bevo_iaq/.venv
+source ~/bevo_iaq/.venv/bin/activate
 
 # Install additional packages
 pip3 install -r ~/bevo_iaq/bevobeacon-iaq/requirements.txt
