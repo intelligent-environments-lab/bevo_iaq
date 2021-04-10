@@ -11,6 +11,13 @@ sudo apt-get install python3-venv -y
 sudo apt-get install -y i2c-tools
 sudo apt-get install -y libatlas-base-dev #for numpy
 
+# VPN
+sudo apt-get install apt-transport-https
+curl -fsSL https://pkgs.tailscale.com/stable/raspbian/buster.gpg | sudo apt-key add -
+curl -fsSL https://pkgs.tailscale.com/stable/raspbian/buster.list | sudo tee /etc/apt/sources.list.d/tailscale.list
+sudo apt-get update
+sudo apt-get install tailscale
+
 # Virtual Environment Setup
 rm -rf ~/bevo_iaq/.venv
 mkdir ~/bevo_iaq/.venv
@@ -28,10 +35,10 @@ git config --global user.name "hagenfritz"
 sudo timedatectl set-timezone US/Central
 
 for s in display pigpio sensors; do
-	install -o root -g root -m 0644 startup/${s}.service /lib/systemd/system/${s}.service
+	sudo cp startup/${s}.service /lib/systemd/system/${s}.service
  	systemctl enable ${s}
 done
 
-install -o root -g root -m 0644 startup/bevobeacon.service /lib/systemd/system/bevobeacon.service
+sudo cp startup/bevobeacon.service /lib/systemd/system/bevobeacon.service
 systemctl enable bevobeacon
 systemctl start bevobeacon
