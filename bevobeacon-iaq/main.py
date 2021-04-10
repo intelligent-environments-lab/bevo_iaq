@@ -151,4 +151,5 @@ def setup_logger(level=logging.WARNING):
 
 if __name__ == "__main__":
     log = setup_logger(logging.INFO)
-    asyncio.run(main(beacon = '00'))
+    beacon = '00'
+    asyncio.run(main(beacon = beacon))
