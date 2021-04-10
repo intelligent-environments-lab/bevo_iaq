@@ -10,6 +10,8 @@ sudo apt-get install python3-pip -y
 sudo apt-get install python3-venv -y
 sudo apt-get install -y i2c-tools
 sudo apt-get install -y libatlas-base-dev #for numpy
+sudo apt-get install -y libopenjp2-7 #for display
+sudo apt-get install -y libtiff5 #for display
 
 # VPN
 sudo apt-get install apt-transport-https

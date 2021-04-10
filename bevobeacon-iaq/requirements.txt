@@ -10,6 +10,7 @@ pyserial
 
 # Display
 oled_text
+pillow
 
 # Sensirion libraries
 sps30
