@@ -27,7 +27,7 @@ python3 -m venv ~/bevo_iaq/.venv
 source ~/bevo_iaq/.venv/bin/activate
 
 # Install additional packages
-pip install -r ~/bevo_iaq/bevobeacon-iaq/requirements.txt
+pip install -r ~/bevo_iaq/bevobeacon-iaq/requirements.txt --user
 
 # Github Credentials
 git config --global user.email "hagenfritz@utexas.edu"
