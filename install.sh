@@ -20,15 +20,6 @@ curl -fsSL https://pkgs.tailscale.com/stable/raspbian/buster.list | sudo tee /et
 sudo apt-get update
 sudo apt-get install tailscale
 
-# Virtual Environment Setup
-rm -rf ~/bevo_iaq/.venv
-mkdir ~/bevo_iaq/.venv
-python3 -m venv ~/bevo_iaq/.venv
-source ~/bevo_iaq/.venv/bin/activate
-
-# Install additional packages
-pip install -r ~/bevo_iaq/bevobeacon-iaq/requirements.txt
-
 # Github Credentials
 git config --global user.email "hagenfritz@utexas.edu"
 git config --global user.name "hagenfritz"
@@ -44,3 +35,12 @@ done
 sudo cp startup/bevobeacon.service /lib/systemd/system/bevobeacon.service
 sudo systemctl enable bevobeacon
 sudo systemctl start bevobeacon
+
+# Virtual Environment Setup
+rm -rf ~/bevo_iaq/.venv
+mkdir ~/bevo_iaq/.venv
+python3 -m venv ~/bevo_iaq/.venv
+source ~/bevo_iaq/.venv/bin/activate
+
+# Install additional packages
+pip install -r ~/bevo_iaq/bevobeacon-iaq/requirements.txt
