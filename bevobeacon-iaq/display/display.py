@@ -10,7 +10,7 @@ import time
 
 from oled_text import OledText, BigLine, SmallLine
 
-def get_measurements(sensor_type,variables,units,names,path_to_data="/home/pi/DATA"):
+def get_measurements(variables,units,names,path_to_data="/home/pi/DATA"):
     """
     Gets the latest measurements from the data file
 
@@ -24,7 +24,7 @@ def get_measurements(sensor_type,variables,units,names,path_to_data="/home/pi/DA
     Returns a list of lists where the inner list corresponds to the variable, unit, and display name
     """
     # getting newest file
-    file_list = glob.glob(f"{path_to_data}/{sensor_type}/*.csv")
+    file_list = glob.glob(f"{path_to_data}/*.csv")
     newest_file = max(file_list, key=os.path.getctime)
     beacon = int(newest_file.split("/")[-1][1:3])
     # reading in file
@@ -70,11 +70,8 @@ def main():
     while True:
         # Getting Newest Measurements
         # ---------------------------
-        m2 = get_measurements(sensor_type="sensirion",variables=["CO2","PM_C_2p5"],
-            units=["ppm","ug/m"],names=["Carbon Dioxide", "Particulate Matter"])
-        m3 = get_measurements(sensor_type="adafruit",variables=["Lux","TVOC","NO2","CO","T_NO2"],
-            units=["lux","ppb","ppb","ppm","C"],names=["Light Level", "Nitrogen Dioxide","TVOCs","Carbon Monoxide","Temperature"])
-        m = m2+m3 # combining measurements
+        m = get_measurements(variables=["CO2","PM_C_2p5","Lux","TVOC","NO2","CO","T_NO2"],
+            units=["ppm","ug/m","lux","ppb","ppb","ppm","C"],names=["Carbon Dioxide", "Particulate Matter","Light Level", "Nitrogen Dioxide","TVOCs","Carbon Monoxide","Temperature"])
 
         # Displaying Measurements
         # -----------------------
