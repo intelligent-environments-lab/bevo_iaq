@@ -43,4 +43,4 @@ python3 -m venv ~/bevo_iaq/.venv
 source ~/bevo_iaq/.venv/bin/activate
 
 # Install additional packages
-pip install -r ~/bevo_iaq/bevobeacon-iaq/requirements.txt
+pip3 install -r ~/bevo_iaq/bevobeacon-iaq/requirements.txt
