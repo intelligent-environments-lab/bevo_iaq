@@ -35,12 +35,12 @@ def get_measurements(variables,units,names,path_to_data="/home/pi/DATA"):
         try:
             value = df.loc[:,v].values[-1]
             # correcting the value 
-            path_to_correction = "/home/pi/bevo_iaq/Setup/Code/correction/"
+            path_to_correction = "/home/pi/bevo_iaq/bevobeacon-iaq/correction/"
             if os.path.exists(path_to_correction):
                 for file in os.listdir(path_to_correction):
                     file_info = file.split("-")
                     if file_info[0] == v.lower():
-                        correction = pd.read_csv(f"/home/pi/bevo_iaq/Setup/Code/correction/{file}",index_col=0)
+                        correction = pd.read_csv(f"{path_to_correction}{file}",index_col=0)
                     else:
                         correction = pd.DataFrame(data={"beacon":np.arange(0,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
                 
