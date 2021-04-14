@@ -27,6 +27,16 @@ git config --global user.name "hagenfritz"
 # Set up locale, timezone, language
 sudo timedatectl set-timezone US/Central
 
+# Virtual Environment Setup
+rm -rf ~/bevo_iaq/.venv
+mkdir ~/bevo_iaq/.venv
+python3 -m venv ~/bevo_iaq/.venv
+source ~/bevo_iaq/.venv/bin/activate
+
+# Install additional packages
+pip install -r ~/bevo_iaq/bevobeacon-iaq/requirements.txt
+
+# Setting up system service files
 for s in display sensors; do
 	sudo cp startup/${s}.service /lib/systemd/system/${s}.service
  	sudo systemctl enable ${s}
@@ -35,12 +45,3 @@ done
 sudo cp startup/bevobeacon.service /lib/systemd/system/bevobeacon.service
 sudo systemctl enable bevobeacon
 sudo systemctl start bevobeacon
-
-# Virtual Environment Setup
-rm -rf ~/bevo_iaq/.venv
-mkdir ~/bevo_iaq/.venv
-python3 -m venv ~/bevo_iaq/.venv
-source ~/bevo_iaq/.venv/bin/activate
-
-# Install additional packages
-pip3 install -r ~/bevo_iaq/bevobeacon-iaq/requirements.txt
