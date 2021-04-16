@@ -4,7 +4,7 @@ import os
 class clean():
     def remove_old_services(self):
         """disables and removes old service files"""
-        for service in ["sensirion","adafruit","pigpio","hamachi"]:
+        for service in ["sensirion","adafruit","pigpio","hamachi","display"]:
             # disabling
             os.system(f"sudo systemctl disable {service}.service")
             # looking in two directories for services to remove
