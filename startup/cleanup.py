@@ -5,12 +5,11 @@ class clean():
     def remove_old_services(self):
         """disables and removes old service files"""
         for service in ["sensirion","adafruit","pigpio","hamachi"]:
+            # disabling
             os.system(f"sudo systemctl disable {service}.service")
-            try:
-                os.system(f"sudo rm /etc/systemd/system/{service}.service")
-                os.system(f"sudo rm /lib/systemd/system/{service}.service")
-            except Exception as inst:
-                print(f"No service found - {inst}")
+            # looking in two directories for services to remove
+            os.system(f"sudo rm /etc/systemd/system/{service}.service")
+            os.system(f"sudo rm /lib/systemd/system/{service}.service")
 
     def update_from_git(self):
         """pulls from git"""
