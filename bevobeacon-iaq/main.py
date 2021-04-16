@@ -23,7 +23,7 @@ from sensirion import SPS30, SCD30
 from spec_dgs import DGS_NO2, DGS_CO
 
 
-async def main(beacon = '09'):
+async def main(beacon = '00'):
     sensor_classes = {
         "sgp": SGP30,
         "tsl": TSL2591,
@@ -151,5 +151,5 @@ def setup_logger(level=logging.WARNING):
 
 if __name__ == "__main__":
     log = setup_logger(logging.INFO)
-    beacon = '09'
+    beacon = '00'
     asyncio.run(main(beacon = beacon))
