@@ -12,11 +12,11 @@ class clean():
             except Exception as inst:
                 print(f"No service found - {inst}")
 
-    def update_from_git():
+    def update_from_git(self):
         """pulls from git"""
         os.system("cd ~/bevo_iaq && git reset --hard && git pull")
 
-    def install_new_software(self)):
+    def install_new_software(self):
         """runs the installation"""
         os.system("cd ~/bevo_iaq/ && sh install.sh")
 
