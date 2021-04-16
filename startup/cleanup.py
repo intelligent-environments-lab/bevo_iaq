@@ -29,8 +29,8 @@ class clean():
         """runs all the functions with"""
         print("REMOVING OLD SERVICE FILES")
         self.remove_old_services()
-        print("UPDATING FROM GIT")
-        self.update_from_git()
+        #print("UPDATING FROM GIT")
+        #self.update_from_git()
         print("INSTALLING NEW SOFTWARE")
         self.install_new_software()
         print("UPDATING BEACON NUMBER")
