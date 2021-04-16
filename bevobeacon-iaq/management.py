@@ -73,7 +73,7 @@ def write_csv2(key, date, data_header, data):
     FILEPATH = {
         'sensirion': '/home/pi/DATA/sensirion/'
     }
-    beacon = '09'
+    beacon = '00'
     filename_writer = {
         "sensirion": lambda date: FILEPATH["sensirion"]
         + "b"
@@ -114,7 +114,7 @@ def write_csv3(key, date, data_header, data):
     data: list\\
     return: void
     '''
-    beacon = '09'
+    beacon = '00'
     FILEPATH = {
         'adafruit':'/home/pi/DATA/adafruit/'
     }
