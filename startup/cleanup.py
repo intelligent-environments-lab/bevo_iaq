@@ -24,6 +24,11 @@ class clean():
         bb = input("Beacon Number (include zero for numbers less than 10): ")
         os.system(f"cd ~/bevo_iaq/ $$ sh fix_number.sh {bb}")
 
+    def remove_old_data(self):
+        """removes old data and associated directories"""
+        for data_dir in ["adafruit","sensirion"]:
+            os.system(f"sudo rm -rf ~/DATA/{data_dir}")
+
     def run(self):
         """runs all the functions with"""
         print("REMOVING OLD SERVICE FILES")
@@ -34,6 +39,8 @@ class clean():
         self.install_new_software()
         print("UPDATING BEACON NUMBER")
         self.update_beacon_number()
+        print("REMOVING OLD DATA DIRECTORIES")
+        self.remove_old_data()
         print("REBOOTING")
         os.system("sudo reboot")
 
