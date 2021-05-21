@@ -34,14 +34,16 @@ def get_measurements(variables,units,names,path_to_data="/home/pi/DATA"):
         try:
             value = df.loc[:,v].values[-1]
             # correcting the value 
-            for file in os.listdir(f"/home/pi/bevo_iaq/Setup/Code/correction/"):
-                file_info = file.split("-")
-                if file_info[0] == v.lower():
-                    correction = pd.read_csv(f"/home/pi/bevo_iaq/Setup/Code/correction/{file}",index_col=0)
-                else:
-                    correction = pd.DataFrame(data={"beacon":np.arange(0,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
-            
-            value = value * correction.loc[beacon,"coefficient"] + correction.loc[beacon,"constant"]
+            path_to_correction = "/home/pi/bevo_iaq/bevobeacon-iaq/correction/"
+            if os.path.exists(path_to_correction):
+                for file in os.listdir(path_to_correction):
+                    file_info = file.split("-")
+                    if file_info[0] == v.lower():
+                        correction = pd.read_csv(f"{path_to_correction}{file}",index_col=0)
+                    else:
+                        correction = pd.DataFrame(data={"beacon":np.arange(0,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
+                
+                value = value * correction.loc[beacon,"coefficient"] + correction.loc[beacon,"constant"]
         except KeyError:
             value = np.nan
             
@@ -69,13 +71,14 @@ def main():
     while True:
         # Getting Newest Measurements
         # ---------------------------
-        mm = get_measurements(sensor_type="sensirion",variables=["CO2","PM_C_2p5","Lux","TVOC","NO2","CO","T_NO2"],
-            units=["ppm","ug/m","lux","ppb","ppb","ppm","C"],names=["Carbon Dioxide", "Particulate Matter","Light Level","Nitrogen Dioxide","TVOCs","Carbon Monoxide","Temperature"])
+        m = get_measurements(variables=["CO2","PM_C_2p5","Lux","TVOC","NO2","CO","T_NO2"],
+            units=["ppm","ug/m","lux","ppb","ppb","ppm","C"],names=["Carbon Dioxide", "Particulate Matter","Light Level", "Nitrogen Dioxide","TVOCs","Carbon Monoxide","Temperature"])
 
         # Displaying Measurements
         # -----------------------
         try:
             for value, unit, name in m:
+                print(f"{name}: {value} {unit}")
                 if name == "Carbon Monoxide": # converting raw CO measurements to ppm
                     value /= 1000
                     value = round(value,1)
