@@ -48,7 +48,7 @@ async def main(beacon = '00'):
 
     time.sleep(1)  # Wait for all sensors to be initialized
 
-    log.info(f"Successfully created: {sensors}")
+    log.info(f"Successfully created: {sensors.keys()}")
     log.info("Attempting scans")
 
     starttime = time.time()  # Used for preventing time drift
@@ -68,7 +68,7 @@ async def main(beacon = '00'):
         data = {}
 
         async def scan(name):
-            """Scans each sensor five times and returns the median"""
+            """Scans each sensor five times and returns the mean"""
             df = pd.DataFrame(
                 [
                     await sensors[name].scan(),
@@ -80,7 +80,7 @@ async def main(beacon = '00'):
             )
             log.info("\nScan results for " + name)
             log.info(df)
-            data[name] = df.median()
+            data[name] = df.mean()
             log.info(data[name])
 
         # Perform all scans
@@ -134,7 +134,7 @@ async def main(beacon = '00'):
         time.sleep(60.0 - ((time.time() - starttime) % 60.0))
 
 def setup_logger(level=logging.WARNING):
-
+    """logging setup for standard and file output"""
     log = logging.getLogger(__name__)
     log.setLevel(logging.INFO)
     log.propagate = False # lower levels are not propogated to children
@@ -149,7 +149,7 @@ def setup_logger(level=logging.WARNING):
     # file output
     f = logging.FileHandler("sensors.log")
     f.setLevel(logging.DEBUG)
-    f_format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    f_format = logging.Formatter("%(asctime)s - %(levelname)s\n%(message)s")
     f.setFormatter(f_format)
     log.addHandler(f)
     return log
