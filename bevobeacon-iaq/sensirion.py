@@ -22,10 +22,13 @@ class SPS30:
     def disable(self):
         self.sps.stop_measurement()
 
+    def clean(self):
+        self.sps.start_fan_cleaning()
+
     async def scan(self):
         """
         Measures different particulate matter counts and concentrations in the
-        room. Data are stored locally and to AWS S3 bucket.
+        room. Data are stored locally.
         Returns dictionary containing counts for 0.5, 1, 2.5 , 4, and 10 microns
         in diameter and concentrations for 1, 2.5, 4, and 10 microns in diameter.
         """

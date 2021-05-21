@@ -63,7 +63,7 @@ async def main(beacon = '00'):
                 log.warning(f"Sensor {manual_sensor} not enabled")
 
         # Wait for sensors to come online
-        time.sleep(0.1)
+        time.sleep(0.5)
 
         data = {}
 
@@ -85,6 +85,9 @@ async def main(beacon = '00'):
 
         # Perform all scans
         await asyncio.gather(*[scan(name) for name in sensors])
+
+        # cleaning SPS
+        sensors["sps"].clean()
 
         # Disable sensors until next measurement interval
         for manual_sensor in manually_enabled_sensors:
