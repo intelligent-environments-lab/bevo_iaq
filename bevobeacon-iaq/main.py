@@ -86,16 +86,6 @@ async def main(beacon = '00'):
         # Perform all scans
         await asyncio.gather(*[scan(name) for name in sensors])
 
-        # cleaning SPS
-        sensors["sps"].clean()
-
-        # Disable sensors until next measurement interval
-        for manual_sensor in manually_enabled_sensors:
-            try:
-                sensors[manual_sensor].disable()
-            except:
-                log.warning(f"Sensor {manual_sensor} not disabled")
-
         # Combine all data from this cycle into one DataFrame
         date = datetime.datetime.now()
         timestamp = pd.Series({"Timestamp": date.strftime("%Y-%m-%d %H:%M:%S")})
@@ -129,9 +119,20 @@ async def main(beacon = '00'):
         except:
             pass
 
+        # cleaning SPS
+        sensors["sps"].clean() # 10-second cycle
+        time.sleep(11) # sleep 1 second longer
+
+        # Disable sensors until next measurement interval
+        for manual_sensor in manually_enabled_sensors:
+            try:
+                sensors[manual_sensor].disable()
+            except:
+                log.warning(f"Sensor {manual_sensor} not disabled")
+
         # Report cycle time for performance evaluation by user
         elapsed_time = time.time() - start_time
-        log.info(f"{elapsed_time} \n\n")
+        log.info(f"Cycle Time: {elapsed_time} \n\n")
 
         # Make sure that interval between scans is exactly 60 seconds
         time.sleep(60.0 - ((time.time() - starttime) % 60.0))
