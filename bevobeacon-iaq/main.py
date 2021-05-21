@@ -48,7 +48,7 @@ async def main(beacon = '00'):
 
     time.sleep(1)  # Wait for all sensors to be initialized
 
-    log.info(f"Successfully created: {sensors}")
+    log.info(f"Successfully created: {sensors.keys()}")
     log.info("Attempting scans")
 
     starttime = time.time()  # Used for preventing time drift
@@ -60,15 +60,15 @@ async def main(beacon = '00'):
             try:
                 sensors[manual_sensor].enable()
             except:
-                pass
+                log.warning(f"Sensor {manual_sensor} not enabled")
 
         # Wait for sensors to come online
-        time.sleep(0.1)
+        time.sleep(0.5)
 
         data = {}
 
         async def scan(name):
-            """Scans each sensor five times and returns the median"""
+            """Scans each sensor five times and returns the mean"""
             df = pd.DataFrame(
                 [
                     await sensors[name].scan(),
@@ -80,18 +80,11 @@ async def main(beacon = '00'):
             )
             log.info("\nScan results for " + name)
             log.info(df)
-            data[name] = df.median()
+            data[name] = df.mean()
             log.info(data[name])
 
         # Perform all scans
         await asyncio.gather(*[scan(name) for name in sensors])
-
-        # Disable sensors until next measurement interval
-        for manual_sensor in manually_enabled_sensors:
-            try:
-                sensors[manual_sensor].disable()
-            except:
-                pass
 
         # Combine all data from this cycle into one DataFrame
         date = datetime.datetime.now()
@@ -126,28 +119,44 @@ async def main(beacon = '00'):
         except:
             pass
 
+        # cleaning SPS
+        sensors["sps"].clean() # 10-second cycle
+        time.sleep(11) # sleep 1 second longer
+
+        # Disable sensors until next measurement interval
+        for manual_sensor in manually_enabled_sensors:
+            try:
+                sensors[manual_sensor].disable()
+            except:
+                log.warning(f"Sensor {manual_sensor} not disabled")
+
         # Report cycle time for performance evaluation by user
         elapsed_time = time.time() - start_time
-        log.info(f"{elapsed_time} \n\n")
+        log.info(f"Cycle Time: {elapsed_time} \n\n")
 
         # Make sure that interval between scans is exactly 60 seconds
         time.sleep(60.0 - ((time.time() - starttime) % 60.0))
 
-
 def setup_logger(level=logging.WARNING):
-
+    """logging setup for standard and file output"""
     log = logging.getLogger(__name__)
     log.setLevel(logging.INFO)
-    log.propagate = False
+    log.propagate = False # lower levels are not propogated to children
     if log.hasHandlers():
         log.handlers.clear()
+    # stream output
     sh = logging.StreamHandler(stream=sys.stdout)
     sh.setLevel(logging.DEBUG)
-    formatter = logging.Formatter("%(message)s")
-    sh.setFormatter(formatter)
+    sh_format = logging.Formatter("%(message)s")
+    sh.setFormatter(sh_format)
     log.addHandler(sh)
+    # file output
+    f = logging.FileHandler("sensors.log")
+    f.setLevel(logging.DEBUG)
+    f_format = logging.Formatter("%(asctime)s - %(levelname)s\n%(message)s")
+    f.setFormatter(f_format)
+    log.addHandler(f)
     return log
-
 
 if __name__ == "__main__":
     log = setup_logger(logging.INFO)
