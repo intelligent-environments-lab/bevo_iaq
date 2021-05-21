@@ -15,7 +15,6 @@ def get_measurements(variables,units,names,path_to_data="/home/pi/DATA"):
     Gets the latest measurements from the data file
 
     Inputs:
-    - sensor_type: string in ["adafruit","sensirion"]
     - variables: list of strings of raw variable name(s) in the data dataframe columns
     - units: list of strings of units for variable(s)
     - names: list of strings of display name(s) for the variables
