@@ -60,7 +60,7 @@ async def main(beacon = '00'):
             try:
                 sensors[manual_sensor].enable()
             except:
-                pass
+                log.warning(f"Sensor {manual_sensor} not enabled")
 
         # Wait for sensors to come online
         time.sleep(0.1)
@@ -91,7 +91,7 @@ async def main(beacon = '00'):
             try:
                 sensors[manual_sensor].disable()
             except:
-                pass
+                log.warning(f"Sensor {manual_sensor} not disabled")
 
         # Combine all data from this cycle into one DataFrame
         date = datetime.datetime.now()
@@ -133,21 +133,26 @@ async def main(beacon = '00'):
         # Make sure that interval between scans is exactly 60 seconds
         time.sleep(60.0 - ((time.time() - starttime) % 60.0))
 
-
 def setup_logger(level=logging.WARNING):
 
     log = logging.getLogger(__name__)
     log.setLevel(logging.INFO)
-    log.propagate = False
+    log.propagate = False # lower levels are not propogated to children
     if log.hasHandlers():
         log.handlers.clear()
+    # stream output
     sh = logging.StreamHandler(stream=sys.stdout)
     sh.setLevel(logging.DEBUG)
-    formatter = logging.Formatter("%(message)s")
-    sh.setFormatter(formatter)
+    sh_format = logging.Formatter("%(message)s")
+    sh.setFormatter(sh_format)
     log.addHandler(sh)
+    # file output
+    f = logging.FileHandler("sensors.log")
+    f.setLevel(logging.DEBUG)
+    f_format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    f.setFormatter(f_format)
+    log.addHandler(f)
     return log
-
 
 if __name__ == "__main__":
     log = setup_logger(logging.INFO)
