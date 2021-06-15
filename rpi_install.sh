@@ -13,6 +13,9 @@ sudo apt-get install -y libatlas-base-dev #for numpy
 sudo apt-get install -y libopenjp2-7 #for display
 sudo apt-get install -y libtiff5 #for display
 
+# Reboot
+sudo /bin/bash -c 'echo "59 23 * * * root /home/pi/bevo_iaq/reboot.sh" >> /etc/crontab'
+
 # VPN
 sudo apt-get install apt-transport-https
 curl -fsSL https://pkgs.tailscale.com/stable/raspbian/buster.gpg | sudo apt-key add -
