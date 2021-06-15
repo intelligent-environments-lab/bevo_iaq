@@ -40,8 +40,8 @@ async def main(beacon = '00'):
         try:
             sensor = sens()
             sensors.update({name: sensor})
-        except:
-            pass
+        except Exception as e:
+            log.warning(e)
 
     # These sensors are turn on and off after each scan cycle to save power
     manually_enabled_sensors = list(set(sensors) & set(["tsl", "sps", "scd"]))
@@ -116,8 +116,8 @@ async def main(beacon = '00'):
             else:
                 df.to_csv(filename)
                 log.info(f"Data written to {filename}")
-        except:
-            pass
+        except Exception as e:
+            log.warning(e)
 
         # cleaning SPS
         #sensors["sps"].clean() # 10-second cycle
