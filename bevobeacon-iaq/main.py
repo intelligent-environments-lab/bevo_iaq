@@ -42,6 +42,7 @@ async def main(beacon = '00'):
             sensors.update({name: sensor})
         except Exception as e:
             log.warning(e)
+            sensors.update({name: sens})
 
     # These sensors are turn on and off after each scan cycle to save power
     manually_enabled_sensors = list(set(sensors) & set(["tsl", "sps", "scd"]))
