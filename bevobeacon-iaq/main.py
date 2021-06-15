@@ -120,8 +120,8 @@ async def main(beacon = '00'):
             pass
 
         # cleaning SPS
-        sensors["sps"].clean() # 10-second cycle
-        time.sleep(11) # sleep 1 second longer
+        #sensors["sps"].clean() # 10-second cycle
+        #time.sleep(11) # sleep 1 second longer
 
         # Disable sensors until next measurement interval
         for manual_sensor in manually_enabled_sensors:
