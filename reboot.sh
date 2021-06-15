@@ -1,3 +1,4 @@
 #!/bin/bash
-echo `date + "Y-%M-%d %T"`" - Rebooting..." >> /home/pi/log.txt
-sudo reboot
+date >> /home/pi/log.txt
+echo "rebooting..." >> log.txt
+sudo /bin/bash -c reboot
