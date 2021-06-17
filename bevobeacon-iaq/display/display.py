@@ -1,3 +1,13 @@
+"""Display Script
+
+This script coordinates the measurements displayed on the OLED screen of the Beacon.
+
+Intelligent Environments Lab (IEL), The University of Texas at Austin
+Author: Hagen Fritz
+Project: BEVO Beacon IAQ
+    - Contact: Hagen Fritz (hagenfritz@utexas.edu)
+"""
+
 import os
 import glob
 
@@ -71,9 +81,11 @@ def main():
     while True:
         # Getting Newest Measurements
         # ---------------------------
+        # standard 
         m = get_measurements(variables=["CO2","PM_C_2p5","Lux","TVOC","NO2","CO","T_NO2"],
             units=["ppm","ug/m","lux","ppb","ppb","ppm","C"],names=["Carbon Dioxide", "Particulate Matter","Light Level", "Nitrogen Dioxide","TVOCs","Carbon Monoxide","Temperature"])
-
+        # demo purposes
+        #m = get_measurements(variables=["CO2","T_NO2","RH_NO2"],units=["ppm","F","%"],names=["Carbon Dioxide","Temperature","Relative Humidity"]) 
         # Displaying Measurements
         # -----------------------
         try:
@@ -82,6 +94,9 @@ def main():
                 if name == "Carbon Monoxide": # converting raw CO measurements to ppm
                     value /= 1000
                     value = round(value,1)
+                    
+                if unit == "F":
+                    value = round(1.8*value+32,2)
 
                 oled.text(f"{value}",2) # output of measured value
                 oled.text(f"{unit}",3) # output of the variable
