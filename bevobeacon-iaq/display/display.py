@@ -85,7 +85,7 @@ def main():
         m = get_measurements(variables=["CO2","PM_C_2p5","Lux","TVOC","NO2","CO","T_NO2"],
             units=["ppm","ug/m","lux","ppb","ppb","ppm","C"],names=["Carbon Dioxide", "Particulate Matter","Light Level", "Nitrogen Dioxide","TVOCs","Carbon Monoxide","Temperature"])
         # demo purposes
-        #m = get_measurements(variables=["CO2","T_NO2","RH_NO2"],units=["ppm","F","%"],names=["Carbon Dioxide","Temperature","Relative Humidity"]) 
+        #m = get_measurements(variables=["CO2","PM_C_2p5","PM_C_10","T_NO2","RH_NO2"],units=["ppm","ug/m","ug/m","F","%"],names=["Carbon Dioxide","PM2.5","PM10","Temperature","Relative Humidity"]) 
         # Displaying Measurements
         # -----------------------
         try:
@@ -113,7 +113,7 @@ def main():
                 oled.text(f"{name}",6) # output of the display name
 
                 oled.show()
-                time.sleep(2) # holding display for 2 seconds
+                time.sleep(3) # holding display for 3 seconds
         except OSError:
             oled.clear()
             oled.text(f"ERROR",3)
