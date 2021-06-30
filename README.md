@@ -21,7 +21,8 @@ and then install the packages to operate the beacons IEQ monitoring capabilities
 
 Finally, enable the service files by
 
-`$ deactivate` (optional)
-`$ sh startup/service_install.sh`
+`$ deactivate` (to get out of virtual environment)
+
+`$ sh service_install.sh` 
 
 and restart with `$ sudo reboot`!
