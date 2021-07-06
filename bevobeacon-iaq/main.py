@@ -89,7 +89,8 @@ async def main(beacon = '00'):
         # Combine all data from this cycle into one DataFrame
         date = datetime.datetime.now()
         timestamp = pd.Series({"Timestamp": date.strftime("%Y-%m-%d %H:%M:%S")})
-        df = pd.concat([timestamp, *data.values()],sort=True).to_frame().T.set_index("Timestamp")
+        data.sort_index(axis = 1)
+        df = pd.concat([timestamp, *data.values()]).to_frame().T.set_index("Timestamp")
         df = df.rename(
             columns={
                 "TC": "Temperature [C]",
