@@ -9,18 +9,21 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GPIO.setup(led_pin,GPIO.OUT)
 
-#while True:
-#    ps = subprocess.Popen(['iwconfig'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-#    try:
-#        output = subprocess.check_output(('grep', 'ESSID'), stdin=ps.stdout)
-#        GPIO.output(led_pin,GPIO.HIGH)
-#        print("connected")
-#    except subprocess.CalledProcessError:
-#        # grep did not match any lines
-#        GPIO.output(led_pin,GPIO.LOW)
-#        print("disconnected")
+while True:
+    ps = subprocess.Popen(['iwconfig'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    try:
+        output = subprocess.check_output(('grep', 'ESSID'), stdin=ps.stdout)
+        print(output)
+        GPIO.output(led_pin,GPIO.HIGH)
+        status = "Connected"
+    except subprocess.CalledProcessError:
+        print(output)
+        # grep did not match any lines
+        GPIO.output(led_pin,GPIO.LOW)
+        status = "Not Connected"
 
-#    time.sleep(5)
+    print(status)
+    time.sleep(5)
 
 while True:
     try:
