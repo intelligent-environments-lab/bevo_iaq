@@ -12,10 +12,10 @@ while True:
     ps = subprocess.Popen(['iwgetid'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     try:
         output = subprocess.check_output(('grep', 'ESSID'), stdin=ps.stdout)
-        status = "Not Connected"
+        status = "Connected"
     except subprocess.CalledProcessError:
         # grep did not match any lines
-        status = "Connected"
+        status = "Not Connected"
 
     print(status)
     if status == "Connected":
