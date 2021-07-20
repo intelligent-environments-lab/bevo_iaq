@@ -37,4 +37,19 @@ Finally, enable the service files by
 
 `$ sh service_install.sh` 
 
-and restart with `$ sudo reboot`!
+### 5. Specify Device Number (Optional)
+
+By default, the device number is 00. You can specify the number by running the `fix_number` shell script:
+
+`$ sh fix_number.sh <label>`
+
+where <label> is any identifier you would like whether it be numeric, alphabetical, or a combination.
+
+### 6. Finalize and Check
+
+Simply restart with `$ sudo reboot` for a clean start to the device.
+
+You can check if the device is working properly by examining the data in the `DATA` directory or on the individual services with:
+
+`$ sudo journalctl -u <service_name>.service`
+
