@@ -1,5 +1,5 @@
 # Setting up system service files
-for s in display sensors; do
+for s in display sensors connection; do
 	sudo cp ~/bevo_iaq/services/${s}.service /lib/systemd/system/${s}.service
  	sudo systemctl enable ${s}
 done

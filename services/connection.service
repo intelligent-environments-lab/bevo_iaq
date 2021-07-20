@@ -1,0 +1,10 @@
+[Unit]
+Description=LED for WiFi connection
+
+[Service]
+ExecStart = /home/pi/bevo_iaq/.venv/bin/python3 -E /home/pi/bevo_iaq/bevobeacon-iaq/connection.py
+Restart=always
+RestartSec=60s
+
+[Install]
+WantedBy=bevobeacon.service
