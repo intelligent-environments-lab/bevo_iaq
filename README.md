@@ -25,11 +25,11 @@ which will install updates, upgrade, install Python3, initialize the Tailscale V
 
 ### 3. Install Libraries to Virtual Environment
 
-Source the virtual environment with
+Create a virtual environment with
 
 `$ source .venv/bin/activate`
 
-and then install the packages to operate the beacons IEQ monitoring capabilities
+and then install the packages to operate the beacon's monitoring capabilities
 
 `pip install -r requirements.txt`
 
@@ -47,7 +47,7 @@ By default, the device number is 00. You can specify the number by running the `
 
 `$ sh fix_number.sh <label>`
 
-where <label> is any identifier you would like whether it be numeric, alphabetical, or a combination.
+where `<label>` is any identifier you would like whether it be numeric, alphabetical, or a combination.
 
 ### 6. Finalize and Check
 
