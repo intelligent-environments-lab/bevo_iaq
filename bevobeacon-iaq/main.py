@@ -37,7 +37,7 @@ async def main(beacon = '00'):
         aws_secret_access_key = AWS_SECRET_ACCESS_KEY
     )
     # upload variables
-    S3_CALL_TIMESTAMP = datetime.datetime(2022,1,1) #datetime.datetime.now()
+    S3_CALL_TIMESTAMP = datetime.datetime.now()
     S3_CALL_FREQUENCY = datetime.timedelta(days=1)
     S3_FILEPATH = f"B{beacon}/"
    
@@ -139,13 +139,13 @@ async def main(beacon = '00'):
             log.warning(e)
 
         # Write data to S3
-        if timestamp - S3_CALL_TIMESTAMP >= S3_CALL_FREQUENCY:
+        if datetime.datetime.now() - S3_CALL_TIMESTAMP >= S3_CALL_FREQUENCY:
             aws_s3_upload_file(s3 = s3,
                 filename=filename,
                 s3_bucket=BUCKET_NAME,
                 s3_filepath=S3_FILEPATH
             )
-            S3_CALL_TIMESTAMP = timestamp
+            S3_CALL_TIMESTAMP = datetime.datetime.now()
             log.info("Data uploaded to S3")
         else:
             log.info("Upload to S3 bucket delayed.")
