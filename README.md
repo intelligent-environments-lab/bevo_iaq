@@ -11,7 +11,9 @@ This document details the basics of the Building EnVironment and Occupancy (BEVO
 
 Make sure your RPi is connected to WiFi. Then install git with
 
-`$ sudo apt install git`
+```bash
+sudo apt install git
+```
 
 Clone this repository and `cd` into the newly created bevo `bevo_iaq` directory. Edit the `rpi_install.sh` file to include the correct GitHub credentials and set your timezone. 
 
@@ -19,7 +21,9 @@ Clone this repository and `cd` into the newly created bevo `bevo_iaq` directory.
 
 Run
 
-`$ sh rpi_install.sh`
+```bash
+sh rpi_install.sh
+```
 
 which will install updates, upgrade, install Python3, initialize the Tailscale VPN, and create a virtual environment. 
 
@@ -27,25 +31,35 @@ which will install updates, upgrade, install Python3, initialize the Tailscale V
 
 Create a virtual environment with
 
-`$ source .venv/bin/activate`
+```bash
+source .venv/bin/activate
+```
 
 and then install the packages to operate the beacon's monitoring capabilities
 
-`pip install -r requirements.txt`
+```bash
+pip install -r requirements.txt
+```
 
 ### 4. Enable Service Files on Boot
 
 Finally, enable the service files by
 
-`$ deactivate` (to get out of virtual environment)
+```bash
+deactivate
+```
 
-`$ sh service_install.sh` 
+```bash
+sh service_install.sh
+```
 
 ### 5. Specify Device Number (Optional)
 
 By default, the device number is 00. You can specify the number by running the `fix_number` shell script:
 
-`$ sh fix_number.sh <label>`
+```bash
+sh fix_number.sh <label>
+```
 
 where `<label>` is any identifier you would like whether it be numeric, alphabetical, or a combination.
 
@@ -55,5 +69,7 @@ Simply restart with `$ sudo reboot` for a clean start to the device.
 
 You can check if the device is working properly by examining the data in the `DATA` directory or on the individual services with:
 
-`$ sudo journalctl -u <service_name>.service`
+```bash
+sudo journalctl -u <service_name>.service
+```
 
