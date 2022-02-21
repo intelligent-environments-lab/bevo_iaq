@@ -18,3 +18,6 @@ scd30-i2c
 
 #I2C tools
 smbus2==0.3.0
+
+# AWS
+boto3
