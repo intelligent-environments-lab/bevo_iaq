@@ -22,8 +22,25 @@ from adafruit import SGP30, TSL2591
 from sensirion import SPS30, SCD30
 from spec_dgs import DGS_NO2, DGS_CO
 
+# AWS libraries
+import boto3
+from botocore.exceptions import ClientError
 
 async def main(beacon = '00'):
+    # AWS credentials
+    AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+    AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+    BUCKET_NAME = os.environ['BUCKET_NAME']
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id = AWS_ACCESS_KEY_ID,
+        aws_secret_access_key = AWS_SECRET_ACCESS_KEY
+    )
+    # upload variables
+    S3_CALL_TIMESTAMP = datetime.datetime(2022,1,1) #datetime.datetime.now()
+    S3_CALL_FREQUENCY = datetime.timedelta(days=1)
+    S3_FILEPATH = f"B{beacon}/"
+   
     sensor_classes = {
         "sgp": SGP30,
         "tsl": TSL2591,
@@ -115,14 +132,23 @@ async def main(beacon = '00'):
                 df.to_csv(filename, mode="a", header=False)
                 log.info(f"Data appended to {filename}")
             else:
+                # create file locally
                 df.to_csv(filename)
                 log.info(f"Data written to {filename}")
         except Exception as e:
             log.warning(e)
 
-        # cleaning SPS
-        #sensors["sps"].clean() # 10-second cycle
-        #time.sleep(11) # sleep 1 second longer
+        # Write data to S3
+        if timestamp - S3_CALL_TIMESTAMP >= S3_CALL_FREQUENCY:
+            aws_s3_upload_file(s3 = s3,
+                filename=filename,
+                s3_bucket=BUCKET_NAME,
+                s3_filepath=S3_FILEPATH
+            )
+            S3_CALL_TIMESTAMP = timestamp
+            log.info("Data uploaded to S3")
+        else:
+            log.info("Upload to S3 bucket delayed.")
 
         # Disable sensors until next measurement interval
         for manual_sensor in manually_enabled_sensors:
@@ -137,6 +163,27 @@ async def main(beacon = '00'):
 
         # Make sure that interval between scans is exactly 60 seconds
         time.sleep(60.0 - ((time.time() - starttime) % 60.0))
+
+def aws_s3_upload_file(s3,filename,s3_bucket,s3_filepath):
+	"""
+	Uploads locally stored file to AWS S3 bucket.
+	Filename contains full filepath of the file locally.
+	s3 bucket is the name of the target bucket and s3 filepath
+	specifies the target location of the file in the bucket.\n
+	filename: string\\
+	s3_bucket: string\\
+	s3_filepath: string\\
+	returns: void
+	"""
+	try:
+		s3_filename = s3_filepath + format(filename.split('/')[-1])
+		s3.upload_file(filename, s3_bucket, s3_filename)
+		logging.debug(filename, 'was uploaded to', s3_bucket)
+		log.info(f"{filename} was uploaded to  AWS S3 bucket: {s3_bucket}")
+	except ClientError as e:
+		logging.error(e)
+	except FileNotFoundError as e:
+		logging.error(e)
 
 def setup_logger(level=logging.WARNING):
     """logging setup for standard and file output"""
