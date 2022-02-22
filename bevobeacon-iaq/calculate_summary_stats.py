@@ -8,7 +8,7 @@ Author: Hagen Fritz
 Project: BEVO Beacon
     - Contact: Hagen Fritz (hagenfritz@utexas.edu)
 """
-
+import sys
 import json
 
 import pandas as pd
@@ -18,18 +18,18 @@ from datetime import datetime
 
 class Calculate:
 
-    def __init__(self,data_dir="~/DATA/",save_dir="~/summary_data/",beacon="00") -> None:
+    def __init__(self,beacon,data_dir="~/DATA/",save_dir="~/summary_data/") -> None:
         """
         Initializing Function
 
         Parameters
         ----------
+        beacon : str
+            number assigned to the beacon
         data_dir : str, default "~/DATA/"
             path to raw data
         save_dir : str, "~/summary_data/"
             path to save location
-        beacon : str, default "00"
-            number assigned to the beacon
 
         Creates
         -------
@@ -95,7 +95,29 @@ class Calculate:
         with open(save_path, 'w') as f:
             json.dump(d, f)
 
+    def run(self):
+        """
+        Calculates the summary statistics and saves the results to a file using all default values
+        """
+        res_dict = self.get_statistics()
+        self.save(res_dict)
+
 if __name__ == "__main__":
     """
     Calculates summary statistics and saves them to file
     """
+    # System inputs if provided
+    # -------------------------
+    ## beacon number
+    try:
+        beacon = sys.argv[1]
+    except IndexError:
+        beacon = "00" # defaults if no argument provided
+    ## save_dir
+    try:
+        save_dir = sys.argv[2]
+    except IndexError:
+        save_dir = "~/summary_data/" # defaults if no argument provided
+    
+    calculate = Calculate(beacon=beacon,save_dir=save_dir)
+    calculate.run()
