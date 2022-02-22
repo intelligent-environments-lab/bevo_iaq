@@ -105,6 +105,9 @@ class Calculate:
                 
                 df[iaq_param] = df[iaq_param] * correction.loc[int(self.beacon),"coefficient"] + correction.loc[int(self.beacon),"constant"]
 
+            if iaq_param == "co":
+                df[iaq_param] /= 1000
+
         return df
 
     def get_statistics(self,iaq_params={"co2":1100,"pm2p5_mass":12,"co":4,"temperature_c":27,"rh":60}):
