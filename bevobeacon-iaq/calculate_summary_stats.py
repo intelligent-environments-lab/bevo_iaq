@@ -9,6 +9,7 @@ Project: BEVO Beacon
     - Contact: Hagen Fritz (hagenfritz@utexas.edu)
 """
 import sys
+import os
 import json
 
 import pandas as pd
@@ -18,7 +19,7 @@ from datetime import datetime
 
 class Calculate:
 
-    def __init__(self,beacon,data_dir="~/DATA/",save_dir="~/summary_data/") -> None:
+    def __init__(self,beacon,data_dir="~/DATA/",save_dir="~/summary_data/", correct=True) -> None:
         """
         Initializing Function
 
@@ -48,9 +49,63 @@ class Calculate:
 
         self.date = datetime.now().date()
         date_str = datetime.strftime(self.date,"%Y-%m-%d")
-        self.data = pd.read_csv(f"{self.data_dir}/b{beacon}_{date_str}.csv")
+        raw_data = pd.read_csv(f"{self.data_dir}/b{beacon}_{date_str}.csv")
+        if correct:
+            self.data = self.correct_raw_data()
+        else:
+            self.data = self.correct_headings(raw_data)
 
-    def get_statistics(self,iaq_params={"CO2":1100,"PM_C_2p5":12,"CO":4,"T_NO2":27,"RH_NO2":60}):
+    def correct_headings(self,data,rename_map={"CO2":"co2","PM_C_2p5":"pm2p5_mass","CO":"co","T_NO2":"temperature_c","RH_NO2":"rh"}):
+        """
+        Corrects headings from the raw data
+
+        Parameters
+        ----------
+        data : DataFrame
+            with columns to correct
+        rename_map : dict, default {"CO2":"co2","PM_C_2p5":"pm2p5_mass","CO":"co","T_NO2":"temperature_c","RH_NO2":"rh"}
+            mapping to rename the raw data headers
+        
+        Returns
+        -------
+        <data> : DataFrame
+            original data with new column names 
+        """
+        return data.rename(columns=rename_map)
+
+    def correct_raw_data(self,data,iaq_params=["co2","pm2p5_mass","co","temperature_c","rh"]):
+        """
+        Uses locally stored calibration files to correct raw IAQ readings
+
+        Parameters
+        ----------
+        data : DataFrame
+            raw data to be corrected
+        iaq_params : list of str
+            names of parameters to be corrected
+
+        Returns
+        -------
+        corrected_data : DataFrame
+            raw data processed through available correction models
+        """
+        df = self.correct_headings(data)
+        for iaq_param in iaq_params:
+            # correcting the value 
+            path_to_correction = "/home/pi/bevo_iaq/bevobeacon-iaq/correction/"
+            if os.path.exists(path_to_correction):
+                for file in os.listdir(path_to_correction):
+                    file_info = file.split("-")
+                    if file_info[0] == iaq_param.lower():
+                        correction = pd.read_csv(f"{path_to_correction}{file}",index_col=0)
+                    else:
+                        correction = pd.DataFrame(data={"beacon":np.arange(0,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
+                
+                df[iaq_param] = df[iaq_param] * correction.loc[self.beacon,"coefficient"] + correction.loc[self.beacon,"constant"]
+
+        return df
+
+    def get_statistics(self,iaq_params={"co2":1100,"pm2p5_mass":12,"co":4,"temperature_c":27,"rh":60}):
         """
         Calculates summary statistics
 
@@ -68,9 +123,17 @@ class Calculate:
         for iaq_param in iaq_params.keys():
             iaq_res = {} # specific parameter results
             for stat_str, fxn in zip(["min","mean","median","max"],[np.nanmin,np.nanmean,np.nanmedian,np.nanmax]):
-                iaq_res[stat_str] = fxn(self.data[iaq_param])
+                value = fxn(self.data[iaq_param])
+                # correcting negative (no detect) values
+                if value < 0:
+                    value = 0
+                # storing typical summary statistic results
+                iaq_res[stat_str] = value
+            
+            # time above threshold parameter
             data_above_threshold = self.data[self.data[iaq_param] > iaq_params[iaq_param]]
             iaq_res["time_above_threshold"] = len(data_above_threshold) # this assumes a 1-minute resolution on the data
+            # storing results to overal results dictionary
             res[iaq_param] = iaq_res
 
         return res
