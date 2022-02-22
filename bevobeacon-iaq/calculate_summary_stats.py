@@ -19,7 +19,7 @@ from datetime import datetime
 
 class Calculate:
 
-    def __init__(self,beacon,data_dir="~/DATA/",save_dir="~/summary_data/", correct=True) -> None:
+    def __init__(self,beacon,data_dir="/home/pi/DATA/",save_dir="/home/pi/summary_data/", correct=True) -> None:
         """
         Initializing Function
 
@@ -180,7 +180,7 @@ if __name__ == "__main__":
     try:
         save_dir = sys.argv[2]
     except IndexError:
-        save_dir = "~/summary_data/" # defaults if no argument provided
+        save_dir = "/home/pi/summary_data/" # defaults if no argument provided
     
     calculate = Calculate(beacon=beacon,save_dir=save_dir)
     calculate.run()
