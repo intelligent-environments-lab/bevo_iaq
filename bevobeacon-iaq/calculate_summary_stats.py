@@ -19,7 +19,7 @@ from datetime import datetime
 
 class Calculate:
 
-    def __init__(self,beacon,data_dir="/home/pi/DATA/",save_dir="/home/pi/summary_data/", correct=True) -> None:
+    def __init__(self, beacon, data_dir="/home/pi/DATA/", save_dir="/home/pi/summary_data/", correct=True) -> None:
         """
         Initializing Function
 
@@ -43,6 +43,8 @@ class Calculate:
         data : DataFrame
             raw data
         """
+        self.beacon = beacon
+
         # read/save locations
         self.data_dir = data_dir
         self.save_dir = save_dir
@@ -51,7 +53,7 @@ class Calculate:
         date_str = datetime.strftime(self.date,"%Y-%m-%d")
         raw_data = pd.read_csv(f"{self.data_dir}/b{beacon}_{date_str}.csv")
         if correct:
-            self.data = self.correct_raw_data()
+            self.data = self.correct_raw_data(raw_data)
         else:
             self.data = self.correct_headings(raw_data)
 
@@ -101,7 +103,7 @@ class Calculate:
                     else:
                         correction = pd.DataFrame(data={"beacon":np.arange(0,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
                 
-                df[iaq_param] = df[iaq_param] * correction.loc[self.beacon,"coefficient"] + correction.loc[self.beacon,"constant"]
+                df[iaq_param] = df[iaq_param] * correction.loc[int(self.beacon),"coefficient"] + correction.loc[int(self.beacon),"constant"]
 
         return df
 
@@ -156,7 +158,7 @@ class Calculate:
             save_path = f"{save_dir}iaq_summary-{self.date.strftime('%Y-%m-%d')}.json"
         # saving as json to location
         with open(save_path, 'w') as f:
-            json.dump(d, f)
+            json.dump(d, f,indent=4)
 
     def run(self):
         """
