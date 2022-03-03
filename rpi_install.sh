@@ -34,3 +34,7 @@ sudo timedatectl set-timezone US/Central
 rm -rf ~/bevo_iaq/.venv
 mkdir ~/bevo_iaq/.venv
 python3 -m venv ~/bevo_iaq/.venv
+
+# Create files and directories
+sudo mkdir /home/pi/DATA /home/pi/summary_data
+sudo touch /lib/systemd/system/aws.env
