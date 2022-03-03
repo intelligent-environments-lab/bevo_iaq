@@ -26,6 +26,7 @@ sudo apt-get install tailscale
 # Github Credentials
 git config --global user.email "hagenfritz@utexas.edu"
 git config --global user.name "hagenfritz"
+git config pull.rebase false
 
 # Set up locale, timezone, language
 sudo timedatectl set-timezone US/Central
