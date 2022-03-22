@@ -142,7 +142,7 @@ async def main(beacon = '00'):
             )
             # upload summary statistics
             ## first generate the file
-            os.systemf("python3 /home/pi/bevobeacon-iaq/calculate_summary_stats.py {beacon}")
+            os.system(f"python3 /home/pi/bevobeacon-iaq/calculate_summary_stats.py {beacon}")
             ## send to S3
             aws_s3_upload_file(s3 = s3,
                 filename=f'/home/pi/summary_stats/b{beacon}-summary-{date.strftime("%Y-%m-%d")}.csv',
