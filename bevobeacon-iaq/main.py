@@ -47,7 +47,7 @@ async def main(beacon = '00'):
     )
     # upload variables
     S3_CALL_TIMESTAMP = datetime.datetime.now()
-    S3_CALL_FREQUENCY = datetime.timedelta(minutes=5)
+    S3_CALL_FREQUENCY = datetime.timedelta(days=1)
     S3_FILEPATH = f"B{beacon}/"
    
     sensor_classes = {
@@ -138,7 +138,7 @@ async def main(beacon = '00'):
             aws_s3_upload_file(s3 = s3,
                 filename=filename,
                 s3_bucket=BUCKET_NAME,
-                s3_filepath=S3_FILEPATH
+                s3_filepath=f"{S3_FILEPATH}/data/"
             )
             # upload summary statistics
             ## first generate the file
@@ -147,7 +147,7 @@ async def main(beacon = '00'):
             aws_s3_upload_file(s3 = s3,
                 filename=f'/home/pi/summary_data/b{beacon}-summary-{date.strftime("%Y-%m-%d")}.json',
                 s3_bucket=BUCKET_NAME,
-                s3_filepath=S3_FILEPATH
+                s3_filepath=f"{S3_FILEPATH}/summary/"
             )
 
             S3_CALL_TIMESTAMP = datetime.datetime.now()
