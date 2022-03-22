@@ -45,7 +45,7 @@ async def main(beacon = '00'):
     )
     # upload variables
     S3_CALL_TIMESTAMP = datetime.datetime.now()
-    S3_CALL_FREQUENCY = datetime.timedelta(days=1)
+    S3_CALL_FREQUENCY = datetime.timedelta(minutes=5)
     S3_FILEPATH = f"B{beacon}/"
    
     sensor_classes = {
@@ -67,7 +67,7 @@ async def main(beacon = '00'):
         except Exception as e:
             log.warning(e)
 
-    # These sensors are turn on and off after each scan cycle to save power
+    # These sensors are to turn on and off after each scan cycle to save power
     manually_enabled_sensors = list(set(sensors) & set(["tsl", "sps", "scd"]))
 
     time.sleep(1)  # Wait for all sensors to be initialized
@@ -132,11 +132,22 @@ async def main(beacon = '00'):
 
         # Write data to S3
         if datetime.datetime.now() - S3_CALL_TIMESTAMP >= S3_CALL_FREQUENCY:
+            # upload raw data
             aws_s3_upload_file(s3 = s3,
                 filename=filename,
                 s3_bucket=BUCKET_NAME,
                 s3_filepath=S3_FILEPATH
             )
+            # upload summary statistics
+            ## first generate the file
+            os.systemf("python3 /home/pi/bevobeacon-iaq/calculate_summary_stats.py {beacon}")
+            ## send to S3
+            aws_s3_upload_file(s3 = s3,
+                filename=f'/home/pi/summary_stats/b{beacon}-summary-{date.strftime("%Y-%m-%d")}.csv',
+                s3_bucket=BUCKET_NAME,
+                s3_filepath=S3_FILEPATH
+            )
+
             S3_CALL_TIMESTAMP = datetime.datetime.now()
             log.info("Data uploaded to S3")
         else:
@@ -159,23 +170,31 @@ async def main(beacon = '00'):
 def aws_s3_upload_file(s3,filename,s3_bucket,s3_filepath):
 	"""
 	Uploads locally stored file to AWS S3 bucket.
-	Filename contains full filepath of the file locally.
-	s3 bucket is the name of the target bucket and s3 filepath
-	specifies the target location of the file in the bucket.\n
-	filename: string\\
-	s3_bucket: string\\
-	s3_filepath: string\\
-	returns: void
+    
+    Parameters
+    ----------
+	filename: str
+        full filepath of the local file
+	s3_bucket: str
+        name of the target bucket
+	s3_filepath: str
+        specifies the target location of the file in the bucket
+	
+    Returns
+    -------
+    <void>
 	"""
 	try:
 		s3_filename = s3_filepath + format(filename.split('/')[-1])
 		s3.upload_file(filename, s3_bucket, s3_filename)
 		logging.debug(filename, 'was uploaded to', s3_bucket)
-		log.info(f"{filename} was uploaded to  AWS S3 bucket: {s3_bucket}")
+		log.info(f"{filename} was uploaded to AWS S3 bucket: {s3_bucket}")
 	except ClientError as e:
 		logging.error(e)
+		log.info(e)
 	except FileNotFoundError as e:
 		logging.error(e)
+		log.info(e)
 
 def setup_logger(level=logging.WARNING):
     """logging setup for standard and file output"""
