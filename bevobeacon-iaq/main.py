@@ -105,7 +105,7 @@ async def main(beacon = '00'):
                 ]
             )
             log.info("\nScan results for " + name)
-            log.info(df)
+            #log.info(df)
             data[name] = df.mean()
             log.info(data[name])
 
