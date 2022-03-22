@@ -21,8 +21,6 @@ class Calculate:
 
     def __init__(self, beacon, data_dir="/home/pi/DATA/", save_dir="/home/pi/summary_data/", correct=True) -> None:
         """
-        Initializing Function
-
         Parameters
         ----------
         beacon : str
@@ -57,7 +55,7 @@ class Calculate:
         else:
             self.data = self.correct_headings(raw_data)
 
-    def correct_headings(self,data,rename_map={"CO2":"co2","PM_C_2p5":"pm2p5_mass","CO":"co","T_NO2":"temperature_c","RH_NO2":"rh"}):
+    def correct_headings(self,data):
         """
         Corrects headings from the raw data
 
@@ -73,6 +71,11 @@ class Calculate:
         <data> : DataFrame
             original data with new column names 
         """
+        rename_map={"CO2":"co2","carbon_dioxide-ppm":"co2",
+                    "PM_C_2p5":"pm2p5_mass","pm2p5_mass-microgram_per_m3":"pm2p5_mass",
+                    "CO":"co","carbon_monoxide-ppb":"co",
+                    "T_NO2":"temperature_c","t_from_no2-c":"temperature_c",
+                    "RH_NO2":"rh","rh_from_no2-percent":"rh"}
         return data.rename(columns=rename_map)
 
     def correct_raw_data(self,data,iaq_params=["co2","pm2p5_mass","co","temperature_c","rh"]):
@@ -110,6 +113,53 @@ class Calculate:
 
         return df
 
+    def get_pollutant_units(self,pollutant):
+        """Gets the formated label for the pollutant"""
+        if pollutant == "co2":
+            return "ppm"
+        elif pollutant == "co":
+            return "ppb"
+        elif pollutant == "pm2p5_mass":
+            return "microgram_per_m3"
+        elif pollutant == "pm2p5_number":
+            return "#/cm3"
+        elif pollutant == "no2":
+            return "ppb"
+        elif pollutant == "tvoc":
+            return "ppb"
+        elif pollutant == "temperature_c":
+            return "c"
+        elif pollutant == "rh":
+            return "percent"
+        elif pollutant in ["lux","light"]:
+            return "lux"
+        else:
+            return ""
+
+    def get_pollutant_name(self,pollutant):
+        """Gets a more formal representation of the pollutant"""
+        if pollutant == "co2":
+            return "carbon_dioxide"
+        elif pollutant == "co":
+            return "carbon_monoxide"
+        elif pollutant == "pm2p5_mass":
+            return "pm2p5_mass"
+        elif pollutant == "pm2p5_number":
+            return "pm2p5_number"
+        elif pollutant == "no2":
+            return "nitrogen_dioxide"
+        elif pollutant == "tvoc":
+            return "total_volatile_organic_compounds"
+        elif pollutant == "temperature_c":
+            return "temperature"
+        elif pollutant == "rh":
+            return "relative_humidity"
+        elif pollutant in ["lux","light"]:
+            return "light"
+        else:
+            return ""
+
+
     def get_statistics(self,iaq_params={"co2":1100,"pm2p5_mass":12,"co":4,"temperature_c":27,"rh":60}):
         """
         Calculates summary statistics
@@ -127,6 +177,7 @@ class Calculate:
         res = {} # overall results
         for iaq_param in iaq_params.keys():
             iaq_res = {} # specific parameter results
+            iaq_res["unit"] = self.get_pollutant_units(iaq_param)
             for stat_str, fxn in zip(["min","mean","median","max"],[np.nanmin,np.nanmean,np.nanmedian,np.nanmax]):
                 value = fxn(self.data[iaq_param])
                 # correcting negative (no detect) values
@@ -139,7 +190,7 @@ class Calculate:
             data_above_threshold = self.data[self.data[iaq_param] > iaq_params[iaq_param]]
             iaq_res["time_above_threshold"] = len(data_above_threshold) # this assumes a 1-minute resolution on the data
             # storing results to overal results dictionary
-            res[iaq_param] = iaq_res
+            res[self.get_pollutant_name(iaq_param)] = iaq_res
 
         return res
 
@@ -156,9 +207,9 @@ class Calculate:
         """
         # Getting save path
         if save_dir == None:
-            save_path = f"{self.save_dir}iaq_summary-{self.date.strftime('%Y-%m-%d')}.json"
+            save_path = f"{self.save_dir}b{self.beacon}-summary-{self.date.strftime('%Y-%m-%d')}.json"
         else:
-            save_path = f"{save_dir}iaq_summary-{self.date.strftime('%Y-%m-%d')}.json"
+            save_path = f"{save_dir}b{self.beacon}-summary-{self.date.strftime('%Y-%m-%d')}.json"
         # saving as json to location
         with open(save_path, 'w') as f:
             json.dump(d, f,indent=4)
