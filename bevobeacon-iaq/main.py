@@ -114,21 +114,6 @@ async def main(beacon = '00'):
         date = datetime.datetime.now()
         timestamp = pd.Series({"Timestamp": date.strftime("%Y-%m-%d %H:%M:%S")})
         df = pd.concat([timestamp, *data.values()]).to_frame().T.set_index("Timestamp")
-        df = df.rename(
-            columns={
-                "TC": "Temperature [C]",
-                "RH": "Relative Humidity",
-                "pm_n_0p5": "PM_N_0p5",
-                "pm_n_1": "PM_N_1",
-                "pm_n_2p5": "PM_N_2p5",
-                "pm_n_4": "PM_N_4",
-                "pm_n_10": "PM_N_10",
-                "pm_c_1": "PM_C_1",
-                "pm_c_2p5": "PM_C_2p5",
-                "pm_c_4": "PM_C_4",
-                "pm_c_10": "PM_C_10",
-            }
-        )
         df.sort_index(axis=1,inplace=True)
         log.info(df)
 

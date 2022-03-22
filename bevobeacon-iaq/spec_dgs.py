@@ -11,8 +11,10 @@ import asyncio
 
 class DGS:
     def __init__(self, port) -> None:
-        """Create and config the Serial object for connecting to the spec
-        dgs sensors"""
+        """
+        Create and config the Serial object for connecting to the spec
+        dgs sensors
+        """
         ser = serial.Serial()
         ser.port = port
         ser.timeout = 1
@@ -21,7 +23,7 @@ class DGS:
 
     @staticmethod
     def split(data):
-        """ Sort and label the measured data """
+        """Sort and label the measured data"""
         output = {
             "sn": data[0],
             "ppb": data[1],
@@ -40,12 +42,19 @@ class DGS:
     async def take_measurement(self, verbose=False):
         """
         Uses the device string to read data from the serial DGS sensors
-        Input:
-            - device: string with the devices location - typically USB
-        Returns:
-            - c: concentration in ppb
-            - tc: temperature in degress C
-            - rh: relative humidity
+        Parameters
+        ----------
+        device: str
+            devices location - typically USB
+
+        Returns
+        -------
+        c: float
+            concentration in ppb
+        tc: float
+            temperature in degress C
+        rh: float
+            relative humidity in percent
         """
 
         ser = self.ser
@@ -87,7 +96,6 @@ class DGS_NO2(DGS):
         """
         Using serial connection, reads in values for T, RH, and NO2 concentration
         """
-
         try:
             no2, t0, rh0 = await self.take_measurement()
         except:
@@ -95,7 +103,7 @@ class DGS_NO2(DGS):
             t0 = np.nan
             rh0 = np.nan
 
-        data = {"NO2": no2, "T_NO2": t0, "RH_NO2": rh0}
+        data = {"nitrogen_dioxide-ppb": no2, "t_from_no2-c": t0, "rh_from_no2-percent": rh0}
         return data
 
 
@@ -107,7 +115,6 @@ class DGS_CO(DGS):
         """
         Using serial connection, reads in values for T, RH, and CO concentration
         """
-
         try:
             co, t1, rh1 = await self.take_measurement()
         except:
@@ -115,5 +122,5 @@ class DGS_CO(DGS):
             t1 = np.nan
             rh1 = np.nan
 
-        data = {"CO": co, "T_CO": t1, "RH_CO": rh1}
+        data = {"carbon_monoxide-ppb": co, "t_from_co-c": t1, "rh_from_co-percent": rh1}
         return data

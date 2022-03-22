@@ -16,7 +16,7 @@ import adafruit_tsl2591
 
 
 class SGP30:
-    """ Located within SVM30"""
+    """Located within SVM30"""
 
     def __init__(self) -> None:
         i2c = I2C(SCL, SDA)
@@ -31,7 +31,7 @@ class SGP30:
             eCO2 = np.nan
             TVOC = np.nan
 
-        data = {"TVOC": TVOC, "eCO2": eCO2}
+        data = {"total_volatile_organic_compounds-ppb": TVOC, "equivalent_carbon_dioxide-ppm": eCO2}
         return data
 
 
@@ -69,5 +69,5 @@ class TSL2591:
             visible = np.nan
             infrared = np.nan
 
-        data = {"Visible": visible, "Infrared": infrared, "Lux": lux}
+        data = {"visible-unitless": visible, "infrared-unitless": infrared, "light-lux": lux}
         return data

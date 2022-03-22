@@ -58,15 +58,15 @@ class SPS30:
             }
 
         return {
-            "pm_n_0p5": pm["nc0p5"],
-            "pm_n_1": pm["nc1p0"],
-            "pm_n_2p5": pm["nc2p5"],
-            "pm_n_4": pm["nc4p0"],
-            "pm_n_10": pm["nc10p0"],
-            "pm_c_1": pm["pm1p0"],
-            "pm_c_2p5": pm["pm2p5"],
-            "pm_c_4": pm["pm4p0"],
-            "pm_c_10": pm["pm10p0"],
+            "pm0p5_count-number_per_cm3": pm["nc0p5"],
+            "pm1_count-number_per_cm3": pm["nc1p0"],
+            "pm2p5_count-number_per_cm3": pm["nc2p5"],
+            "pm4_count-number_per_cm3": pm["nc4p0"],
+            "pm10_count-number_per_cm3": pm["nc10p0"],
+            "pm1_mass-microgram_per_m3": pm["pm1p0"],
+            "pm2p5_mass-microgram_per_m3": pm["pm2p5"],
+            "pm4_mass-microgram_per_m3": pm["pm4p0"],
+            "pm10_mass-microgram_per_m3": pm["pm10p0"],
         }
 
 
@@ -104,4 +104,4 @@ class SCD30:
             tc = np.nan
             rh = np.nan
 
-        return {"CO2": co2, "TC": tc, "RH": rh}
+        return {"carbon_dioxide-ppm": co2, "t_from_co2-c": tc, "rh_from_co2-percent": rh}
