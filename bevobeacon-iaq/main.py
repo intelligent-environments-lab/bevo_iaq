@@ -28,11 +28,13 @@ from botocore.exceptions import ClientError
 
 async def main(beacon = '00'):
     # AWS credentials
+    print(os.environ)
     try:
         AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
         AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
         BUCKET_NAME = os.environ['BUCKET_NAME']
     except KeyError:
+        log.info("Could not find AWS credentials")
         # credentials have not been specified
         AWS_ACCESS_KEY_ID = ""
         AWS_SECRET_ACCESS_KEY = ""
@@ -128,7 +130,7 @@ async def main(beacon = '00'):
                 df.to_csv(filename)
                 log.info(f"Data written to {filename}")
         except Exception as e:
-            log.warning(e)
+            log.warning(f"Could not write to file: {e}")
 
         # Write data to S3
         if datetime.datetime.now() - S3_CALL_TIMESTAMP >= S3_CALL_FREQUENCY:
@@ -170,7 +172,7 @@ async def main(beacon = '00'):
 def aws_s3_upload_file(s3,filename,s3_bucket,s3_filepath):
 	"""
 	Uploads locally stored file to AWS S3 bucket.
-    
+
     Parameters
     ----------
 	filename: str
@@ -191,10 +193,10 @@ def aws_s3_upload_file(s3,filename,s3_bucket,s3_filepath):
 		log.info(f"{filename} was uploaded to AWS S3 bucket: {s3_bucket}")
 	except ClientError as e:
 		logging.error(e)
-		log.info(e)
+		log.info(f"Could not upload to S3: {e}")
 	except FileNotFoundError as e:
 		logging.error(e)
-		log.info(e)
+		log.info(f"FileNotFoundError: {e}")
 
 def setup_logger(level=logging.WARNING):
     """logging setup for standard and file output"""
