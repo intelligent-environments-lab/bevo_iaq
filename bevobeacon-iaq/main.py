@@ -138,7 +138,7 @@ async def main(beacon = '00'):
             aws_s3_upload_file(s3 = s3,
                 filename=filename,
                 s3_bucket=BUCKET_NAME,
-                s3_filepath=f"{S3_FILEPATH}/data/"
+                s3_filepath=f"{S3_FILEPATH}data/"
             )
             # upload summary statistics
             ## first generate the file
@@ -147,7 +147,7 @@ async def main(beacon = '00'):
             aws_s3_upload_file(s3 = s3,
                 filename=f'/home/pi/summary_data/b{beacon}-summary-{date.strftime("%Y-%m-%d")}.json',
                 s3_bucket=BUCKET_NAME,
-                s3_filepath=f"{S3_FILEPATH}/summary/"
+                s3_filepath=f"{S3_FILEPATH}summary/"
             )
 
             S3_CALL_TIMESTAMP = datetime.datetime.now()
