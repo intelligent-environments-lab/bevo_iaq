@@ -3,9 +3,7 @@
 
 cff-version: 1.2.0
 title: BEVO Beacon IAQ
-message: >-
-  "If you use this software, please cite it as
-  below."
+message: If you use this software, please cite it using these meta data."
 type: software
 authors:
   - given-names: Hagen
@@ -29,3 +27,4 @@ authors:
     family-names: Nagy
     affiliation: The University of Texas at Austin
     orcid: 'https://orcid.org/0000-0002-6014-3228'
+repository-code: "https://github.com/intelligent-environments-lab/bevo_iaq"
