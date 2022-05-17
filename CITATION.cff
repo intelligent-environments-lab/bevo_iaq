@@ -1,0 +1,31 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: BEVO Beacon IAQ
+message: >-
+  "If you use this software, please cite it as
+  below."
+type: software
+authors:
+  - given-names: Hagen
+    family-names: Fritz
+    email: hagenfritz@utexas.edu
+    affiliation: The University of Texas at Austin
+    orcid: 'https://orcid.org/0000-0002-5708-7683'
+  - given-names: Calvin
+    family-names: Lin
+    affiliation: The University of Texas at Austin
+  - given-names: Dung
+    family-names: Le
+    affiliation: The University of Texas at Austin
+  - given-names: Tejal
+    family-names: Kulkarni
+    affiliation: The University of Texas at Austin
+  - given-names: Sepehr
+    family-names: Bastami
+    affiliation: The University of Texas at Austin
+  - given-names: Zoltan
+    family-names: Nagy
+    affiliation: The University of Texas at Austin
+    orcid: 'https://orcid.org/0000-0002-6014-3228'
