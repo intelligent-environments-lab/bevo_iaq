@@ -64,7 +64,7 @@ def get_measurements(variables,path_to_data="/home/pi/DATA"):
                     file_info = file.split("-")
                     short_name = get_short_name(v.split('-')[0])
                     if file_info[0] == short_name:
-                        logger.info(f"Found correction file for {short_name}")
+                        logger.warning(f"Found correction file for {short_name}")
                         correction = pd.read_csv(f"{path_to_correction}{file}",index_col=0)
                     else:
                         logger.info(f"{file_info[0]} vs {short_name}")
@@ -172,8 +172,8 @@ def setup_logging(log_file_name):
     c_handler = logging.StreamHandler()
     dir_path = pathlib.Path(__file__).resolve().parent
     f_handler = logging.FileHandler(f'{dir_path}/{log_file_name}.log',mode='w')
-    c_handler.setLevel(logging.WARNING)
-    f_handler.setLevel(logging.DEBUG)
+    c_handler.setLevel(logging.INFO)
+    f_handler.setLevel(logging.INFO)
 
     # Create formatters and add it to handlers
     c_format = logging.Formatter('%(asctime)s: %(name)s (%(lineno)d) - %(levelname)s - %(message)s',datefmt='%m/%d/%y %H:%M:%S')
