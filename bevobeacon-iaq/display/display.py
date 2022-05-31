@@ -65,7 +65,7 @@ def get_measurements(variables,path_to_data="/home/pi/DATA"):
                     file_info = file.split("-")
                     short_name = get_short_name(v.split('-')[0])
                     if file_info[0] == short_name:
-                        logger.info(f"Found correction file for {short_name}")
+                        logger.warning(f"Found correction file for {short_name}")
                         correction = pd.read_csv(f"{path_to_correction}{file}",index_col=0)
                         corrected = True
                         break
