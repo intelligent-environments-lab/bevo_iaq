@@ -58,6 +58,7 @@ def get_measurements(variables,path_to_data="/home/pi/DATA"):
         try:
             value = df.loc[:,v].values[-1]
             # correcting the value 
+            corrected = False
             path_to_correction = "/home/pi/bevo_iaq/bevobeacon-iaq/correction/"
             if os.path.exists(path_to_correction):
                 for file in os.listdir(path_to_correction):
@@ -66,12 +67,14 @@ def get_measurements(variables,path_to_data="/home/pi/DATA"):
                     if file_info[0] == short_name:
                         logger.info(f"Found correction file for {short_name}")
                         correction = pd.read_csv(f"{path_to_correction}{file}",index_col=0)
-                    else:
-                        logger.info(f"{file_info[0]} vs {short_name}")
-                        logger.warning(f"No correction file for {v} (looked for {short_name})")
-                        correction = pd.DataFrame(data={"beacon":np.arange(0,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
+                        corrected = True
+                        break
+
+            if corrected is False:
+                logger.warning(f"No correction file for {v} (looked for {short_name})")
+                correction = pd.DataFrame(data={"beacon":np.arange(0,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
                 
-                value = value * correction.loc[beacon,"coefficient"] + correction.loc[beacon,"constant"]
+            value = value * correction.loc[beacon,"coefficient"] + correction.loc[beacon,"constant"]
         except KeyError:
             logger.exception(f"Check parameter name: {v}")
             value = np.nan
