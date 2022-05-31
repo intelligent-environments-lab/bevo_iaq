@@ -10,6 +10,9 @@ Project: BEVO Beacon IAQ
 
 import os
 import glob
+import logging
+import pathlib
+import argparse
 
 import board
 import busio as io
@@ -20,27 +23,38 @@ import time
 
 from oled_text import OledText, BigLine, SmallLine
 
-def get_measurements(variables,units,names,path_to_data="/home/pi/DATA"):
+def get_measurements(variables,path_to_data="/home/pi/DATA"):
     """
     Gets the latest measurements from the data file
 
-    Inputs:
-    - variables: list of strings of raw variable name(s) in the data dataframe columns
-    - units: list of strings of units for variable(s)
-    - names: list of strings of display name(s) for the variables
-    - path_to_data: string for the path to the sensirion/adafruit directories
+    Parameters
+    ----------
+    variables : list of str
+         raw variable name(s) in the dataframe columns
+    units : list of str
+        units for variable(s)
+    names : list of str
+        display name(s) for the variables
+    path_to_data : str 
+        path to the raw data
 
-    Returns a list of lists where the inner list corresponds to the variable, unit, and display name
+    Returns
+    -------
+    measurements : list of lists 
+        inner list corresponds to the variable, unit, and display name
     """
+    # logging instance
+    logger = setup_logging("get_measurements")
     # getting newest file
     file_list = glob.glob(f"{path_to_data}/*.csv")
     newest_file = max(file_list, key=os.path.getctime)
+    logger.info(f"Reading from {newest_file}")
     beacon = int(newest_file.split("/")[-1][1:3])
     # reading in file
     df = pd.read_csv(f"{newest_file}",index_col=0)
     # getting important var measurements
     measurements = []
-    for v, u, n in zip(variables,units,names):
+    for v in variables:
         try:
             value = df.loc[:,v].values[-1]
             # correcting the value 
@@ -48,20 +62,81 @@ def get_measurements(variables,units,names,path_to_data="/home/pi/DATA"):
             if os.path.exists(path_to_correction):
                 for file in os.listdir(path_to_correction):
                     file_info = file.split("-")
-                    if file_info[0] == v.lower():
+                    if file_info[0] == get_short_name(v):
+                        logger.info(f"Found correction file for {v}")
                         correction = pd.read_csv(f"{path_to_correction}{file}",index_col=0)
                     else:
+                        logger.warning(f"No correction file for {v} (looked for {get_short_name(v)})")
                         correction = pd.DataFrame(data={"beacon":np.arange(0,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
                 
                 value = value * correction.loc[beacon,"coefficient"] + correction.loc[beacon,"constant"]
         except KeyError:
+            logger.exception(f"Check parameter name: {v}")
             value = np.nan
             
-        measurements.append([round(value,1),u,n])
+        measurements.append(round(value,1))
 
     return measurements
 
-def main():
+def get_short_name(param):
+    """
+    Gets the short name for a given formal name
+
+    Parameters
+    ----------
+    param : str
+        name of the parameter to look up
+
+    Returns
+    -------
+    <short_name> : str
+        shortened name
+    """
+    if param in ["carbon_dioxid","co2"]:
+        return "co2"
+    elif param in ["carbon_monoxide","co"]:
+        return "co"
+    else: # no change needed
+        return param
+
+def setup_logging(log_file_name):
+    """
+    Creates a logging object
+
+    Parameters
+    ----------
+    log_file_name : str
+        how to name the log file
+
+    Returns
+    -------
+    logger : logging object
+        a logger to debug
+    """
+    # Create a custom logger
+    logger = logging.getLogger(__name__)
+
+    # Create handlers
+    c_handler = logging.StreamHandler()
+    dir_path = pathlib.Path(__file__).resolve().parent
+    f_handler = logging.FileHandler(f'{dir_path}/{log_file_name}.log',mode='w')
+    c_handler.setLevel(logging.WARNING)
+    f_handler.setLevel(logging.DEBUG)
+
+    # Create formatters and add it to handlers
+    c_format = logging.Formatter('%(asctime)s: %(name)s (%(lineno)d) - %(levelname)s - %(message)s',datefmt='%m/%d/%y %H:%M:%S')
+    f_format = logging.Formatter('%(asctime)s: %(name)s (%(lineno)d) - %(levelname)s - %(message)s',datefmt='%m/%d/%y %H:%M:%S')
+    c_handler.setFormatter(c_format)
+    f_handler.setFormatter(f_format)
+
+    # Add handlers to the logger
+    logger.addHandler(c_handler)
+    logger.addHandler(f_handler)
+
+    return logger
+
+def main(sleep_time=3):
+    logger = setup_logging("display")
     # creating i2c instance
     i2c = io.I2C(board.SCL, board.SDA)
 
@@ -82,28 +157,30 @@ def main():
         # Getting Newest Measurements
         # ---------------------------
         # standard 
-        m = get_measurements(variables=["CO2","PM_C_2p5","Lux","TVOC","NO2","CO","T_NO2"],
-            units=["ppm","ug/m","lux","ppb","ppb","ppm","C"],names=["Carbon Dioxide", "Particulate Matter","Light Level", "Nitrogen Dioxide","TVOCs","Carbon Monoxide","Temperature"])
-        # demo purposes
-        #m = get_measurements(variables=["CO2","PM_C_2p5","PM_C_10","T_NO2","RH_NO2"],units=["ppm","ug/m","ug/m","F","%"],names=["Carbon Dioxide","PM2.5","PM10","Temperature","Relative Humidity"]) 
+        variables=["carbon_dioxide-ppm","pm2p5_mass-microgram_per_m3","carbon_monoxide-ppb","t_from_no2-c"]
+        m = get_measurements(variables=variables) 
         # Displaying Measurements
         # -----------------------
         try:
-            for value, unit, name in m:
-                print(f"{name}: {value} {unit}")
-                if name == "Carbon Monoxide": # converting raw CO measurements to ppm
+            for variable, value in zip(variables,m):
+                name = variable.split("-")[0]
+                unit = variable.split("-")[-1]
+                logger.info(f"Displaying {name}: {value} {unit}")
+                if name in ["carbon_monxide","co","Carbon Monoxide"]:
+                    logger.info("Converting raw CO measurements to ppm")
                     value /= 1000
                     value = round(value,1)
                     
                 if unit == "F":
+                    logger.info("Converting to F")
                     value = round(1.8*value+32,2)
 
                 oled.text(f"{value}",2) # output of measured value
                 oled.text(f"{unit}",3) # output of the variable
-                if unit in ["C","F"]: # adding degree symbol for temperature
+                if unit in ["c","C","F","f"]: # adding degree symbol for temperature
                     oled.text(f"\uf22d",4)
                     oled.text(f"",5)
-                elif unit == "ug/m": # adding exponent for pm
+                elif unit in ["ug/m","microgram_per_m3"]: # adding exponent for pm
                     oled.text(f"",4)
                     oled.text(f"3",5)
                 else: # no output on these "lines"
@@ -113,14 +190,22 @@ def main():
                 oled.text(f"{name}",6) # output of the display name
 
                 oled.show()
-                time.sleep(3) # holding display for 3 seconds
+                time.sleep(sleep_time) # holding display
         except OSError:
+            logger.exception("Error:")
             oled.clear()
             oled.text(f"ERROR",3)
-            time.sleep(3)
+            time.sleep(sleep_time)
 
 # Execution Start
 # ------------------------------------------------------------------------- #
-main()
-
+if __name__ == '__main__':
+    """ 
+    Generates the figures used in the dashboard
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-t', help="number of seconds to display a measurement", default=3, type=int)
+    args = parser.parse_args()
+ 
+    main(sleep_time=args.t)
 # ------------------------------------------------------------------------- #
