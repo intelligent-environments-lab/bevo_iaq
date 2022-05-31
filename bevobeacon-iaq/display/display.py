@@ -63,11 +63,11 @@ def get_measurements(variables,path_to_data="/home/pi/DATA"):
                 for file in os.listdir(path_to_correction):
                     file_info = file.split("-")
                     short_name = get_short_name(v.split('-')[0])
-                    logger.info(f"{file_info} vs {short_name}")
                     if file_info[0] == short_name:
                         logger.info(f"Found correction file for {short_name}")
                         correction = pd.read_csv(f"{path_to_correction}{file}",index_col=0)
                     else:
+                        logger.info(f"{file_info[0]} vs {short_name}")
                         logger.warning(f"No correction file for {v} (looked for {short_name})")
                         correction = pd.DataFrame(data={"beacon":np.arange(0,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
                 
