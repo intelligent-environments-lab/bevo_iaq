@@ -62,11 +62,12 @@ def get_measurements(variables,path_to_data="/home/pi/DATA"):
             if os.path.exists(path_to_correction):
                 for file in os.listdir(path_to_correction):
                     file_info = file.split("-")
-                    if file_info[0] == get_short_name(v):
-                        logger.info(f"Found correction file for {v}")
+                    short_name = get_short_name(v.split('-')[0])
+                    if file_info[0] == short_name:
+                        logger.info(f"Found correction file for {short_name}")
                         correction = pd.read_csv(f"{path_to_correction}{file}",index_col=0)
                     else:
-                        logger.warning(f"No correction file for {v} (looked for {get_short_name(v)})")
+                        logger.warning(f"No correction file for {v} (looked for {short_name})")
                         correction = pd.DataFrame(data={"beacon":np.arange(0,51),"constant":np.zeros(51),"coefficient":np.ones(51)}).set_index("beacon")
                 
                 value = value * correction.loc[beacon,"coefficient"] + correction.loc[beacon,"constant"]
@@ -80,7 +81,7 @@ def get_measurements(variables,path_to_data="/home/pi/DATA"):
 
 def get_short_name(param):
     """
-    Gets the short name for a given formal name
+    Gets the short name for a given parameter
 
     Parameters
     ----------
@@ -92,10 +93,60 @@ def get_short_name(param):
     <short_name> : str
         shortened name
     """
-    if param in ["carbon_dioxid","co2"]:
+    if param in ["carbon_dioxide","co2"]:
         return "co2"
     elif param in ["carbon_monoxide","co"]:
         return "co"
+    elif param in ["t_from_no2","t_from_co2","t_from_co"]:
+        return "temperature_c"
+    else: # no change needed
+        return param
+
+def get_display_name(param):
+    """
+    Gets the display name for a given parameter
+    
+    Parameters
+    ----------
+    param : str
+        name of the parameter to look up
+
+    Returns
+    -------
+    <display_name> : str
+        name to display for parameter
+    
+    """
+    if param in ["carbon_dioxide","co2"]:
+        return "Carbon Dioxide"
+    elif param in ["carbon_monoxide","co"]:
+        return "Carbon Monoxide"
+    elif param in ["pm1_mass","pm2p5_mass","pm10_mass"]:
+        return "Particulate Matter"
+    elif param in ["t_from_no2","t_from_co2","t_from_co"]:
+        return "Temperature"
+    else: # no change needed
+        return param
+
+def get_display_unit(param):
+    """
+    Gets the display name for a given parameter
+    
+    Parameters
+    ----------
+    param : str
+        name of the parameter to look up
+
+    Returns
+    -------
+    <display_name> : str
+        name to display for parameter
+    
+    """
+    if param in ["c","f"]:
+        return param.upper()
+    elif param == "microgram_per_m3":
+        return "ug/m" #exponent needs to be taken care of separately
     else: # no change needed
         return param
 
@@ -176,7 +227,7 @@ def main(sleep_time=3):
                     value = round(1.8*value+32,2)
 
                 oled.text(f"{value}",2) # output of measured value
-                oled.text(f"{unit}",3) # output of the variable
+                oled.text(f"{get_display_unit(unit)}",3) # output of the variable
                 if unit in ["c","C","F","f"]: # adding degree symbol for temperature
                     oled.text(f"\uf22d",4)
                     oled.text(f"",5)
@@ -187,7 +238,7 @@ def main(sleep_time=3):
                     oled.text(f"",4)
                     oled.text(f"",5)
 
-                oled.text(f"{name}",6) # output of the display name
+                oled.text(f"{get_display_name(name)}",6) # output of the display name
 
                 oled.show()
                 time.sleep(sleep_time) # holding display
