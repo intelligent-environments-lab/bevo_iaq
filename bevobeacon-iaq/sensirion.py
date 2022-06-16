@@ -44,7 +44,7 @@ class SPS30:
             sps.read_measured_values()
             pm = sps.dict_values
         except Exception as e:
-            print("Error reading from sensors:", e)
+            # error reading from sensors
             pm = {
                 "nc0p5": np.nan,
                 "nc1p0": np.nan,
