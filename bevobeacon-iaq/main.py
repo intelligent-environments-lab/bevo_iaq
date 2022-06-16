@@ -28,7 +28,6 @@ from botocore.exceptions import ClientError
 
 async def main(beacon = '00'):
     # AWS credentials
-    print(os.environ)
     try:
         AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
         AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
@@ -199,27 +198,38 @@ def aws_s3_upload_file(s3,filename,s3_bucket,s3_filepath):
 		log.info(f"FileNotFoundError: {e}")
 
 def setup_logger(level=logging.WARNING):
-    """logging setup for standard and file output"""
+    """
+    Logging setup for standard and file output
+
+    Parameters
+    ----------
+    level : logging level
+        priority level of messages to record
+
+    Returns
+    -------
+    log : logging instance
+        file-based logger
+    """
+    # creating logging instance
     log = logging.getLogger(__name__)
-    log.setLevel(logging.INFO)
+
+    log.setLevel(level)
     log.propagate = False # lower levels are not propogated to children
+    # removing any current handles
     if log.hasHandlers():
         log.handlers.clear()
-    # stream output
-    sh = logging.StreamHandler(stream=sys.stdout)
-    sh.setLevel(logging.DEBUG)
-    sh_format = logging.Formatter("%(message)s")
-    sh.setFormatter(sh_format)
-    log.addHandler(sh)
+        
     # file output
     f = logging.FileHandler("sensors.log")
-    f.setLevel(logging.DEBUG)
+    f.setLevel(level)
     f_format = logging.Formatter("%(asctime)s - %(levelname)s\n%(message)s")
     f.setFormatter(f_format)
     log.addHandler(f)
+
     return log
 
 if __name__ == "__main__":
-    log = setup_logger(logging.INFO)
+    log = setup_logger(logging.ERROR)
     beacon = '00'
     asyncio.run(main(beacon = beacon))
