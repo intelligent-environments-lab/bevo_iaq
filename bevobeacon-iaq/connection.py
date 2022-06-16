@@ -8,6 +8,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GPIO.setup(led_pin,GPIO.OUT)
 
+debug = False
 while True:
     ps = subprocess.Popen(['iwgetid'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     try:
@@ -17,10 +18,11 @@ while True:
         # grep did not match any lines
         status = "Not Connected"
 
-    print(status)
+    if debug:
+        print(status)
     if status == "Connected":
         GPIO.output(led_pin,GPIO.HIGH)
     else:
         GPIO.output(led_pin,GPIO.LOW)
 
-    time.sleep(5)
+    time.sleep(60)
