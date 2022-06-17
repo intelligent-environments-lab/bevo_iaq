@@ -180,12 +180,7 @@ def setup_logging(log_file_name,level):
     # Create handler
     dir_path = pathlib.Path(__file__).resolve().parent
     f_handler = logging.FileHandler(f'{dir_path}/{log_file_name}.log',mode='w')
-<<<<<<< HEAD
-    c_handler.setLevel(logging.INFO)
-    f_handler.setLevel(logging.INFO)
-=======
     logging.getLogger().setLevel(level)
->>>>>>> 214a4cf513d8f0ca1b90292c3c1b6050dfce3fac
 
     # Create formatter and add it to handler
     f_format = logging.Formatter('%(asctime)s: %(name)s (%(lineno)d) - %(levelname)s:\t%(message)s',datefmt='%m/%d/%y %H:%M:%S')
