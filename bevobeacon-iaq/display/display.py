@@ -44,7 +44,7 @@ def get_measurements(variables,path_to_data="/home/pi/DATA"):
         inner list corresponds to the variable, unit, and display name
     """
     # logging instance
-    logger = setup_logging("get_measurements")
+    logger = setup_logging("get_measurements",level=logging.ERROR)
     # getting newest file
     file_list = glob.glob(f"{path_to_data}/*.csv")
     newest_file = max(file_list, key=os.path.getctime)
@@ -154,7 +154,7 @@ def get_display_unit(param):
     else: # no change needed
         return param
 
-def setup_logging(log_file_name):
+def setup_logging(log_file_name,level):
     """
     Creates a logging object
 
@@ -162,6 +162,8 @@ def setup_logging(log_file_name):
     ----------
     log_file_name : str
         how to name the log file
+    level : logging level
+        priority level of messages to record
 
     Returns
     -------
@@ -171,21 +173,25 @@ def setup_logging(log_file_name):
     # Create a custom logger
     logger = logging.getLogger(__name__)
 
-    # Create handlers
-    c_handler = logging.StreamHandler()
+    # Clearing log instances
+    if logger.hasHandlers():
+        logger.handlers.clear()
+
+    # Create handler
     dir_path = pathlib.Path(__file__).resolve().parent
     f_handler = logging.FileHandler(f'{dir_path}/{log_file_name}.log',mode='w')
+<<<<<<< HEAD
     c_handler.setLevel(logging.INFO)
     f_handler.setLevel(logging.INFO)
+=======
+    logging.getLogger().setLevel(level)
+>>>>>>> 214a4cf513d8f0ca1b90292c3c1b6050dfce3fac
 
-    # Create formatters and add it to handlers
-    c_format = logging.Formatter('%(asctime)s: %(name)s (%(lineno)d) - %(levelname)s - %(message)s',datefmt='%m/%d/%y %H:%M:%S')
-    f_format = logging.Formatter('%(asctime)s: %(name)s (%(lineno)d) - %(levelname)s - %(message)s',datefmt='%m/%d/%y %H:%M:%S')
-    c_handler.setFormatter(c_format)
+    # Create formatter and add it to handler
+    f_format = logging.Formatter('%(asctime)s: %(name)s (%(lineno)d) - %(levelname)s:\t%(message)s',datefmt='%m/%d/%y %H:%M:%S')
     f_handler.setFormatter(f_format)
 
-    # Add handlers to the logger
-    logger.addHandler(c_handler)
+    # Add handler to the logger
     logger.addHandler(f_handler)
 
     return logger
